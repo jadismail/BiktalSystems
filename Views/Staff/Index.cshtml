@@ -1,0 +1,67 @@
+@model StaffIndexViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Staff & HR";
+    ViewData["Module"] = "Staff";
+    ViewData["ModuleSubtitle"] = "Team directory, attendance, payroll runs, and activity.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-staff">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <section class="bk-staff-kpis" aria-label="Staff snapshot">
+        <article class="bk-staff-kpi">
+            <div class="bk-staff-kpi-icon" aria-hidden="true"><i class="bi bi-people"></i></div>
+            <div>
+                <div class="bk-staff-kpi-label">Active team members</div>
+                <div class="bk-staff-kpi-value">@Model.ActiveStaffCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-staff-kpi">
+            <div class="bk-staff-kpi-icon" aria-hidden="true"><i class="bi bi-clock-history"></i></div>
+            <div>
+                <div class="bk-staff-kpi-label">Open clock-ins</div>
+                <div class="bk-staff-kpi-value">@Model.OpenAttendanceSessionCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-staff-kpi">
+            <div class="bk-staff-kpi-icon" aria-hidden="true"><i class="bi bi-receipt"></i></div>
+            <div>
+                <div class="bk-staff-kpi-label">Draft payroll runs</div>
+                <div class="bk-staff-kpi-value">@Model.DraftPayrollRunCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-staff-kpi">
+            <div class="bk-staff-kpi-icon" aria-hidden="true"><i class="bi bi-activity"></i></div>
+            <div>
+                <div class="bk-staff-kpi-label">Activity rows (7 days)</div>
+                <div class="bk-staff-kpi-value">@Model.ActivityEntriesLast7DaysCount.ToString("N0", n)</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="bk-grid-tiles bk-staff-tiles">
+        <a asp-action="Team" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-person-lines-fill"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Team</h2>
+            <p class="small text-muted mb-0 fw-semibold">Directory, roles, and employment details.</p>
+        </a>
+        <a asp-action="Attendance" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-clock-history"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Attendance</h2>
+            <p class="small text-muted mb-0 fw-semibold">Clock in and out with an audit trail.</p>
+        </a>
+        <a asp-action="Payroll" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-currency-dollar"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Payroll</h2>
+            <p class="small text-muted mb-0 fw-semibold">Period runs, lines, and status workflow.</p>
+        </a>
+        <a asp-action="Activity" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-shield-check"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Activity log</h2>
+            <p class="small text-muted mb-0 fw-semibold">Notable actions across staff workflows.</p>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+@model NewTicketPageViewModel
+@{
+    ViewData["Title"] = "New support ticket";
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Log a non-repair support case.";
+}
+<div class="container pb-5 pt-3 bk-crm" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-crm-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Tickets">Support tickets</a></li>
+            <li class="breadcrumb-item active" aria-current="page">New</li>
+        </ol>
+    </nav>
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-crm-panel p-4 p-lg-5">
+        <div class="bk-crm-panel-title">Ticket</div>
+        <form asp-action="CreateTicket" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="mb-3">
+                <label asp-for="Form.CustomerId" class="form-label small fw-bold">Customer (optional)</label>
+                <select asp-for="Form.CustomerId" class="form-select" title="Link to profile or leave blank">
+                    <option value="">Walk-in / not linked</option>
+                    @foreach (var o in Model.CustomerOptions)
+                    {
+                        <option value="@o.Id">@o.Label</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Form.Subject" class="form-label small fw-bold"></label>
+                <input asp-for="Form.Subject" class="form-control" />
+                <span asp-validation-for="Form.Subject" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Form.Description" class="form-label small fw-bold"></label>
+                <textarea asp-for="Form.Description" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Form.Priority" class="form-label small fw-bold"></label>
+                <select asp-for="Form.Priority" class="form-select" asp-items="Html.GetEnumSelectList<CrmSupportTicketPriority>()"></select>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary fw-semibold px-4">Create ticket</button>
+                <a asp-action="Tickets" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,131 @@
+@model InventoryImportPageViewModel
+@using Biktal.Infrastructure.Inventory
+@{
+    ViewData["Title"] = "Import products";
+    ViewData["Module"] = "Inventory";
+    var result = Model.LastResult;
+}
+<div class="container pb-5 pt-3 bk-products-page">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    @if (result is not null)
+    {
+        var hasSuccess = result.Succeeded;
+        <div id="import-results" class="alert @(hasSuccess ? "alert-success" : "alert-danger") border-0 shadow-sm mb-4" role="alert">
+            <div class="fw-bold mb-1">
+                @if (hasSuccess)
+                {
+                    <text>Import completed with @(result.Inserted + result.Updated) change(s)</text>
+                }
+                else
+                {
+                    <text>Import did not save any products</text>
+                }
+            </div>
+            <div class="small">
+                @result.RowsRead rows read · @result.Inserted added · @result.Updated updated · @result.Skipped skipped
+                @if (result.CategoriesCreated > 0)
+                {
+                    <span> · @result.CategoriesCreated categories created</span>
+                }
+                @if (result.BrandsCreated > 0)
+                {
+                    <span> · @result.BrandsCreated brands created</span>
+                }
+            </div>
+            @if (!hasSuccess)
+            {
+                <div class="small mt-2 mb-0">Check the issues below — common causes are missing SKU/Name headers, duplicate barcodes, or uploading without re-selecting the file after a failed attempt.</div>
+            }
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="bk-card p-4 h-100">
+                <h2 class="h5 fw-bold mb-3">Upload Excel</h2>
+                <p class="small text-muted fw-semibold">
+                    Import products from a <strong>.xlsx</strong> file. Existing SKUs are updated; new SKUs are added.
+                    Categories and brands are created automatically when they do not exist yet.
+                </p>
+
+                <form asp-action="Import" method="post" enctype="multipart/form-data" class="mt-4">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+
+                    <div class="mb-3">
+                        <label for="import-file" class="form-label fw-semibold">Excel file</label>
+                        <input type="file" class="form-control" id="import-file" name="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
+                        <div class="form-text">Max 10 MB · .xlsx only · you must pick the file again each time you import</div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-primary fw-semibold">
+                            <i class="bi bi-upload me-1" aria-hidden="true"></i>Import products
+                        </button>
+                        <a asp-action="DownloadImportTemplate" class="btn btn-outline-secondary fw-semibold">
+                            <i class="bi bi-download me-1" aria-hidden="true"></i>Download template
+                        </a>
+                        <a asp-action="Products" class="btn btn-outline-secondary fw-semibold">Back to products</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="bk-card p-4 h-100">
+                <h2 class="h5 fw-bold mb-3">Expected columns</h2>
+                <p class="small text-muted fw-semibold mb-3">First row with a <strong>product name</strong> column is detected automatically. <strong>SKU</strong> is optional — if missing, it is generated from the name (e.g. iPhone 13 → IPHONE-13). Extra columns like Min/Max Stock are ignored.</p>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Column</th><th>Required</th><th>Notes</th></tr>
+                        </thead>
+                        <tbody class="small">
+                            <tr><td class="fw-semibold">SKU</td><td>No</td><td>Unique code; auto-generated from name if omitted</td></tr>
+                            <tr><td class="fw-semibold">Name / Product Name</td><td>Yes</td><td>Product title</td></tr>
+                            <tr><td class="fw-semibold">Category</td><td>No</td><td>Defaults to General; created if missing</td></tr>
+                            <tr><td class="fw-semibold">Brand</td><td>No</td><td>Created if missing</td></tr>
+                            <tr><td class="fw-semibold">Barcode</td><td>No</td><td>UPC / EAN; must be unique</td></tr>
+                            <tr><td class="fw-semibold">Cost / Cost Price</td><td>No</td><td>Purchase cost (defaults to 0)</td></tr>
+                            <tr><td class="fw-semibold">Price / Selling Price</td><td>No</td><td>Retail price (defaults to 0)</td></tr>
+                            <tr><td class="fw-semibold">Stock</td><td>No</td><td>On-hand quantity (defaults to 0)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (result is not null && result.Issues.Count > 0)
+    {
+        <section class="mt-4" aria-label="Import issues">
+            <div class="bk-card p-4">
+                <h3 class="h6 fw-bold mb-3">Issues (@result.Issues.Count)</h3>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Row</th><th>SKU</th><th>Severity</th><th>Message</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var issue in result.Issues)
+                            {
+                                <tr>
+                                    <td class="font-monospace">@(issue.RowNumber > 0 ? issue.RowNumber.ToString() : "—")</td>
+                                    <td class="font-monospace small">@(issue.Sku ?? "—")</td>
+                                    <td>
+                                        <span class="badge @(issue.Severity == CatalogProductExcelImportIssueSeverity.Error ? "text-bg-danger" : "text-bg-warning")">
+                                            @issue.Severity
+                                        </span>
+                                    </td>
+                                    <td class="small">@issue.Message</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+</div>

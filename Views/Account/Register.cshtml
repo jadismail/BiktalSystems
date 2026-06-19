@@ -1,0 +1,62 @@
+@model Biktal.WebMVC.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Create account";
+}
+
+<div class="bk-auth-shell">
+    <div class="bk-auth-card" style="max-width: 480px;">
+        <div class="text-center mb-4">
+            <div class="bk-brand-mark mx-auto mb-3" style="width: 48px; height: 48px; font-size: 1.1rem;">B</div>
+            <h1 class="h3 fw-bold bk-hero-title">Create your account</h1>
+            @if (ViewData["IsFirstAccount"] as bool? == true)
+            {
+                <p class="text-muted small mb-0 fw-semibold">This database has no users yet — you will receive the <strong>Administrator</strong> role and can manage Admin settings.</p>
+            }
+            else
+            {
+                <p class="text-muted small mb-0 fw-semibold">New accounts are assigned the <strong>Cashier</strong> role. Ask an administrator or manager to upgrade your role for Admin access.</p>
+            }
+        </div>
+
+        <div class="bk-card p-4 p-lg-5">
+            <form asp-action="Register" method="post" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3 py-2" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="DisplayName" class="form-label small fw-bold"></label>
+                    <input asp-for="DisplayName" class="form-control form-control-lg" autocomplete="name" autofocus />
+                    <span asp-validation-for="DisplayName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label small fw-bold"></label>
+                    <input asp-for="Email" class="form-control form-control-lg" autocomplete="username" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label small fw-bold"></label>
+                    <input asp-for="Password" class="form-control form-control-lg" autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ConfirmPassword" class="form-label small fw-bold"></label>
+                    <input asp-for="ConfirmPassword" class="form-control form-control-lg" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">Create account</button>
+            </form>
+        </div>
+
+        <p class="text-center small text-muted mt-3 mb-0 fw-semibold">
+            Already have access?
+            <a asp-action="Login">Sign in</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

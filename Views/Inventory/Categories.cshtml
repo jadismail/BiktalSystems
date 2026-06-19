@@ -1,0 +1,154 @@
+@model Biktal.WebMVC.Models.CategoriesPageViewModel
+
+<div class="container pb-5 pt-3 bk-categories-page">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["CategoryMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["CategoryError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-inv-toolbar bk-card p-3 p-md-4 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h2 class="h5 fw-bold mb-1">Category catalog</h2>
+            <p class="small text-muted mb-0 fw-semibold">@Model.Categories.Count @(Model.Categories.Count == 1 ? "group" : "groups") · product counts match the <strong>Category</strong> field on each SKU.</p>
+        </div>
+        <button type="button" class="btn btn-primary fw-semibold px-4" data-bs-toggle="modal" data-bs-target="#bk-add-category-modal" id="bk-open-add-category">
+            <i class="bi bi-folder-plus me-1" aria-hidden="true"></i>Add category
+        </button>
+    </div>
+
+    <div class="bk-table-wrap">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-end" scope="col" style="width:5rem">Sort</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th class="text-end" scope="col" style="width:8rem">Products</th>
+                        <th class="text-end" scope="col" style="width:7rem">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Categories.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="bk-empty py-5">
+                                    <i class="bi bi-folder2-open d-block fs-1 mb-2 opacity-50" aria-hidden="true"></i>
+                                    <p class="fw-semibold mb-1">No categories yet</p>
+                                    <p class="small text-muted mb-0">Click <strong>Add category</strong> to create your first group.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Categories)
+                        {
+                            <tr>
+                                <td class="text-end font-monospace small text-muted">@row.SortOrder</td>
+                                <td class="fw-semibold">@row.Name</td>
+                                <td class="small text-muted">@(string.IsNullOrWhiteSpace(row.Description) ? "—" : row.Description)</td>
+                                <td class="text-end">
+                                    @if (row.ProductCount == 0)
+                                    {
+                                        <span class="badge rounded-pill text-bg-light border">0</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill text-bg-primary">@row.ProductCount.ToString("N0")</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    @if (row.ProductCount > 0)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Reassign products to another category first.">
+                                            <i class="bi bi-trash3" aria-hidden="true"></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="DeleteCategory" method="post" class="d-inline" onsubmit="return confirm('Delete this category? This cannot be undone.');">
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete category">
+                                                <i class="bi bi-trash3" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bk-add-category-modal" tabindex="-1" aria-labelledby="bk-add-category-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h2 class="modal-title h5 fw-bold" id="bk-add-category-modal-title">Add category</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <form asp-action="AddCategory" method="post" id="bk-add-category-form">
+                    @if (ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger py-2 small mb-3" role="alert"></div>
+                    }
+                    <div class="mb-3">
+                        <label asp-for="NewCategory.Name" class="form-label fw-semibold small"></label>
+                        <input asp-for="NewCategory.Name" class="form-control" autocomplete="off" placeholder="e.g. Tablets" />
+                        <span asp-validation-for="NewCategory.Name" class="text-danger small d-block mt-1"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewCategory.Description" class="form-label fw-semibold small"></label>
+                        <textarea asp-for="NewCategory.Description" class="form-control" rows="2" placeholder="Optional — shown internally for staff"></textarea>
+                        <span asp-validation-for="NewCategory.Description" class="text-danger small d-block mt-1"></span>
+                    </div>
+                    <div class="mb-0">
+                        <label asp-for="NewCategory.SortOrder" class="form-label fw-semibold small"></label>
+                        <input asp-for="NewCategory.SortOrder" class="form-control" type="number" step="1" placeholder="Leave blank for auto (end of list)" />
+                        <span asp-validation-for="NewCategory.SortOrder" class="text-danger small d-block mt-1"></span>
+                        <p class="form-text small mb-0">Lower numbers appear first in this list.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="bk-add-category-form" class="btn btn-primary fw-semibold">Save category</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    @if (Model.OpenAddModal)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var el = document.getElementById('bk-add-category-modal');
+                if (el && window.bootstrap && bootstrap.Modal) {
+                    bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            });
+        </script>
+    }
+}

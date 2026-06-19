@@ -1,0 +1,169 @@
+@model DashboardKpiViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Dashboard";
+    var n = CultureInfo.InvariantCulture;
+    var userName = User.Identity?.Name?.Trim() ?? "Team";
+    var hour = DateTime.Now.Hour;
+    var greet = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+}
+
+<div class="bk-dash">
+    <header class="bk-dash-hero">
+        <div class="bk-dash-hero-bg" aria-hidden="true"></div>
+        <div class="bk-dash-hero-orbs" aria-hidden="true">
+            <span class="bk-dash-orb bk-dash-orb--a"></span>
+            <span class="bk-dash-orb bk-dash-orb--b"></span>
+        </div>
+        <div class="container bk-dash-hero-inner">
+            <div class="bk-dash-hero-top">
+                <div class="bk-dash-hero-copy">
+                    <p class="bk-dash-eyebrow"><span class="bk-dash-eyebrow-dot"></span> Live overview</p>
+                    <h1 class="bk-dash-title">
+                        @greet,
+                        <span class="bk-dash-title-accent">@userName</span>
+                    </h1>
+                    <p class="bk-dash-lead">
+                        Your mobile store control center — open POS for sales, or jump into inventory, repairs, and finance as you wire them up.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container bk-dash-body">
+        <section class="bk-dash-stats" aria-label="Key metrics">
+            <article class="bk-dash-stat bk-dash-stat--revenue">
+                <div class="bk-dash-stat-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></div>
+                <div class="bk-dash-stat-body">
+                    <span class="bk-dash-stat-label">Today revenue</span>
+                    <span class="bk-dash-stat-value">@Model.TodayRevenueFromJournals.ToString("N2", n)</span>
+                    <span class="bk-dash-stat-hint">Net of credits minus debits on revenue GL lines for journals dated today (UTC), including POS sales posted automatically at checkout.</span>
+                </div>
+                <div class="bk-dash-stat-spark" aria-hidden="true"></div>
+            </article>
+            <article class="bk-dash-stat bk-dash-stat--repairs">
+                <div class="bk-dash-stat-icon"><i class="bi bi-wrench-adjustable" aria-hidden="true"></i></div>
+                <div class="bk-dash-stat-body">
+                    <span class="bk-dash-stat-label">Repairs in progress</span>
+                    <span class="bk-dash-stat-value">@Model.RepairsInProgress.ToString("N0", n)</span>
+                    <span class="bk-dash-stat-hint">Open repair tickets (excludes delivered and cancelled).</span>
+                </div>
+                <div class="bk-dash-stat-spark" aria-hidden="true"></div>
+            </article>
+            <article class="bk-dash-stat bk-dash-stat--stock">
+                <div class="bk-dash-stat-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></div>
+                <div class="bk-dash-stat-body">
+                    <span class="bk-dash-stat-label">Low stock SKUs</span>
+                    <span class="bk-dash-stat-value">@Model.LowStockSkus.ToString("N0", n)</span>
+                    <span class="bk-dash-stat-hint">Catalog SKUs at or below @DashboardKpiViewModel.LowStockThreshold units on hand.</span>
+                </div>
+                <div class="bk-dash-stat-spark" aria-hidden="true"></div>
+            </article>
+        </section>
+
+        <section class="bk-dash-jump" aria-label="Quick actions">
+            <a asp-controller="Pos" asp-action="Index" class="bk-dash-jump-primary">
+                <span class="bk-dash-jump-primary-text">
+                    <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+                    Open POS
+                </span>
+                <span class="bk-dash-jump-primary-sub">Ring up a sale</span>
+                <i class="bi bi-arrow-right-short bk-dash-jump-arrow" aria-hidden="true"></i>
+            </a>
+            <div class="bk-dash-jump-row">
+                <a asp-controller="Inventory" asp-action="Index" class="bk-dash-jump-chip"><i class="bi bi-box-seam" aria-hidden="true"></i>Inventory</a>
+                <a asp-controller="Repairs" asp-action="Index" class="bk-dash-jump-chip"><i class="bi bi-tools" aria-hidden="true"></i>Repairs</a>
+                <a asp-controller="Finance" asp-action="Index" class="bk-dash-jump-chip"><i class="bi bi-bank" aria-hidden="true"></i>Finance</a>
+                <a asp-controller="Operations" asp-action="Index" class="bk-dash-jump-chip"><i class="bi bi-clipboard-data" aria-hidden="true"></i>Operations</a>
+                <a asp-controller="Insights" asp-action="Index" class="bk-dash-jump-chip"><i class="bi bi-lightbulb" aria-hidden="true"></i>Insights</a>
+            </div>
+        </section>
+
+        <section class="bk-dash-modules" aria-labelledby="bk-dash-modules-title">
+            <div class="bk-dash-modules-head">
+                <h2 class="bk-dash-modules-title" id="bk-dash-modules-title">Modules</h2>
+                <p class="bk-dash-modules-lead">Pick a workspace — each area is ready for your next milestone.</p>
+            </div>
+
+            <div class="bk-dash-bento">
+                <a asp-controller="Pos" asp-action="Index" class="bk-dash-tile bk-dash-tile--feature text-decoration-none">
+                    <div class="bk-dash-tile-glow"></div>
+                    <span class="bk-dash-tile-badge">Primary</span>
+                    <div class="bk-dash-tile-icon bk-dash-tile-icon--lg"><i class="bi bi-cash-stack" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Point of sale</h3>
+                    <p class="bk-dash-tile-desc">Checkout flow, cart, tax — tuned for counter speed.</p>
+                    <span class="bk-dash-tile-cta">Launch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                </a>
+
+                <a asp-controller="Inventory" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Inventory</h3>
+                    <p class="bk-dash-tile-desc">Products, stock levels, purchase orders.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="Repairs" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-tools" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Repairs</h3>
+                    <p class="bk-dash-tile-desc">Tickets, check-in, and device history.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="Finance" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-bank" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Finance</h3>
+                    <p class="bk-dash-tile-desc">GL, cashbox, and aging views.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="Crm" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-people" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">CRM</h3>
+                    <p class="bk-dash-tile-desc">Customers, loyalty, and outreach.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="Operations" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-clipboard-data" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Operations</h3>
+                    <p class="bk-dash-tile-desc">Sales, inventory, repairs, and supply chain reports.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="Insights" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-lightbulb" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Insights</h3>
+                    <p class="bk-dash-tile-desc">Revenue, margin, expenses, and cash at a glance.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="Staff" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Staff</h3>
+                    <p class="bk-dash-tile-desc">Team, attendance, payroll, and activity log.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="Admin" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-gear" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">Admin</h3>
+                    <p class="bk-dash-tile-desc">Branches, tax, backups, settings.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+
+                <a asp-controller="License" asp-action="Index" class="bk-dash-tile text-decoration-none">
+                    <div class="bk-dash-tile-icon"><i class="bi bi-key" aria-hidden="true"></i></div>
+                    <h3 class="bk-dash-tile-title">License</h3>
+                    <p class="bk-dash-tile-desc">Subscription and entitlement control.</p>
+                    <span class="bk-dash-tile-cta">Open</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="bk-dash-foot">
+            <i class="bi bi-stars" aria-hidden="true"></i>
+            <p><strong>Tip:</strong> Theme toggle lives in the top bar — set light or dark for the floor or back office.</p>
+        </footer>
+    </div>
+</div>

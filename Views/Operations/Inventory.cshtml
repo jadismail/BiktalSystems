@@ -1,0 +1,91 @@
+@model InsightsInventoryViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Real-time inventory";
+    ViewData["Module"] = "Operations";
+    var n = CultureInfo.InvariantCulture;
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-reports bk-operations">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+    <div class="bk-reports-toolbar mb-3">
+        <a asp-controller="Inventory" asp-action="Movements" class="btn btn-primary btn-sm fw-semibold">Movements</a>
+        <a asp-controller="Inventory" asp-action="Stock" class="btn btn-outline-secondary btn-sm fw-semibold">Stock</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Operations hub</a>
+    </div>
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Retail value</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.InventoryRetailValue.ToString("C0", money)</div>
+            <div class="bk-reports-kpi-hint">@Model.CatalogSkuCount.ToString("N0", n) SKUs · @Model.TotalStockUnits.ToString("N0", n) units</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Cost value</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.InventoryCostValue.ToString("C0", money)</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Low stock</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.LowStockSkuCount.ToString("N0", n)</div>
+        </article>
+    </section>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Low stock (≤ @Model.LowStockThreshold)</div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light"><tr><th>SKU</th><th>Name</th><th class="text-end">Qty</th></tr></thead>
+                        <tbody>
+                            @foreach (var r in Model.LowStockRows)
+                            {
+                                <tr><td class="font-monospace small">@r.Sku</td><td>@r.Name</td><td class="text-end">@r.StockQuantity</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Category valuation</div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light"><tr><th>Category</th><th class="text-end">Retail</th><th class="text-end">Cost</th></tr></thead>
+                        <tbody>
+                            @foreach (var c in Model.CategoryValuation)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@c.Category</td>
+                                    <td class="text-end font-monospace">@c.RetailValue.ToString("C", money)</td>
+                                    <td class="text-end font-monospace">@c.CostValue.ToString("C", money)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Stock movement summary (MTD)</div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light"><tr><th>Type</th><th class="text-end">Count</th><th class="text-end">Net units</th><th class="text-end">Cost</th></tr></thead>
+                        <tbody>
+                            @foreach (var m in Model.MovementSummaryMtd)
+                            {
+                                <tr>
+                                    <td>@m.TypeLabel</td>
+                                    <td class="text-end">@m.Count</td>
+                                    <td class="text-end font-monospace">@m.NetUnits</td>
+                                    <td class="text-end font-monospace">@m.TotalCost.ToString("C", money)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+@model CrmLoyaltyPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Loyalty";
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Points, rewards tiers, and redemptions.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-crm">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["CrmMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["CrmError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="bk-table-wrap bk-crm-table">
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted px-2 pt-3 mb-0">Leaderboard</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-end" style="width:3rem" scope="col">#</th>
+                                <th scope="col">Customer</th>
+                                <th class="text-end" scope="col">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Ranked.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="3"><div class="bk-empty">No active customers yet.</div></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var row in Model.Ranked)
+                                {
+                                    <tr>
+                                        <td class="text-end font-monospace text-muted small">@row.Rank</td>
+                                        <td class="fw-semibold">
+                                            <a asp-action="Customer" asp-route-id="@row.CustomerId" class="text-decoration-none">@row.FullName</a>
+                                        </td>
+                                        <td class="text-end font-monospace fw-bold">@row.LoyaltyPoints.ToString("N0", n)</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="bk-crm-panel p-4">
+                <div class="bk-crm-panel-title">Adjust points</div>
+                <form asp-action="AdjustLoyaltyPoints" method="post" class="row g-3">
+                    @Html.AntiForgeryToken()
+                    <div class="col-12">
+                        <label asp-for="AdjustForm.CustomerId" class="form-label small fw-bold"></label>
+                        <select asp-for="AdjustForm.CustomerId" class="form-select">
+                            <option value="">— Select —</option>
+                            @foreach (var o in Model.CustomerOptions)
+                            {
+                                <option value="@o.Id">@o.Label</option>
+                            }
+                        </select>
+                        <span asp-validation-for="AdjustForm.CustomerId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="AdjustForm.Delta" class="form-label small fw-bold"></label>
+                        <input asp-for="AdjustForm.Delta" class="form-control font-monospace text-end" placeholder="e.g. 100 or -50" />
+                        <span asp-validation-for="AdjustForm.Delta" class="text-danger small"></span>
+                        <p class="small text-muted mb-0 mt-1">Use negative values to redeem or correct.</p>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold">Apply change</button>
+                    </div>
+                </form>
+            </div>
+            <div class="bk-card-muted p-4 mt-3 rounded-3 border small text-muted fw-semibold">
+                Program rules and reward catalog can plug in here later — for now points are edited manually or on the customer profile.
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

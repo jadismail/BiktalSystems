@@ -1,0 +1,253 @@
+@model Biktal.WebMVC.Models.PurchaseOrderDetailViewModel
+@using System.Globalization
+@using Biktal.Domain.Inventory
+@{
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var isDraft = Model.Status == PurchaseOrderStatus.Draft;
+    var isOpen = Model.Status == PurchaseOrderStatus.Open;
+    var isClosed = Model.Status is PurchaseOrderStatus.Received or PurchaseOrderStatus.Cancelled;
+    string StatusBadgeClass(PurchaseOrderStatus s) => s switch
+    {
+        PurchaseOrderStatus.Draft => "text-bg-secondary",
+        PurchaseOrderStatus.Open => "text-bg-primary",
+        PurchaseOrderStatus.Received => "text-bg-success",
+        PurchaseOrderStatus.Cancelled => "text-bg-dark",
+        _ => "text-bg-light border"
+    };
+}
+
+<div class="container pb-5 pt-3 bk-po-detail-page">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="PurchaseOrders">Purchase orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.PoNumber</li>
+        </ol>
+    </nav>
+
+    <div class="bk-module-head mb-4">
+        <p class="bk-landing-badge">Inventory</p>
+        <h1 class="h2 fw-bold bk-hero-title mb-1">@Model.PoNumber</h1>
+        <p class="text-muted mb-0 fw-semibold small">
+            @Model.SupplierName
+            @if (Model.UsesDirectorySupplier)
+            {
+                <span class="badge rounded-pill text-bg-light border ms-1">Directory@(string.IsNullOrEmpty(Model.SupplierDirectoryCode) ? "" : $" · {Model.SupplierDirectoryCode}")</span>
+            }
+            · <span class="badge rounded-pill @StatusBadgeClass(Model.Status)">@Model.Status</span>
+        </p>
+    </div>
+
+    @if (TempData["PoMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["PoError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-inv-toolbar bk-card p-3 p-md-4 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="small text-muted fw-semibold">
+            <span class="me-3"><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Created @Model.CreatedAtUtc.ToLocalTime().ToString("g", money)</span>
+            @if (Model.ExpectedAtUtc is { } exp)
+            {
+                <span><i class="bi bi-truck me-1" aria-hidden="true"></i>Expected @exp.ToLocalTime().ToString("d", money)</span>
+            }
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            @if (isDraft)
+            {
+                <button type="button" class="btn btn-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#bk-add-po-line-modal">
+                    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add line
+                </button>
+                <form asp-action="SubmitPurchaseOrder" method="post" class="d-inline" onsubmit="return confirm('Submit this PO? You will not be able to add or remove lines after submit.');">
+                    <input type="hidden" name="id" value="@Model.PurchaseOrderId" />
+                    <button type="submit" class="btn btn-outline-primary fw-semibold" @(Model.Lines.Count == 0 ? "disabled" : null)>Submit order</button>
+                </form>
+                <form asp-action="CancelPurchaseOrder" method="post" class="d-inline" onsubmit="return confirm('Cancel this draft PO?');">
+                    <input type="hidden" name="id" value="@Model.PurchaseOrderId" />
+                    <button type="submit" class="btn btn-outline-secondary fw-semibold">Cancel draft</button>
+                </form>
+                <form asp-action="DeletePurchaseOrder" method="post" class="d-inline" onsubmit="return confirm('Delete this draft PO permanently?');">
+                    <input type="hidden" name="id" value="@Model.PurchaseOrderId" />
+                    <button type="submit" class="btn btn-outline-danger fw-semibold">Delete</button>
+                </form>
+            }
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Notes))
+    {
+        <div class="alert alert-secondary border-0 shadow-sm small mb-4" role="note">
+            <strong>Notes.</strong> @Model.Notes
+        </div>
+    }
+
+    <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-2">
+        <h2 class="h5 fw-bold mb-0">Lines</h2>
+        <p class="small text-muted mb-0 fw-semibold">Order total: <strong class="text-body font-monospace">@Model.OrderTotal.ToString("C2", money)</strong></p>
+    </div>
+
+    <div class="bk-table-wrap mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">SKU</th>
+                        <th class="text-end" scope="col">Qty</th>
+                        <th class="text-end" scope="col">Unit cost</th>
+                        <th class="text-end" scope="col">Line total</th>
+                        <th class="text-end" scope="col">Received</th>
+                        <th class="text-end" scope="col">Remaining</th>
+                        <th class="text-end" scope="col" style="min-width:11rem">Receive</th>
+                        <th class="text-end" scope="col" style="width:4rem"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Lines.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="9">
+                                <div class="bk-empty py-4">
+                                    <p class="fw-semibold mb-1 small">No lines yet</p>
+                                    <p class="small text-muted mb-0">Use <strong>Add line</strong> while this PO is in draft.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var line in Model.Lines)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@line.ProductName</td>
+                                <td class="font-monospace small">@line.ProductSku</td>
+                                <td class="text-end font-monospace small">@line.QuantityOrdered.ToString("N0", money)</td>
+                                <td class="text-end font-monospace small">@line.UnitCost.ToString("C2", money)</td>
+                                <td class="text-end font-monospace small">@line.LineTotal.ToString("C2", money)</td>
+                                <td class="text-end font-monospace small">@line.QuantityReceived.ToString("N0", money)</td>
+                                <td class="text-end font-monospace small fw-semibold">@line.Remaining.ToString("N0", money)</td>
+                                <td class="text-end">
+                                    @if (isOpen && line.Remaining > 0)
+                                    {
+                                        <form asp-action="ReceivePurchaseOrderLine" method="post" class="d-inline-flex align-items-center gap-1 justify-content-end flex-wrap bk-po-receive-form">
+                                            <input type="hidden" name="lineId" value="@line.LineId" />
+                                            <input type="number" name="quantity" class="form-control form-control-sm font-monospace text-end" style="width:4.5rem" min="1" max="@line.Remaining" value="@line.Remaining" required aria-label="Quantity to receive" />
+                                            <button type="submit" class="btn btn-sm btn-success fw-semibold">Receive</button>
+                                        </form>
+                                    }
+                                    else if (isOpen && line.Remaining == 0)
+                                    {
+                                        <span class="badge rounded-pill text-bg-light border">Done</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    @if (isDraft)
+                                    {
+                                        <form asp-action="DeletePurchaseOrderLine" method="post" class="d-inline" onsubmit="return confirm('Remove this line?');">
+                                            <input type="hidden" name="lineId" value="@line.LineId" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove line"><i class="bi bi-trash3" aria-hidden="true"></i></button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (isClosed)
+    {
+        <div class="alert alert-light border shadow-sm small mb-0" role="status">
+            @if (Model.Status == PurchaseOrderStatus.Received)
+            {
+                <text>This PO is fully received. Stock on hand was increased for each receipt.</text>
+            }
+            else
+            {
+                <text>This PO was cancelled. No further receiving.</text>
+            }
+        </div>
+    }
+</div>
+
+@if (isDraft)
+{
+    <div class="modal fade" id="bk-add-po-line-modal" tabindex="-1" aria-labelledby="bk-add-po-line-modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h2 class="modal-title h5 fw-bold" id="bk-add-po-line-modal-title">Add line</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <form asp-action="AddPurchaseOrderLine" method="post" id="bk-add-po-line-form">
+                        <input type="hidden" name="purchaseOrderId" value="@Model.PurchaseOrderId" />
+                        @if (ViewData.ModelState.ErrorCount > 0)
+                        {
+                            <div asp-validation-summary="All" class="alert alert-danger py-2 small mb-3" role="alert"></div>
+                        }
+                        <div class="mb-3">
+                            <label asp-for="NewLine.CatalogProductId" class="form-label fw-semibold small"></label>
+                            <select asp-for="NewLine.CatalogProductId" class="form-select" required>
+                                <option value="">Choose product…</option>
+                                @foreach (var p in Model.ProductOptions)
+                                {
+                                    <option value="@p.Id">@p.Name (@p.Sku)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="NewLine.CatalogProductId" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="NewLine.QuantityOrdered" class="form-label fw-semibold small"></label>
+                            <input asp-for="NewLine.QuantityOrdered" class="form-control" type="number" min="1" max="99999999" step="1" />
+                            <span asp-validation-for="NewLine.QuantityOrdered" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        <div class="mb-0">
+                            <label asp-for="NewLine.UnitCost" class="form-label fw-semibold small"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="NewLine.UnitCost" class="form-control" type="number" min="0" max="999999.99" step="0.01" placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="NewLine.UnitCost" class="text-danger small d-block mt-1"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" form="bk-add-po-line-form" class="btn btn-primary fw-semibold">Add line</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    @if (Model.OpenAddLineModal)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var el = document.getElementById('bk-add-po-line-modal');
+                if (el && window.bootstrap && bootstrap.Modal) {
+                    bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            });
+        </script>
+    }
+}

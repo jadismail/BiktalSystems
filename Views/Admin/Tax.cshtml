@@ -1,0 +1,71 @@
+@model AdminTaxFormModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Tax & currency";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "VAT rules, inclusive/exclusive pricing, and FX.";
+    var pct = Model.DefaultTaxRate * 100m;
+    var lbpFmt = Model.LbpPerUsd.ToString("N0", CultureInfo.InvariantCulture);
+}
+<div class="container pb-5 pt-3 bk-admin" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["AdminMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-admin-panel p-4 p-lg-5">
+        <div class="bk-admin-panel-title">Tax & currency</div>
+        <p class="small text-muted fw-semibold mb-4">POS currently uses a rate of <strong>@pct.ToString("0.##", CultureInfo.InvariantCulture)%</strong> from these settings.</p>
+        <form asp-action="Tax" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="DefaultTaxRate" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <input asp-for="DefaultTaxRate" class="form-control text-end" step="0.0001" min="0" max="1" />
+                        <span class="input-group-text small">decimal (e.g. 0.09)</span>
+                    </div>
+                    <span asp-validation-for="DefaultTaxRate" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="BaseCurrencyCode" class="form-label small fw-bold"></label>
+                    <select asp-for="BaseCurrencyCode" class="form-select">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="LBP">LBP</option>
+                    </select>
+                    <span asp-validation-for="BaseCurrencyCode" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="PricesTaxInclusive" class="form-check-input" />
+                        <label asp-for="PricesTaxInclusive" class="form-check-label small fw-semibold"></label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <hr class="my-1" />
+                    <p class="small text-muted fw-semibold mb-3">POS uses this rate when splitting change into Lebanese pounds. Current rate: <strong>1 USD = @lbpFmt LBP</strong>.</p>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="LbpPerUsd" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text small">1 USD =</span>
+                        <input asp-for="LbpPerUsd" class="form-control text-end" step="1" min="1" />
+                        <span class="input-group-text small">LBP</span>
+                    </div>
+                    <span asp-validation-for="LbpPerUsd" class="text-danger small"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 fw-semibold">Save</button>
+        </form>
+    </div>
+</div>

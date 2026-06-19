@@ -1,0 +1,33 @@
+@model OperationsDailySalesViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Daily sales";
+    ViewData["Module"] = "Operations";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports bk-operations">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+    <div class="bk-reports-toolbar mb-3">
+        <span class="badge text-bg-light border fw-semibold">@Model.Date.ToString("D", CultureInfo.CurrentCulture)</span>
+        <a asp-controller="Pos" asp-action="Index" class="btn btn-primary btn-sm fw-semibold ms-auto">Open POS</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Operations hub</a>
+    </div>
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Total revenue</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalRevenue.ToString("C0", money)</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">POS sales</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.PosRevenue.ToString("C0", money)</div>
+            <div class="bk-reports-kpi-hint">@Model.PosSaleCount.ToString("N0", n) transactions</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Repairs delivered</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.RepairRevenue.ToString("C0", money)</div>
+            <div class="bk-reports-kpi-hint">@Model.RepairCount.ToString("N0", n) tickets</div>
+        </article>
+    </section>
+</div>

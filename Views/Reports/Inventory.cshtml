@@ -1,0 +1,175 @@
+@model ReportsInventoryPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Inventory reports";
+    ViewData["Module"] = "Reports";
+    ViewData["ModuleSubtitle"] = "Valuation, low stock, category cost vs retail, and purchase orders.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-reports-toolbar mb-3">
+        <a asp-controller="Inventory" asp-action="Products" class="btn btn-primary btn-sm fw-semibold">Manage products</a>
+        <a asp-controller="Inventory" asp-action="PurchaseOrders" class="btn btn-outline-secondary btn-sm fw-semibold">Purchase orders</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Reports home</a>
+    </div>
+
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4" aria-label="Inventory valuation">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-icon bk-reports-kpi-icon--sm" aria-hidden="true"><i class="bi bi-box-seam"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">SKUs</div>
+                <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.CatalogSkuCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-icon bk-reports-kpi-icon--sm" aria-hidden="true"><i class="bi bi-stack"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Units on hand</div>
+                <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalStockUnits.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-icon bk-reports-kpi-icon--sm" aria-hidden="true"><i class="bi bi-tag"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Retail value</div>
+                <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.InventoryRetailValue.ToString("N2", n)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-icon bk-reports-kpi-icon--sm" aria-hidden="true"><i class="bi bi-cash"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Cost value</div>
+                <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.InventoryCostValue.ToString("N2", n)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-icon bk-reports-kpi-icon--sm" aria-hidden="true"><i class="bi bi-exclamation-triangle"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Low stock SKUs</div>
+                <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.LowStockSkuCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">≤ @Model.LowStockThreshold units</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="bk-reports-panel p-4 h-100">
+                <div class="bk-reports-panel-title">Low stock</div>
+                <div class="bk-table-wrap bk-reports-table">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Name</th>
+                                    <th class="text-end">Qty</th>
+                                    <th class="text-end">List</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.LowStockRows.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="4"><div class="bk-empty">No rows at or below threshold.</div></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var r in Model.LowStockRows)
+                                    {
+                                        <tr>
+                                            <td class="font-monospace small">@r.Sku</td>
+                                            <td class="small fw-semibold">@r.Name</td>
+                                            <td class="text-end font-monospace">@r.StockQuantity</td>
+                                            <td class="text-end font-monospace small">@r.Price.ToString("N2", n)</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="bk-reports-panel p-4 h-100">
+                <div class="bk-reports-panel-title">Category valuation</div>
+                <div class="bk-table-wrap bk-reports-table">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Category</th>
+                                    <th class="text-end">Retail</th>
+                                    <th class="text-end">Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var c in Model.CategoryValuation)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fw-semibold small">@c.Category</span>
+                                            <div class="text-muted font-monospace" style="font-size:0.7rem">@c.SkuCount SKUs · @c.TotalUnits u</div>
+                                        </td>
+                                        <td class="text-end font-monospace small fw-semibold">@c.RetailValue.ToString("N2", n)</td>
+                                        <td class="text-end font-monospace small text-muted">@c.CostValue.ToString("N2", n)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bk-reports-panel p-4 mt-4">
+        <div class="bk-reports-panel-title">Recent purchase orders</div>
+        <div class="bk-table-wrap bk-reports-table">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>PO</th>
+                            <th>Supplier</th>
+                            <th>Status</th>
+                            <th class="text-end">Line total</th>
+                            <th class="text-end">Created</th>
+                            <th class="text-end" style="width:6rem"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentPurchaseOrders.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="6"><div class="bk-empty">No purchase orders.</div></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var p in Model.RecentPurchaseOrders)
+                            {
+                                <tr>
+                                    <td class="font-monospace fw-semibold">@p.PoNumber</td>
+                                    <td class="small">@p.SupplierName</td>
+                                    <td><span class="badge text-bg-light border">@PurchaseOrderStatusReportLabels.Title(p.Status)</span></td>
+                                    <td class="text-end font-monospace">@p.LineTotal.ToString("N2", n)</td>
+                                    <td class="text-end small font-monospace text-muted">@p.CreatedAtUtc.ToString("yyyy-MM-dd", n)</td>
+                                    <td class="text-end">
+                                        <a asp-controller="Inventory" asp-action="PurchaseOrderDetail" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary fw-semibold">Open</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

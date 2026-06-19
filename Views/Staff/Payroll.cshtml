@@ -1,0 +1,108 @@
+@model StaffPayrollListPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Payroll";
+    ViewData["Module"] = "Staff";
+    ViewData["ModuleSubtitle"] = "Pay periods, totals, and workflow.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-staff">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["StaffMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["StaffError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-7 order-2 order-lg-1">
+            <div class="bk-table-wrap bk-staff-table">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Run</th>
+                                <th>Period</th>
+                                <th>Status</th>
+                                <th class="text-end">Lines</th>
+                                <th class="text-end">Net total</th>
+                                <th class="text-end" style="width:6rem"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Runs.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="6"><div class="bk-empty">No payroll runs yet — create one on the right.</div></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var r in Model.Runs)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@r.Label</td>
+                                        <td class="small font-monospace text-nowrap">@r.PeriodStart.ToString("yyyy-MM-dd", n) → @r.PeriodEnd.ToString("yyyy-MM-dd", n)</td>
+                                        <td><span class="badge text-bg-secondary">@StaffPayrollRunStatusLabels.Title(r.Status)</span></td>
+                                        <td class="text-end">@r.LineCount.ToString("N0", n)</td>
+                                        <td class="text-end font-monospace fw-semibold">@r.TotalNetPay.ToString("N2", n)</td>
+                                        <td class="text-end">
+                                            <a asp-action="PayrollRun" asp-route-id="@r.Id" class="btn btn-sm btn-outline-primary fw-semibold">Open</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 order-1 order-lg-2">
+            <div class="bk-staff-panel p-4">
+                <div class="bk-staff-panel-title">New payroll run</div>
+                <p class="small text-muted">Creates a <strong>draft</strong> with one line per active team member (zero amounts).</p>
+                <form asp-action="CreatePayrollRun" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label asp-for="NewRunForm.Label" class="form-label small fw-bold"></label>
+                        <input asp-for="NewRunForm.Label" class="form-control" />
+                        <span asp-validation-for="NewRunForm.Label" class="text-danger small"></span>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="NewRunForm.PeriodStart" class="form-label small fw-bold"></label>
+                            <input asp-for="NewRunForm.PeriodStart" class="form-control" type="date" />
+                            <span asp-validation-for="NewRunForm.PeriodStart" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NewRunForm.PeriodEnd" class="form-label small fw-bold"></label>
+                            <input asp-for="NewRunForm.PeriodEnd" class="form-control" type="date" />
+                            <span asp-validation-for="NewRunForm.PeriodEnd" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewRunForm.Notes" class="form-label small fw-bold"></label>
+                        <textarea asp-for="NewRunForm.Notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary fw-semibold">Create draft run</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

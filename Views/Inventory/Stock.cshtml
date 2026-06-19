@@ -1,0 +1,191 @@
+@model Biktal.WebMVC.Models.StockPageViewModel
+@using System.Globalization
+@using System.Net
+@{
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var th = Model.LowStockThreshold;
+}
+
+<div class="container pb-5 pt-3 bk-stock-page">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["StockMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["StockError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-stock-summary row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="bk-stock-metric bk-card h-100 p-3 text-center">
+                <div class="bk-stock-metric-value font-monospace">@Model.TotalSkus.ToString("N0", money)</div>
+                <div class="bk-stock-metric-label small text-muted fw-semibold text-uppercase">SKUs</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="bk-stock-metric bk-card h-100 p-3 text-center">
+                <div class="bk-stock-metric-value font-monospace">@Model.TotalUnitsOnHand.ToString("N0", money)</div>
+                <div class="bk-stock-metric-label small text-muted fw-semibold text-uppercase">Units on hand</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="bk-stock-metric bk-stock-metric--alert bk-card h-100 p-3 text-center">
+                <div class="bk-stock-metric-value font-monospace text-danger">@Model.OutOfStockCount.ToString("N0", money)</div>
+                <div class="bk-stock-metric-label small text-muted fw-semibold text-uppercase">Out of stock</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="bk-stock-metric bk-stock-metric--warn bk-card h-100 p-3 text-center">
+                <div class="bk-stock-metric-value font-monospace text-warning">@Model.LowStockCount.ToString("N0", money)</div>
+                <div class="bk-stock-metric-label small text-muted fw-semibold text-uppercase">Low (1–@th)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bk-inv-toolbar bk-stock-toolbar bk-card p-3 p-md-4 mb-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="flex-grow-1 min-w-0">
+            <h2 class="h5 fw-bold mb-1">On-hand by SKU</h2>
+            <p class="small text-muted mb-0 fw-semibold">
+                <span id="bk-stock-count-meta" data-total="@Model.Rows.Count">
+                    <strong>@Model.Rows.Count</strong> @(Model.Rows.Count == 1 ? "SKU" : "SKUs")
+                </span>
+                · low stock = quantity between 1 and @th · edit quantity and click <strong>Save</strong>.
+            </p>
+        </div>
+    </div>
+
+    @if (Model.Rows.Count > 0)
+    {
+        <div class="bk-stock-search bk-card p-3 mb-3">
+            <div class="d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-center" role="search" aria-label="Filter stock list">
+                <label for="bk-stock-search-q" class="visually-hidden">Filter SKUs</label>
+                <div class="input-group flex-grow-1">
+                    <span class="input-group-text bg-transparent border-end-0" aria-hidden="true"><i class="bi bi-search"></i></span>
+                    <input type="search"
+                           id="bk-stock-search-q"
+                           class="form-control border-start-0 ps-0"
+                           autocomplete="off"
+                           placeholder="Filter by name, SKU, barcode, category, or brand…"
+                           maxlength="200" />
+                    <button type="button" class="btn btn-outline-secondary fw-semibold px-3 d-none" id="bk-stock-search-clear" aria-label="Clear filter">Clear</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="bk-table-wrap bk-stock-table-wrap">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">SKU</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Status</th>
+                        <th class="text-end" scope="col" style="min-width:12rem">On hand</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Rows.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <div class="bk-empty py-5">
+                                    <i class="bi bi-box-seam d-block fs-1 mb-2 opacity-50" aria-hidden="true"></i>
+                                    <p class="fw-semibold mb-1">No products in the catalog</p>
+                                    <p class="small text-muted mb-0">Add SKUs under <a asp-action="Products" class="fw-semibold">Inventory → Products</a> to manage stock here.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Rows)
+                        {
+                            string statusLabel;
+                            string statusClass;
+                            string rowClass;
+                            if (row.StockQuantity <= 0)
+                            {
+                                statusLabel = "Out";
+                                statusClass = "text-bg-danger";
+                                rowClass = "bk-stock-row--out";
+                            }
+                            else if (row.StockQuantity <= th)
+                            {
+                                statusLabel = "Low";
+                                statusClass = "text-bg-warning";
+                                rowClass = "bk-stock-row--low";
+                            }
+                            else
+                            {
+                                statusLabel = "OK";
+                                statusClass = "text-bg-success";
+                                rowClass = "";
+                            }
+                            var searchHaystack = $"{row.Sku} {row.Barcode ?? ""} {row.Name} {row.Category} {row.BrandName ?? ""}".ToLowerInvariant();
+                            <tr class="bk-stock-row @rowClass" data-bk-search="@WebUtility.HtmlEncode(searchHaystack)">
+                                <td class="fw-semibold">@row.Name</td>
+                                <td class="font-monospace small">@row.Sku</td>
+                                <td><span class="badge rounded-pill text-bg-light border">@row.Category</span></td>
+                                <td>
+                                    @if (string.IsNullOrEmpty(row.BrandName))
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill text-bg-light border text-secondary">@row.BrandName</span>
+                                    }
+                                </td>
+                                <td><span class="badge rounded-pill @statusClass">@statusLabel</span></td>
+                                <td class="text-end">
+                                    <form asp-action="UpdateStock" method="post" class="d-inline-flex flex-wrap align-items-center justify-content-end gap-2 bk-stock-update-form">
+                                        <input type="hidden" name="productId" value="@row.ProductId" />
+                                        <input type="number"
+                                               name="stockQuantity"
+                                               class="form-control form-control-sm font-monospace text-end bk-stock-qty-input"
+                                               min="0"
+                                               max="99999999"
+                                               step="1"
+                                               value="@row.StockQuantity"
+                                               aria-label="Quantity for @row.Sku" />
+                                        <button type="submit" class="btn btn-sm btn-primary fw-semibold">Save</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        <tr id="bk-stock-filter-empty" class="d-none" aria-live="polite">
+                            <td colspan="6">
+                                <div class="bk-empty py-4">
+                                    <i class="bi bi-search d-block fs-3 mb-2 opacity-50" aria-hidden="true"></i>
+                                    <p class="fw-semibold mb-1 small">No rows match this filter</p>
+                                    <p class="small text-muted mb-0">Clear the box or try different keywords.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @if (Model.Rows.Count > 0)
+    {
+        <script src="~/js/stock-catalog-filter.js" asp-append-version="true"></script>
+    }
+}

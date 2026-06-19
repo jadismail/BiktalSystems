@@ -1,0 +1,16 @@
+@model Biktal.WebMVC.ViewComponents.ModuleNavViewModel
+<nav class="bk-subnav" aria-label="Section navigation">
+    @foreach (var link in Model.Links)
+    {
+        var controller = link.Controller ?? Model.Controller;
+        var isActive = string.Equals(link.Action, Model.ActiveAction, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(controller, Model.Controller, StringComparison.OrdinalIgnoreCase)
+            || (string.Equals(link.Action, "Index", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(controller, "Installments", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Model.Controller, "Installments", StringComparison.OrdinalIgnoreCase)
+                && (string.Equals(Model.ActiveAction, "Detail", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(Model.ActiveAction, "New", StringComparison.OrdinalIgnoreCase)));
+        <a asp-controller="@controller" asp-action="@link.Action"
+           class="bk-subnav-link @(isActive ? "is-active" : null)">@link.Label</a>
+    }
+</nav>

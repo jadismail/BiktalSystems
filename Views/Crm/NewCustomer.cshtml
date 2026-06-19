@@ -1,0 +1,66 @@
+@model CreateCrmCustomerFormModel
+@{
+    ViewData["Title"] = "New customer";
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Create a customer profile.";
+}
+<div class="container pb-5 pt-3 bk-crm" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-crm-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Customers">Customers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">New</li>
+        </ol>
+    </nav>
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-crm-panel p-4 p-lg-5">
+        <div class="bk-crm-panel-title">Customer details</div>
+        <form asp-action="CreateCustomer" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="FullName" class="form-label small fw-bold"></label>
+                    <input asp-for="FullName" class="form-control" autocomplete="name" />
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Phone" class="form-label small fw-bold"></label>
+                    <input asp-for="Phone" class="form-control" autocomplete="tel" />
+                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label small fw-bold"></label>
+                    <input asp-for="Email" class="form-control" autocomplete="email" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Company" class="form-label small fw-bold"></label>
+                    <input asp-for="Company" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <label asp-for="Notes" class="form-label small fw-bold"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="MarketingOptIn" class="form-check-input" />
+                        <label asp-for="MarketingOptIn" class="form-check-label small fw-semibold"></label>
+                    </div>
+                </div>
+            </div>
+            <p class="small text-muted mt-2 mb-0">Provide at least a phone number or an email.</p>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-primary fw-semibold px-4">Save customer</button>
+                <a asp-action="Customers" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

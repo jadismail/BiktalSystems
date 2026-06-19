@@ -1,0 +1,159 @@
+﻿@{
+    var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var bodyClass = ViewData["BodyClass"] as string ?? "";
+    var hideFooter = ViewData["HideFooter"] as bool? == true;
+    var userName = User.Identity?.Name?.Trim() ?? "";
+    var userInitial = userName.Length > 0 ? char.ToUpperInvariant(userName[0]) : (char)'?';
+}
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · Biktal Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Biktal.WebMVC.styles.css" asp-append-version="true" />
+</head>
+<body class="@bodyClass">
+<div class="bk-shell">
+    <header class="bk-topbar">
+        <nav class="navbar navbar-expand-lg navbar-light navbar-bk py-0" aria-label="Primary">
+            <div class="container">
+                <a class="navbar-brand bk-brand" asp-controller="Home" asp-action="Index">
+                    <span class="bk-brand-mark" aria-hidden="true">B</span>
+                    <span class="bk-brand-text">Biktal</span>
+                </a>
+                <button class="navbar-toggler bk-navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#bkNav" aria-controls="bkNav" aria-expanded="false" aria-label="Open menu">
+                    <span class="navbar-toggler-icon" aria-hidden="true"></span>
+                </button>
+                <div id="bkNav" class="collapse navbar-collapse align-items-lg-center bk-navbar-collapse">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <ul class="navbar-nav bk-navbar-nav mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Dashboard" ? "bk-nav-active" : null)" asp-controller="Dashboard" asp-action="Index">
+                                    <i class="bi bi-columns-gap bk-nav-icon" aria-hidden="true"></i><span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Pos" ? "bk-nav-active" : null)" asp-controller="Pos" asp-action="Index">
+                                    <i class="bi bi-cash-stack bk-nav-icon" aria-hidden="true"></i><span>POS</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Inventory" ? "bk-nav-active" : null)" asp-controller="Inventory" asp-action="Index">
+                                    <i class="bi bi-box-seam bk-nav-icon" aria-hidden="true"></i><span>Inventory</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Repairs" ? "bk-nav-active" : null)" asp-controller="Repairs" asp-action="Index">
+                                    <i class="bi bi-tools bk-nav-icon" aria-hidden="true"></i><span>Repairs</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Finance" ? "bk-nav-active" : null)" asp-controller="Finance" asp-action="Index">
+                                    <i class="bi bi-bank bk-nav-icon" aria-hidden="true"></i><span>Finance</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Crm" ? "bk-nav-active" : null)" asp-controller="Crm" asp-action="Index">
+                                    <i class="bi bi-people bk-nav-icon" aria-hidden="true"></i><span>CRM</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Operations" ? "bk-nav-active" : null)" asp-controller="Operations" asp-action="Index">
+                                    <i class="bi bi-clipboard-data bk-nav-icon" aria-hidden="true"></i><span>Operations</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Insights" ? "bk-nav-active" : null)" asp-controller="Insights" asp-action="Index">
+                                    <i class="bi bi-lightbulb bk-nav-icon" aria-hidden="true"></i><span>Insights</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bk-nav-link @(ctrl == "Staff" ? "bk-nav-active" : null)" asp-controller="Staff" asp-action="Index">
+                                    <i class="bi bi-person-badge bk-nav-icon" aria-hidden="true"></i><span>Staff</span>
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                    <div class="bk-topbar-actions d-flex flex-wrap align-items-center gap-2 mt-3 mt-lg-0 w-100 w-lg-auto justify-content-between justify-content-lg-end">
+                        <button type="button" class="bk-btn-icon" data-theme-toggle aria-label="Toggle color theme" title="Theme">
+                            <i class="bi bi-circle-half" data-theme-icon aria-hidden="true"></i>
+                        </button>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <div class="dropdown bk-profile-dropdown">
+                                <button type="button" class="bk-profile-trigger d-inline-flex align-items-center gap-1 btn border-0 rounded-pill" id="bkProfilerMenuBtn" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" aria-haspopup="true" aria-label="Open Profiler menu" title="Profiler">
+                                    <span class="bk-user-avatar" aria-hidden="true">@userInitial</span>
+                                    <span class="bk-profile-trigger-label fw-semibold d-none d-sm-inline">Profiler</span>
+                                    <i class="bi bi-chevron-down bk-profile-chevron small opacity-75" aria-hidden="true"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end bk-profile-menu shadow border mt-2 py-2" aria-labelledby="bkProfilerMenuBtn">
+                                    <li>
+                                        <a class="dropdown-item bk-profile-menu-link @(string.Equals(ctrl, "Account", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Account" asp-action="Index">
+                                            <i class="bi bi-person-circle bk-profile-menu-icon" aria-hidden="true"></i>Account
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item bk-profile-menu-link @(string.Equals(ctrl, "Admin", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Admin" asp-action="Index">
+                                            <i class="bi bi-gear bk-profile-menu-icon" aria-hidden="true"></i>Admin
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item bk-profile-menu-link @(string.Equals(ctrl, "License", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="License" asp-action="Index">
+                                            <i class="bi bi-key bk-profile-menu-icon" aria-hidden="true"></i>License
+                                        </a>
+                                    </li>
+                                    <li class="bk-profile-email-foot px-3 pt-3 pb-2 small text-muted text-break border-top">
+                                        @(string.IsNullOrEmpty(userName) ? "—" : userName)
+                                    </li>
+                                    <li class="px-2 py-2 border-top">
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="mb-0">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger w-100 fw-semibold d-inline-flex align-items-center justify-content-center gap-1">
+                                                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                                                Log out
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-secondary px-3 bk-nav-signin bk-topbar-signin-link" asp-controller="Account" asp-action="Login">Sign in</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="bk-main">
+        @RenderBody()
+    </main>
+
+    @if (!hideFooter)
+    {
+        <footer class="bk-footer py-4 mt-auto">
+            <div class="container small d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <span class="text-muted fw-semibold">© @DateTime.UtcNow.Year Biktal Systems</span>
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="License" asp-action="Index" class="fw-semibold">License</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="fw-semibold">Privacy</a>
+                </div>
+            </div>
+        </footer>
+    }
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

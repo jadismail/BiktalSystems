@@ -1,0 +1,195 @@
+@model Biktal.WebMVC.Models.SuppliersPageViewModel
+
+<div class="container pb-5 pt-3 bk-suppliers-page">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["SupplierMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["SupplierError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-inv-toolbar bk-card p-3 p-md-4 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h2 class="h5 fw-bold mb-1">Supplier directory</h2>
+            <p class="small text-muted mb-0 fw-semibold">@Model.Suppliers.Count @(Model.Suppliers.Count == 1 ? "supplier" : "suppliers") · used when creating <a asp-action="PurchaseOrders" class="fw-semibold">purchase orders</a>. AP balances can tie in later.</p>
+        </div>
+        <button type="button" class="btn btn-primary fw-semibold px-4" data-bs-toggle="modal" data-bs-target="#bk-add-supplier-modal">
+            <i class="bi bi-person-plus me-1" aria-hidden="true"></i>Add supplier
+        </button>
+    </div>
+
+    <div class="bk-table-wrap">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-end" scope="col" style="width:5rem">Sort</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Description</th>
+                        <th class="text-end" scope="col" style="width:7rem">POs</th>
+                        <th class="text-end" scope="col" style="width:7rem">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Suppliers.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="8">
+                                <div class="bk-empty py-5">
+                                    <i class="bi bi-people d-block fs-1 mb-2 opacity-50" aria-hidden="true"></i>
+                                    <p class="fw-semibold mb-1">No suppliers yet</p>
+                                    <p class="small text-muted mb-0">Click <strong>Add supplier</strong> to build your vendor list.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Suppliers)
+                        {
+                            <tr>
+                                <td class="text-end font-monospace small text-muted">@row.SortOrder</td>
+                                <td class="fw-semibold">@row.Name</td>
+                                <td class="font-monospace small">
+                                    @if (string.IsNullOrWhiteSpace(row.Code))
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                    else
+                                    {
+                                        @row.Code
+                                    }
+                                </td>
+                                <td class="small">@(string.IsNullOrWhiteSpace(row.Phone) ? "—" : row.Phone)</td>
+                                <td class="small">
+                                    @if (string.IsNullOrWhiteSpace(row.Email))
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                    else
+                                    {
+                                        <a href="mailto:@row.Email" class="text-decoration-none">@row.Email</a>
+                                    }
+                                </td>
+                                <td class="small text-muted">@(string.IsNullOrWhiteSpace(row.Description) ? "—" : row.Description)</td>
+                                <td class="text-end">
+                                    @if (row.PurchaseOrderCount == 0)
+                                    {
+                                        <span class="badge rounded-pill text-bg-light border">0</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill text-bg-primary">@row.PurchaseOrderCount.ToString("N0")</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    @if (row.PurchaseOrderCount > 0)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Remove PO links to this supplier first.">
+                                            <i class="bi bi-trash3" aria-hidden="true"></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="DeleteSupplier" method="post" class="d-inline" onsubmit="return confirm('Delete this supplier? This cannot be undone.');">
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete supplier">
+                                                <i class="bi bi-trash3" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bk-add-supplier-modal" tabindex="-1" aria-labelledby="bk-add-supplier-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h2 class="modal-title h5 fw-bold" id="bk-add-supplier-modal-title">Add supplier</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <form asp-action="AddSupplier" method="post" id="bk-add-supplier-form">
+                    @if (ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger py-2 small mb-3" role="alert"></div>
+                    }
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="NewSupplier.Name" class="form-label fw-semibold small"></label>
+                            <input asp-for="NewSupplier.Name" class="form-control" autocomplete="organization" placeholder="Legal or trade name" />
+                            <span asp-validation-for="NewSupplier.Name" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NewSupplier.Code" class="form-label fw-semibold small"></label>
+                            <input asp-for="NewSupplier.Code" class="form-control font-monospace" autocomplete="off" placeholder="Optional short code" maxlength="32" />
+                            <span asp-validation-for="NewSupplier.Code" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NewSupplier.Phone" class="form-label fw-semibold small"></label>
+                            <input asp-for="NewSupplier.Phone" class="form-control" type="tel" autocomplete="tel" placeholder="Main purchasing line" />
+                            <span asp-validation-for="NewSupplier.Phone" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NewSupplier.Email" class="form-label fw-semibold small"></label>
+                            <input asp-for="NewSupplier.Email" class="form-control" type="email" autocomplete="email" placeholder="orders@supplier.com" />
+                            <span asp-validation-for="NewSupplier.Email" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="NewSupplier.Description" class="form-label fw-semibold small"></label>
+                            <textarea asp-for="NewSupplier.Description" class="form-control" rows="2" placeholder="Payment terms, lead times, notes for staff…"></textarea>
+                            <span asp-validation-for="NewSupplier.Description" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NewSupplier.SortOrder" class="form-label fw-semibold small"></label>
+                            <input asp-for="NewSupplier.SortOrder" class="form-control" type="number" step="1" placeholder="Leave blank for auto (end of list)" />
+                            <span asp-validation-for="NewSupplier.SortOrder" class="text-danger small d-block mt-1"></span>
+                            <p class="form-text small mb-0">Lower numbers appear first.</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="bk-add-supplier-form" class="btn btn-primary fw-semibold">Save supplier</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    @if (Model.OpenAddModal)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var el = document.getElementById('bk-add-supplier-modal');
+                if (el && window.bootstrap && bootstrap.Modal) {
+                    bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            });
+        </script>
+    }
+}

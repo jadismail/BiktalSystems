@@ -1,0 +1,407 @@
+is_global = true
+build_property.TargetFramework = net9.0
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v9.0
+build_property.RootNamespace = Biktal.WebMVC
+build_property.RootNamespace = Biktal.WebMVC
+build_property.ProjectDir = /Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Account/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9BY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Account/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9Mb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9SZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/Backups.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vQmFja3Vwcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/Branches.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vQnJhbmNoZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/DataReset.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vRGF0YVJlc2V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/EditBranch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vRWRpdEJyYW5jaC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/EditUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vRWRpdFVzZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/NewBranch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vTmV3QnJhbmNoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/NewUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vTmV3VXNlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/Settings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vU2V0dGluZ3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/Tax.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vVGF4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/Users.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vVXNlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Admin/_DeleteUserModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vX0RlbGV0ZVVzZXJNb2RhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/Campaigns.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL0NhbXBhaWducy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/Customer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL0N1c3RvbWVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/Customers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL0N1c3RvbWVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/Loyalty.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL0xveWFsdHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/NewCustomer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL05ld0N1c3RvbWVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/NewTicket.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL05ld1RpY2tldC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/SupportTicket.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL1N1cHBvcnRUaWNrZXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Crm/Tickets.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3JtL1RpY2tldHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/Accounting.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9BY2NvdW50aW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/Accounts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9BY2NvdW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/Aging.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9BZ2luZy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/Cashbox.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9DYXNoYm94LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/Expenses.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9FeHBlbnNlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/Journal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9Kb3VybmFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/JournalDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9Kb3VybmFsRGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Finance/NewJournal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9OZXdKb3VybmFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Insights/Customers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zaWdodHMvQ3VzdG9tZXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Insights/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zaWdodHMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Insights/Inventory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zaWdodHMvSW52ZW50b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Insights/Repairs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zaWdodHMvUmVwYWlycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Insights/RevenueMargin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zaWdodHMvUmV2ZW51ZU1hcmdpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Insights/Staff.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zaWdodHMvU3RhZmYuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Installments/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zdGFsbG1lbnRzL0RldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Installments/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zdGFsbG1lbnRzL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Installments/New.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW5zdGFsbG1lbnRzL05ldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Brands.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0JyYW5kcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Categories.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0NhdGVnb3JpZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Import.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0ltcG9ydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Movements.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L01vdmVtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Products.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L1Byb2R1Y3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/PurchaseOrderDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L1B1cmNoYXNlT3JkZXJEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/PurchaseOrders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L1B1cmNoYXNlT3JkZXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Stock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L1N0b2NrLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Suppliers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L1N1cHBsaWVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Inventory/Warehouses.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L1dhcmVob3VzZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/License/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGljZW5zZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/ComingSoon.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9Db21pbmdTb29uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/DailySales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9EYWlseVNhbGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/Inventory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9JbnZlbnRvcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/LowStock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9Mb3dTdG9jay5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/MonthlySales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9Nb250aGx5U2FsZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/ProductProfitability.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9Qcm9kdWN0UHJvZml0YWJpbGl0eS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/PurchaseOrders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9QdXJjaGFzZU9yZGVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/Repairs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9SZXBhaXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/Sales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9TYWxlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Operations/StockMovement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3BlcmF0aW9ucy9TdG9ja01vdmVtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Pos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUG9zL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Repairs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwYWlycy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Repairs/New.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwYWlycy9OZXcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Repairs/Ticket.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwYWlycy9UaWNrZXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Repairs/Tickets.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwYWlycy9UaWNrZXRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Reports/Financial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwb3J0cy9GaW5hbmNpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Reports/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwb3J0cy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Reports/Inventory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwb3J0cy9JbnZlbnRvcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Reports/Repairs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwb3J0cy9SZXBhaXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Reports/Sales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVwb3J0cy9TYWxlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Shared/Components/ModuleNav/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0NvbXBvbmVudHMvTW9kdWxlTmF2L0RlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Shared/_ModuleHeader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Nb2R1bGVIZWFkZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/Activity.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvQWN0aXZpdHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/Attendance.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvQXR0ZW5kYW5jZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/Member.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvTWVtYmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/NewMember.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvTmV3TWVtYmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/Payroll.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvUGF5cm9sbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/PayrollRun.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvUGF5cm9sbFJ1bi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Staff/Team.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3RhZmYvVGVhbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-zc484wnmyw

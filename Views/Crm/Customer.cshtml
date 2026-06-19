@@ -1,0 +1,81 @@
+@model CrmCustomerDetailPageViewModel
+@{
+    ViewData["Title"] = Model.Form.FullName;
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Edit customer profile.";
+}
+<div class="container pb-5 pt-3 bk-crm" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-crm-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Customers">Customers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Form.FullName</li>
+        </ol>
+    </nav>
+
+    @if (TempData["CrmMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-crm-panel p-4 p-lg-5">
+        <div class="bk-crm-panel-title">Profile</div>
+        <form asp-action="UpdateCustomer" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Form.Id" />
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="Form.FullName" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.FullName" class="form-control" />
+                    <span asp-validation-for="Form.FullName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.Phone" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.Phone" class="form-control" />
+                    <span asp-validation-for="Form.Phone" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.Email" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.Email" class="form-control" />
+                    <span asp-validation-for="Form.Email" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.Company" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.Company" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.LoyaltyPoints" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.LoyaltyPoints" class="form-control font-monospace text-end" />
+                    <span asp-validation-for="Form.LoyaltyPoints" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Form.Notes" class="form-label small fw-bold"></label>
+                    <textarea asp-for="Form.Notes" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="Form.MarketingOptIn" class="form-check-input" />
+                        <label asp-for="Form.MarketingOptIn" class="form-check-label small fw-semibold"></label>
+                    </div>
+                </div>
+            </div>
+            <p class="small text-muted mt-2 mb-0">At least one of phone or email is required.</p>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-primary fw-semibold px-4">Save changes</button>
+                <a asp-controller="Installments" asp-action="New" asp-route-customerId="@Model.Form.Id" class="btn btn-outline-primary fw-semibold">New installment plan</a>
+                <a asp-action="Customers" class="btn btn-outline-secondary">Back to list</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,87 @@
+@model ReportsIndexViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Reports";
+    ViewData["Module"] = "Reports";
+    ViewData["ModuleSubtitle"] = "Live snapshots from inventory, repairs, finance, and CRM.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <section class="bk-reports-kpis" aria-label="Business snapshot">
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-box-seam"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Catalog SKUs</div>
+                <div class="bk-reports-kpi-value">@Model.CatalogSkuCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">@Model.TotalStockUnits.ToString("N0", n) units on hand</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-currency-exchange"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Stock retail value</div>
+                <div class="bk-reports-kpi-value">@Model.InventoryRetailValue.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">Cost @Model.InventoryCostValue.ToString("N0", n) · margin @Model.InventoryUnrealizedMargin.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-tools"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Repair tickets</div>
+                <div class="bk-reports-kpi-value">@Model.RepairTicketCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">@Model.OpenRepairTicketCount.ToString("N0", n) open (excl. delivered / cancelled)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-truck"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Open purchase orders</div>
+                <div class="bk-reports-kpi-value">@Model.OpenPurchaseOrderCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">Draft or open, not received</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Journal entries</div>
+                <div class="bk-reports-kpi-value">@Model.JournalEntryCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">Expenses MTD @Model.ExpensesThisMonth.ToString("N2", n)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-people"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">CRM (active)</div>
+                <div class="bk-reports-kpi-value">@Model.ActiveCrmCustomerCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">@Model.OpenCrmSupportTicketCount.ToString("N0", n) open support tickets</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="bk-grid-tiles bk-reports-tiles">
+        <a asp-action="Sales" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-graph-up"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Sales &amp; mix</h2>
+            <p class="small text-muted mb-0 fw-semibold">Catalog velocity proxy and category retail mix.</p>
+        </a>
+        <a asp-action="Inventory" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-boxes"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Inventory</h2>
+            <p class="small text-muted mb-0 fw-semibold">Valuation, low stock, and recent PO lines.</p>
+        </a>
+        <a asp-action="Repairs" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-tools"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Repairs</h2>
+            <p class="small text-muted mb-0 fw-semibold">Status funnel and latest tickets.</p>
+        </a>
+        <a asp-action="Financial" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-pie-chart"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Financial</h2>
+            <p class="small text-muted mb-0 fw-semibold">GL mix, activity, and trial balance preview.</p>
+        </a>
+    </div>
+</div>

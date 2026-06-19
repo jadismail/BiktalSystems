@@ -1,0 +1,201 @@
+@model InventoryOverviewViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Inventory";
+    var n = CultureInfo.InvariantCulture;
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="bk-inv">
+    <section class="bk-inv-overview" aria-labelledby="bk-inv-overview-title">
+        <div class="bk-inv-hero-bg" aria-hidden="true"></div>
+        <div class="bk-inv-hero-orbs" aria-hidden="true">
+            <span class="bk-inv-orb bk-inv-orb--a"></span>
+            <span class="bk-inv-orb bk-inv-orb--b"></span>
+            <span class="bk-inv-orb bk-inv-orb--c"></span>
+        </div>
+
+        <div class="container bk-inv-hero-inner">
+            <div class="bk-inv-hero-top">
+                <div class="bk-inv-hero-copy">
+                    <p class="bk-inv-eyebrow">
+                        <span class="bk-inv-eyebrow-icon" aria-hidden="true"><i class="bi bi-layers"></i></span>
+                        Stock &amp; catalog
+                    </p>
+                    <h1 class="bk-inv-title" id="bk-inv-overview-title">
+                        Run your shelves with
+                        <span class="bk-inv-title-accent">confidence</span>
+                    </h1>
+                    <p class="bk-inv-lead">@(ViewData["ModuleSubtitle"] as string)</p>
+                    <div class="bk-inv-pills" role="list">
+                        <span class="bk-inv-pill" role="listitem"><i class="bi bi-upc-scan" aria-hidden="true"></i> SKU &amp; IMEI</span>
+                        <span class="bk-inv-pill" role="listitem"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Transfers</span>
+                        <span class="bk-inv-pill" role="listitem"><i class="bi bi-receipt" aria-hidden="true"></i> Receiving</span>
+                    </div>
+                </div>
+                <aside class="bk-inv-snapshot" aria-label="Live snapshot">
+                    <div class="bk-inv-snapshot-head">
+                        <span class="bk-inv-snapshot-label">Snapshot</span>
+                        <span class="bk-inv-snapshot-pulse" aria-hidden="true"></span>
+                    </div>
+                    <ul class="bk-inv-snapshot-list list-unstyled mb-0">
+                        <li class="bk-inv-snapshot-row">
+                            <span class="bk-inv-snapshot-icon" aria-hidden="true"><i class="bi bi-box-seam"></i></span>
+                            <span class="bk-inv-snapshot-meta">SKUs on file</span>
+                            <span class="bk-inv-snapshot-value">@Model.SkuCount.ToString("N0", n)</span>
+                        </li>
+                        <li class="bk-inv-snapshot-row">
+                            <span class="bk-inv-snapshot-icon" aria-hidden="true"><i class="bi bi-building"></i></span>
+                            <span class="bk-inv-snapshot-meta">Warehouses</span>
+                            <span class="bk-inv-snapshot-value">@Model.WarehouseCount.ToString("N0", n)</span>
+                        </li>
+                        <li class="bk-inv-snapshot-row">
+                            <span class="bk-inv-snapshot-icon" aria-hidden="true"><i class="bi bi-truck"></i></span>
+                            <span class="bk-inv-snapshot-meta">Open POs</span>
+                            <span class="bk-inv-snapshot-value">@Model.OpenPurchaseOrderCount.ToString("N0", n)</span>
+                        </li>
+                    </ul>
+                    <p class="bk-inv-snapshot-foot mb-0">
+                        @Model.TotalStockUnits.ToString("N0", n) units on hand
+                        · @Model.InventoryRetailValue.ToString("C0", money) retail value
+                        · @Model.MovementsThisMonth.ToString("N0", n) movements MTD
+                    </p>
+                </aside>
+            </div>
+        </div>
+
+        <div class="container bk-inv-metrics-outer">
+            <div class="bk-inv-metrics" aria-label="At-a-glance metrics">
+                <article class="bk-inv-metric bk-inv-metric--sku">
+                    <div class="bk-inv-metric-icon" aria-hidden="true"><i class="bi bi-box-seam"></i></div>
+                    <div class="bk-inv-metric-body">
+                        <span class="bk-inv-metric-label">Products</span>
+                        <span class="bk-inv-metric-value">@Model.SkuCount.ToString("N0", n)</span>
+                        <span class="bk-inv-metric-hint">@Model.BrandCount.ToString("N0", n) brands</span>
+                    </div>
+                    <div class="bk-inv-metric-sheen" aria-hidden="true"></div>
+                </article>
+                <article class="bk-inv-metric bk-inv-metric--tree">
+                    <div class="bk-inv-metric-icon" aria-hidden="true"><i class="bi bi-diagram-3"></i></div>
+                    <div class="bk-inv-metric-body">
+                        <span class="bk-inv-metric-label">Categories</span>
+                        <span class="bk-inv-metric-value">@Model.CategoryCount.ToString("N0", n)</span>
+                        <span class="bk-inv-metric-hint">Navigation tree</span>
+                    </div>
+                    <div class="bk-inv-metric-sheen" aria-hidden="true"></div>
+                </article>
+                <article class="bk-inv-metric bk-inv-metric--levels">
+                    <div class="bk-inv-metric-icon" aria-hidden="true"><i class="bi bi-clipboard-pulse"></i></div>
+                    <div class="bk-inv-metric-body">
+                        <span class="bk-inv-metric-label">Stock health</span>
+                        <span class="bk-inv-metric-value">@Model.StockHealthLabel</span>
+                        <span class="bk-inv-metric-hint">
+                            @if (Model.SkuCount > 0)
+                            {
+                                <text>@Model.OkStockSkuCount.ToString("N0", n) OK · ≤@Model.LowStockThreshold low: @Model.LowStockSkuCount.ToString("N0", n) · out: @Model.OutOfStockSkuCount.ToString("N0", n)</text>
+                            }
+                            else
+                            {
+                                <text>Low / OK / over</text>
+                            }
+                        </span>
+                    </div>
+                    <div class="bk-inv-metric-sheen" aria-hidden="true"></div>
+                </article>
+                <article class="bk-inv-metric bk-inv-metric--vendors">
+                    <div class="bk-inv-metric-icon" aria-hidden="true"><i class="bi bi-people"></i></div>
+                    <div class="bk-inv-metric-body">
+                        <span class="bk-inv-metric-label">Suppliers</span>
+                        <span class="bk-inv-metric-value">@Model.SupplierCount.ToString("N0", n)</span>
+                        <span class="bk-inv-metric-hint">Active vendors</span>
+                    </div>
+                    <div class="bk-inv-metric-sheen" aria-hidden="true"></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <div class="container bk-inv-body pb-5">
+        @await Component.InvokeAsync("ModuleNav")
+
+        <header class="bk-inv-workspace-head">
+            <div>
+                <h2 class="bk-inv-workspace-title" id="bk-inv-workspace-title">Workspace</h2>
+                <p class="bk-inv-workspace-lead">Choose a lane — each screen is tuned for counter and back-office flows.</p>
+            </div>
+        </header>
+
+        <div class="bk-inv-bento" aria-labelledby="bk-inv-workspace-title">
+            <a asp-action="Products" class="bk-inv-card bk-inv-card--products bk-inv-g--products text-decoration-none">
+                <div class="bk-inv-card-glow" aria-hidden="true"></div>
+                <span class="bk-inv-card-badge">Core</span>
+                <div class="bk-inv-card-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Products</h3>
+                <p class="bk-inv-card-desc">SKU, variants, IMEI, images, warranty — the full device record.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="Import" class="bk-inv-card bk-inv-card--import bk-inv-g--import text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Import Excel</h3>
+                <p class="bk-inv-card-desc">Bulk upload SKUs, prices, stock, and barcodes from a spreadsheet.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="Stock" class="bk-inv-card bk-inv-card--stock bk-inv-g--stock text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-clipboard-data" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Stock</h3>
+                <p class="bk-inv-card-desc">On-hand by SKU, low-stock flags, quick adjustments.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="Movements" class="bk-inv-card bk-inv-card--movements bk-inv-g--movements text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-journal-arrow-up" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Movements &amp; GL</h3>
+                <p class="bk-inv-card-desc">Returns, transfers, damage — each event logs stock and journals.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="Warehouses" class="bk-inv-card bk-inv-card--warehouses bk-inv-g--warehouses text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-building" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Warehouses</h3>
+                <p class="bk-inv-card-desc">Sales floor, lab, storage — your location list.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="Categories" class="bk-inv-card bk-inv-card--categories bk-inv-g--categories text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Categories</h3>
+                <p class="bk-inv-card-desc">Tree, merchandising, reporting groups.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="Brands" class="bk-inv-card bk-inv-card--brands bk-inv-g--brands text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-tag" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Brands</h3>
+                <p class="bk-inv-card-desc">Manufacturers and brand performance.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="PurchaseOrders" class="bk-inv-card bk-inv-card--po bk-inv-g--po text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-truck" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Purchase orders</h3>
+                <p class="bk-inv-card-desc">Draft POs, receive into stock, track supplier totals.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-action="Suppliers" class="bk-inv-card bk-inv-card--suppliers bk-inv-g--suppliers text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-people" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Suppliers</h3>
+                <p class="bk-inv-card-desc">Directory for POs — contact, codes, linked orders.</p>
+                <span class="bk-inv-card-cta">Open <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+
+            <a asp-controller="Pos" asp-action="Index" class="bk-inv-card bk-inv-card--pos bk-inv-g--pos text-decoration-none">
+                <div class="bk-inv-card-icon"><i class="bi bi-cash-stack" aria-hidden="true"></i></div>
+                <h3 class="bk-inv-card-title">Open POS</h3>
+                <p class="bk-inv-card-desc">Jump to checkout with the demo catalog.</p>
+                <span class="bk-inv-card-cta">Launch <i class="bi bi-arrow-right-short" aria-hidden="true"></i></span>
+            </a>
+        </div>
+    </div>
+</div>

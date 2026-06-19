@@ -1,0 +1,102 @@
+@model SupportTicketDetailViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = Model.TicketNumber;
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Support ticket detail.";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-crm">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-crm-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Tickets">Support tickets</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.TicketNumber</li>
+        </ol>
+    </nav>
+
+    @if (TempData["CrmMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["CrmError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-crm-ticket-head mb-4">
+        <div>
+            <p class="small text-uppercase fw-bold text-muted letter-spacing mb-1">Support ticket</p>
+            <h1 class="bk-crm-ticket-ref mb-2 font-monospace">@Model.TicketNumber</h1>
+            <p class="small text-muted mb-0 fw-semibold">
+                Opened @Model.CreatedAtUtc.ToLocalTime().ToString("g", money)
+                @if (Model.CustomerId is Guid cid)
+                {
+                    <span class="mx-2">·</span>
+                    <span>Customer: <a asp-action="Customer" asp-route-id="@cid" class="fw-semibold">@(Model.CustomerName ?? "Profile")</a></span>
+                }
+                else
+                {
+                    <span class="mx-2">·</span>
+                    <span>Not linked to a customer</span>
+                }
+            </p>
+            <h2 class="h5 fw-bold mt-3 mb-2">@Model.Subject</h2>
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p class="mb-0 text-muted">@Model.Description</p>
+            }
+        </div>
+        <a asp-action="Tickets" class="btn btn-outline-secondary btn-sm fw-semibold align-self-start">Back to list</a>
+    </div>
+
+    <div class="bk-crm-panel p-4">
+        <div class="bk-crm-panel-title">Update status &amp; priority</div>
+        <form asp-action="UpdateSupportTicket" method="post" class="row g-3 align-items-end">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+            <div class="col-md-5">
+                <label class="form-label small fw-bold">Status</label>
+                <select name="status" class="form-select">
+                    @foreach (CrmSupportTicketStatus s in Enum.GetValues<CrmSupportTicketStatus>())
+                    {
+                        if (s == Model.Status)
+                        {
+                            <option value="@((int)s)" selected>@CrmSupportTicketStatusLabels.Title(s)</option>
+                        }
+                        else
+                        {
+                            <option value="@((int)s)">@CrmSupportTicketStatusLabels.Title(s)</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label class="form-label small fw-bold">Priority</label>
+                <select name="priority" class="form-select">
+                    @foreach (CrmSupportTicketPriority p in Enum.GetValues<CrmSupportTicketPriority>())
+                    {
+                        if (p == Model.Priority)
+                        {
+                            <option value="@((int)p)" selected>@CrmSupportTicketPriorityLabels.Title(p)</option>
+                        }
+                        else
+                        {
+                            <option value="@((int)p)">@CrmSupportTicketPriorityLabels.Title(p)</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

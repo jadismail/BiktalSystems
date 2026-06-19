@@ -1,0 +1,166 @@
+@model RepairTicketDetailViewModel
+@using System.Globalization
+@using Biktal.Domain.Repairs
+@{
+    ViewData["Title"] = Model.TicketNumber;
+    ViewData["Module"] = "Repairs";
+    ViewData["ModuleSubtitle"] = "Ticket detail and workflow.";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    string StatusBadgeClass(RepairTicketStatus s) => s switch
+    {
+        RepairTicketStatus.Intake => "text-bg-secondary",
+        RepairTicketStatus.Inspection => "text-bg-info",
+        RepairTicketStatus.WaitingParts => "text-bg-warning",
+        RepairTicketStatus.InRepair => "text-bg-primary",
+        RepairTicketStatus.ReadyForPickup => "text-bg-success",
+        RepairTicketStatus.Delivered => "text-bg-success",
+        RepairTicketStatus.Cancelled => "text-bg-dark",
+        _ => "text-bg-light border"
+    };
+}
+
+<div class="container pb-5 pt-3">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Tickets">Tickets</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.TicketNumber</li>
+        </ol>
+    </nav>
+
+    @if (TempData["RepairMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["RepairError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+        <div>
+            <h1 class="h4 fw-bold mb-2 font-monospace">@Model.TicketNumber</h1>
+            <span class="badge @StatusBadgeClass(Model.Status)">@RepairTicketStatusLabels.Title(Model.Status)</span>
+            <p class="small text-muted mb-0 mt-2 fw-semibold">
+                <i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Created @Model.CreatedAtUtc.ToLocalTime().ToString("g", money)
+            </p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-action="Tickets" class="btn btn-outline-secondary btn-sm">Back to board</a>
+            <a asp-action="New" class="btn btn-primary btn-sm">New check-in</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="bk-card p-4 mb-4">
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Device &amp; issue</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-sm-4 text-muted fw-semibold">Device</dt>
+                    <dd class="col-sm-8 fw-semibold mb-2">@Model.DeviceSummary</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">IMEI / serial</dt>
+                    <dd class="col-sm-8 mb-2">@(string.IsNullOrWhiteSpace(Model.SerialOrImei) ? "—" : Model.SerialOrImei)</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Issue</dt>
+                    <dd class="col-sm-8 mb-2">@Model.IssueDescription</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Accessories</dt>
+                    <dd class="col-sm-8 mb-0">@(string.IsNullOrWhiteSpace(Model.AccessoriesNotes) ? "—" : Model.AccessoriesNotes)</dd>
+                </dl>
+            </div>
+            <div class="bk-card p-4">
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Customer</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-sm-4 text-muted fw-semibold">Name</dt>
+                    <dd class="col-sm-8 fw-semibold mb-2">@Model.CustomerName</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Phone</dt>
+                    <dd class="col-sm-8 mb-2">@(string.IsNullOrWhiteSpace(Model.Phone) ? "—" : Model.Phone)</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Email</dt>
+                    <dd class="col-sm-8 mb-0">@(string.IsNullOrWhiteSpace(Model.Email) ? "—" : Model.Email)</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="bk-card p-4 mb-4">
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Pricing & margin</h2>
+                @if (Model.MarginAmount is { } margin)
+                {
+                    <div class="d-flex justify-content-between align-items-baseline mb-3 p-3 rounded bg-light">
+                        <span class="small fw-semibold text-muted">Estimated margin</span>
+                        <span class="h5 mb-0 font-monospace fw-bold">@margin.ToString("C", money)</span>
+                    </div>
+                    @if (Model.MarginPercent is { } mp)
+                    {
+                        <p class="small text-muted mb-3">@mp.ToString("N1", CultureInfo.InvariantCulture)% of customer quote</p>
+                    }
+                }
+                <form asp-action="UpdateTicketEstimate" method="post" class="mb-0">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <label for="repair-estimated-price" class="form-label small fw-semibold text-muted">Customer quote (USD)</label>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text">$</span>
+                        <input type="text"
+                               class="form-control font-monospace"
+                               id="repair-estimated-price"
+                               name="estimatedPrice"
+                               inputmode="decimal"
+                               placeholder="e.g. 149.99"
+                               value="@(Model.EstimatedPrice?.ToString("0.00", CultureInfo.InvariantCulture) ?? "")"
+                               autocomplete="off" />
+                    </div>
+                    <label for="repair-parts-cost" class="form-label small fw-semibold text-muted">Parts cost (USD)</label>
+                    <div class="input-group input-group-lg mb-2">
+                        <span class="input-group-text">$</span>
+                        <input type="text"
+                               class="form-control font-monospace"
+                               id="repair-parts-cost"
+                               name="partsCost"
+                               inputmode="decimal"
+                               placeholder="e.g. 45.00"
+                               value="@(Model.PartsCost?.ToString("0.00", CultureInfo.InvariantCulture) ?? "")"
+                               autocomplete="off" />
+                    </div>
+                    <p class="small text-muted mb-3">Track parts and materials so Insights can show repair margin. Leave fields blank to clear.</p>
+                    <button type="submit" class="btn btn-primary btn-sm fw-semibold">Save pricing</button>
+                </form>
+            </div>
+            <div class="bk-card p-4 mb-4">
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Change status</h2>
+                <p class="small text-muted fw-semibold mb-3">Move this ticket to any workflow stage.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (RepairTicketStatus s in Enum.GetValues<RepairTicketStatus>())
+                    {
+                        if (s == Model.Status)
+                        {
+                            continue;
+                        }
+                        <form asp-action="UpdateTicketStatus" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <input type="hidden" name="status" value="@((int)s)" />
+                            <button type="submit" class="btn btn-outline-secondary btn-sm fw-semibold">@RepairTicketStatusLabels.Title(s)</button>
+                        </form>
+                    }
+                </div>
+            </div>
+            @if (Model.CanDelete)
+            {
+                <div class="bk-card p-4 border-danger border-opacity-25">
+                    <h2 class="h6 fw-bold text-uppercase letter-spacing text-danger mb-3">Remove ticket</h2>
+                    <p class="small text-muted mb-3">Only intake or cancelled tickets can be permanently removed.</p>
+                    <form asp-action="DeleteRepairTicket" method="post" onsubmit="return confirm('Delete this ticket? This cannot be undone.');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-outline-danger btn-sm fw-semibold">Delete ticket</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>

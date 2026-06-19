@@ -1,0 +1,338 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Biktal.WebMVC.csproj": {}
+  },
+  "projects": {
+    "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj",
+        "projectName": "Biktal.Application",
+        "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj",
+        "packagesPath": "/Users/jaismail/.nuget/packages/",
+        "outputPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jaismail/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/Biktal.Domain.csproj": {
+                "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/Biktal.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100-rc.2.25502.107/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/Biktal.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/Biktal.Domain.csproj",
+        "projectName": "Biktal.Domain",
+        "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/Biktal.Domain.csproj",
+        "packagesPath": "/Users/jaismail/.nuget/packages/",
+        "outputPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jaismail/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100-rc.2.25502.107/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/Biktal.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/Biktal.Infrastructure.csproj",
+        "projectName": "Biktal.Infrastructure",
+        "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/Biktal.Infrastructure.csproj",
+        "packagesPath": "/Users/jaismail/.nuget/packages/",
+        "outputPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jaismail/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj": {
+                "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj"
+              },
+              "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/Biktal.Domain.csproj": {
+                "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Domain/Biktal.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.2, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100-rc.2.25502.107/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Biktal.WebMVC.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Biktal.WebMVC.csproj",
+        "projectName": "Biktal.WebMVC",
+        "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Biktal.WebMVC.csproj",
+        "packagesPath": "/Users/jaismail/.nuget/packages/",
+        "outputPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jaismail/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj": {
+                "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj"
+              },
+              "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/Biktal.Infrastructure.csproj": {
+                "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/Biktal.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-arm64",
+              "version": "[9.0.10, 9.0.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.10, 9.0.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100-rc.2.25502.107/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

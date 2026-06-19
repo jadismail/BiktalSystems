@@ -1,0 +1,103 @@
+@model NewInstallmentPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "New installment plan";
+    ViewData["Module"] = "CRM";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-crm" style="max-width: 760px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-crm-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Installments</a></li>
+            <li class="breadcrumb-item active" aria-current="page">New plan</li>
+        </ol>
+    </nav>
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-crm-panel p-4 p-lg-5">
+        <div class="bk-crm-panel-title">Payment plan</div>
+        <p class="small text-muted fw-semibold mb-4">
+            Total sale is posted to the ledger: down payment to Cash/Whish/Card, balance to Accounts Receivable (1200).
+            Monthly installments are generated from the first due date.
+        </p>
+
+        <form asp-action="Create" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="Form.CrmCustomerId" class="form-label small fw-bold"></label>
+                    @if (Model.Customers.Count == 0)
+                    {
+                        <p class="small text-muted mb-0">No active customers — <a asp-controller="Crm" asp-action="NewCustomer">add a customer</a> first.</p>
+                    }
+                    else
+                    {
+                        <select asp-for="Form.CrmCustomerId" class="form-select" required>
+                            <option value="">Choose customer…</option>
+                            @foreach (var c in Model.Customers)
+                            {
+                                <option value="@c.Id">@c.Label</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Form.CrmCustomerId" class="text-danger small"></span>
+                    }
+                </div>
+                <div class="col-12">
+                    <label asp-for="Form.Description" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.Description" class="form-control" placeholder="e.g. iPhone 15 Pro — 256GB" />
+                    <span asp-validation-for="Form.Description" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.TotalAmount" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="Form.TotalAmount" class="form-control" inputmode="decimal" step="0.01" min="0.01" />
+                    </div>
+                    <span asp-validation-for="Form.TotalAmount" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.DownPayment" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="Form.DownPayment" class="form-control" inputmode="decimal" step="0.01" min="0" />
+                    </div>
+                    <span asp-validation-for="Form.DownPayment" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.DownPaymentMethod" class="form-label small fw-bold"></label>
+                    <select asp-for="Form.DownPaymentMethod" class="form-select">
+                        <option value="Cash">Cash</option>
+                        <option value="Whish">Whish</option>
+                        <option value="Card">Card</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.InstallmentCount" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.InstallmentCount" class="form-control" type="number" min="1" max="60" />
+                    <span asp-validation-for="Form.InstallmentCount" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.FirstDueDate" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.FirstDueDate" class="form-control" type="date" />
+                    <span asp-validation-for="Form.FirstDueDate" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Form.Notes" class="form-label small fw-bold"></label>
+                    <textarea asp-for="Form.Notes" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-primary fw-semibold px-4" @(Model.Customers.Count == 0 ? "disabled" : null)>Create plan</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

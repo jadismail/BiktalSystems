@@ -1,0 +1,48 @@
+@model InsightsCustomersViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Customer insights";
+    ViewData["Module"] = "Insights";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports bk-insights">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+    <div class="bk-reports-toolbar mb-3">
+        <a asp-controller="Crm" asp-action="Customers" class="btn btn-primary btn-sm fw-semibold">CRM customers</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Insights hub</a>
+    </div>
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Active customers</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.ActiveCustomers.ToString("N0", n)</div>
+            <div class="bk-reports-kpi-hint">@Model.NewCustomersMtd new MTD</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Loyalty points</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalLoyaltyPoints.ToString("N0", n)</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Open tickets</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.OpenSupportTickets.ToString("N0", n)</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Active campaigns</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.ActiveCampaigns.ToString("N0", n)</div>
+        </article>
+    </section>
+    <div class="bk-reports-panel p-4">
+        <div class="bk-reports-panel-title">Support tickets by status</div>
+        <div class="table-responsive">
+            <table class="table table-sm mb-0">
+                <thead class="table-light"><tr><th>Status</th><th class="text-end">Count</th></tr></thead>
+                <tbody>
+                    @foreach (var row in Model.TicketsByStatus)
+                    {
+                        <tr><td>@row.Segment</td><td class="text-end">@row.Count</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

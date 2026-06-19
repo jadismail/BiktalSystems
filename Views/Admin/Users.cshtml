@@ -1,0 +1,121 @@
+@model AdminUsersPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Users & roles";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "Create accounts, assign roles, reset passwords, and remove users.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-admin">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["AdminMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["AdminError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-admin-toolbar mb-3">
+        <a asp-action="NewUser" class="btn btn-primary fw-semibold"><i class="bi bi-person-plus me-1"></i>Create user</a>
+        @if (Model.CanInviteViaRegister)
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-secondary btn-sm fw-semibold">Open registration</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Admin home</a>
+    </div>
+
+    <div class="bk-table-wrap bk-admin-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">User</th>
+                        <th scope="col">Hire date</th>
+                        <th scope="col">Roles</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Last login</th>
+                        <th class="text-end" scope="col" style="width:11rem">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Users.Count == 0)
+                    {
+                        <tr><td colspan="6"><div class="bk-empty">No users in Identity yet.</div></td></tr>
+                    }
+                    @foreach (var u in Model.Users)
+                    {
+                        <tr class="@(u.IsCurrentUser ? "table-active" : null)">
+                            <td>
+                                <div class="fw-semibold">
+                                    @u.DisplayName
+                                    @if (u.IsCurrentUser)
+                                    {
+                                        <span class="badge text-bg-primary ms-1">You</span>
+                                    }
+                                </div>
+                                <div class="small text-muted">@u.Email</div>
+                            </td>
+                            <td class="small text-muted">
+                                @(u.HireDate?.ToString("MMM d, yyyy", n) ?? "—")
+                            </td>
+                            <td>
+                                @foreach (var role in u.Roles)
+                                {
+                                    <span class="badge rounded-pill text-bg-light border me-1 mb-1">@role</span>
+                                }
+                            </td>
+                            <td>
+                                @if (u.IsLockedOut)
+                                {
+                                    <span class="badge rounded-pill text-bg-danger">Locked</span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill text-bg-success">Active</span>
+                                }
+                            </td>
+                            <td class="small text-muted">
+                                @(u.LastLoginAtUtc?.ToLocalTime().ToString("g", n) ?? "—")
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <a asp-action="EditUser" asp-route-id="@u.Id" class="btn btn-sm btn-primary fw-semibold">Manage</a>
+                                @if (u.CanDelete)
+                                {
+                                    <form asp-action="DeleteUser" method="post" class="d-inline bk-admin-delete-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@u.Id" />
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger fw-semibold"
+                                                title="Delete user"
+                                                data-bk-delete-user
+                                                data-delete-name="@u.DisplayName"
+                                                data-delete-email="@u.Email">
+                                            <i class="bi bi-trash" aria-hidden="true"></i>
+                                            <span class="visually-hidden">Delete</span>
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteUserModal" />
+
+@section Scripts {
+    <script src="~/js/admin-users.js" asp-append-version="true"></script>
+}

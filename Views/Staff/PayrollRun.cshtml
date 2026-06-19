@@ -1,0 +1,130 @@
+@model StaffPayrollRunDetailPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = Model.Label;
+    ViewData["Module"] = "Staff";
+    ViewData["ModuleSubtitle"] = "Edit lines while draft; advance status when ready.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-staff">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-staff-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Payroll">Payroll</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Label</li>
+        </ol>
+    </nav>
+
+    @if (TempData["StaffMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["StaffError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-staff-ticket-head mb-4">
+        <div>
+            <div class="bk-staff-ticket-ref">@Model.Label</div>
+            <div class="small text-muted mt-1 font-monospace">
+                @Model.PeriodStart.ToString("yyyy-MM-dd", n) → @Model.PeriodEnd.ToString("yyyy-MM-dd", n)
+                · <span class="badge text-bg-secondary">@StaffPayrollRunStatusLabels.Title(Model.Status)</span>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.Notes))
+            {
+                <p class="small mt-2 mb-0">@Model.Notes</p>
+            }
+        </div>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <a asp-action="Payroll" class="btn btn-outline-secondary btn-sm fw-semibold">All runs</a>
+            @if (Model.CanAdvanceStatus)
+            {
+                var btn = Model.Status == StaffPayrollRunStatus.Draft ? "Submit run" : "Mark paid";
+                <form asp-action="AdvancePayrollRun" asp-route-id="@Model.RunId" method="post" class="d-inline" onsubmit="return confirm('Advance payroll status?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-primary btn-sm fw-semibold">@btn</button>
+                </form>
+            }
+        </div>
+    </div>
+
+    <div class="bk-staff-panel p-4">
+        <div class="bk-staff-panel-title">Pay lines</div>
+        @if (!Model.CanEditLines)
+        {
+            <p class="small text-muted mb-3">This run is no longer editable. Totals are read-only.</p>
+        }
+        else
+        {
+            <p class="small text-muted mb-3">Net pay is recalculated as <strong>gross − deductions</strong> when you save.</p>
+        }
+        <div class="table-responsive bk-staff-table">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Member</th>
+                        @if (Model.CanEditLines)
+                        {
+                            <th colspan="4">Gross, deductions, and net (UTC amounts)</th>
+                        }
+                        else
+                        {
+                            <th class="text-end">Gross</th>
+                            <th class="text-end">Deductions</th>
+                            <th class="text-end">Net</th>
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var line in Model.Lines)
+                    {
+                        if (Model.CanEditLines)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@line.MemberName <span class="text-muted small font-monospace">@line.EmployeeCode</span></td>
+                                <td colspan="4" class="p-2">
+                                    <form asp-action="UpdatePayrollLine" asp-route-runId="@Model.RunId" method="post" class="d-flex flex-wrap gap-3 align-items-end">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="LineId" value="@line.LineId" />
+                                        <div>
+                                            <label class="form-label small fw-bold mb-0">Gross</label>
+                                            <input name="GrossPay" class="form-control form-control-sm text-end font-monospace" style="min-width:7rem" type="number" step="0.01" min="0" value="@line.GrossPay.ToString("F2", n)" />
+                                        </div>
+                                        <div>
+                                            <label class="form-label small fw-bold mb-0">Deductions</label>
+                                            <input name="Deductions" class="form-control form-control-sm text-end font-monospace" style="min-width:7rem" type="number" step="0.01" min="0" value="@line.Deductions.ToString("F2", n)" />
+                                        </div>
+                                        <div>
+                                            <label class="form-label small text-muted mb-0">Current net</label>
+                                            <div class="small font-monospace fw-bold pt-1">@line.NetPay.ToString("N2", n)</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-primary fw-semibold">Save line</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="fw-semibold">@line.MemberName <span class="text-muted small font-monospace">@line.EmployeeCode</span></td>
+                                <td class="text-end font-monospace">@line.GrossPay.ToString("N2", n)</td>
+                                <td class="text-end font-monospace">@line.Deductions.ToString("N2", n)</td>
+                                <td class="text-end font-monospace fw-bold">@line.NetPay.ToString("N2", n)</td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

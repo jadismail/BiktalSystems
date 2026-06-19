@@ -1,0 +1,106 @@
+@model FinanceExpensesPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Expenses";
+    ViewData["Module"] = "Finance";
+    ViewData["ModuleSubtitle"] = "Operating costs, approvals, and vendor bills.";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-finance">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["FinanceMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-finance-panel p-4 mb-4">
+        <div class="bk-finance-panel-title">Log expense</div>
+        <form asp-action="CreateExpense" method="post" class="row g-3 align-items-end">
+            @Html.AntiForgeryToken()
+            <div class="col-md-2">
+                <label asp-for="CreateForm.ExpenseDate" class="form-label small fw-bold"></label>
+                <input asp-for="CreateForm.ExpenseDate" class="form-control" type="date" />
+                <span asp-validation-for="CreateForm.ExpenseDate" class="text-danger small"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="CreateForm.VendorName" class="form-label small fw-bold"></label>
+                <input asp-for="CreateForm.VendorName" class="form-control" />
+                <span asp-validation-for="CreateForm.VendorName" class="text-danger small"></span>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="CreateForm.Category" class="form-label small fw-bold"></label>
+                <input asp-for="CreateForm.Category" class="form-control" placeholder="e.g. Rent" />
+                <span asp-validation-for="CreateForm.Category" class="text-danger small"></span>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="CreateForm.Amount" class="form-label small fw-bold"></label>
+                <input asp-for="CreateForm.Amount" class="form-control text-end font-monospace" inputmode="decimal" />
+                <span asp-validation-for="CreateForm.Amount" class="text-danger small"></span>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">Save</button>
+            </div>
+            <div class="col-12">
+                <label asp-for="CreateForm.Notes" class="form-label small fw-bold"></label>
+                <input asp-for="CreateForm.Notes" class="form-control" />
+            </div>
+        </form>
+        <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mt-2 mb-0"></div>
+    </div>
+
+    <div class="bk-table-wrap bk-finance-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Category</th>
+                        <th class="text-end" scope="col">Amount</th>
+                        <th class="text-end" scope="col" style="width:6rem"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Expenses.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="bk-empty">No expenses logged yet.</div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Expenses)
+                        {
+                            <tr>
+                                <td class="text-nowrap small text-muted">@row.ExpenseDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</td>
+                                <td class="fw-semibold">@row.VendorName</td>
+                                <td><span class="bk-finance-type bk-finance-type--expense">@row.Category</span></td>
+                                <td class="text-end font-monospace bk-finance-amount-neg fw-semibold">@row.Amount.ToString("C", money)</td>
+                                <td class="text-end">
+                                    <form asp-action="DeleteExpense" method="post" class="d-inline" onsubmit="return confirm('Remove this expense row?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@row.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger fw-semibold">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p class="small text-muted fw-semibold mt-3 mb-0">This log is separate from the GL; wire to journal templates when you are ready.</p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

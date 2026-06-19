@@ -1,0 +1,200 @@
+@model InstallmentPlanDetailViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = Model.PlanNumber;
+    ViewData["Module"] = "CRM";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-crm">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-crm-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Installments</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.PlanNumber</li>
+        </ol>
+    </nav>
+
+    @if (TempData["CrmMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["CrmError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <partial name="_ModuleHeader" />
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-7">
+            <div class="bk-crm-panel p-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                    <div>
+                        <div class="bk-crm-panel-title mb-1">@Model.Description</div>
+                        <p class="small text-muted mb-0">
+                            <a asp-controller="Crm" asp-action="Customer" asp-route-id="@Model.CustomerId" class="fw-semibold">@Model.CustomerName</a>
+                            @if (!string.IsNullOrWhiteSpace(Model.CustomerPhone))
+                            {
+                                <span> · @Model.CustomerPhone</span>
+                            }
+                        </p>
+                    </div>
+                    <span class="badge @InstallmentPlanStatusLabels.BadgeClass(Model.Status)">
+                        @InstallmentPlanStatusLabels.Title(Model.Status)
+                    </span>
+                </div>
+
+                <div class="row g-3 small">
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted fw-semibold">Total</div>
+                        <div class="font-monospace fw-bold">@Model.TotalAmount.ToString("C", money)</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted fw-semibold">Down payment</div>
+                        <div class="font-monospace fw-bold">@Model.DownPayment.ToString("C", money)</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted fw-semibold">Financed</div>
+                        <div class="font-monospace fw-bold">@Model.FinancedAmount.ToString("C", money)</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted fw-semibold">Balance due</div>
+                        <div class="font-monospace fw-bold text-primary">@Model.BalanceDue.ToString("C", money)</div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.OpeningJournalReference))
+                {
+                    <p class="small text-muted mt-3 mb-0">Opening journal: <span class="font-monospace">@Model.OpeningJournalReference</span></p>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Notes))
+                {
+                    <p class="small mt-2 mb-0"><span class="fw-bold">Notes:</span> @Model.Notes</p>
+                }
+            </div>
+        </div>
+
+        @if (Model.Status == Biktal.Domain.Crm.InstallmentPlanStatus.Active && Model.BalanceDue > 0m)
+        {
+            <div class="col-lg-5">
+                <div class="bk-crm-panel p-4 border border-primary border-opacity-25">
+                    <div class="bk-crm-panel-title">Record payment</div>
+                    <form asp-action="RecordPayment" method="post" class="row g-3">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="PaymentForm.PlanId" />
+                        <div class="col-12">
+                            <label asp-for="PaymentForm.Amount" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="PaymentForm.Amount" class="form-control" inputmode="decimal" step="0.01" min="0.01"
+                                       placeholder="@Model.BalanceDue.ToString("F2", CultureInfo.InvariantCulture)" />
+                            </div>
+                            <div class="form-text">Balance due: @Model.BalanceDue.ToString("C", money)</div>
+                            <span asp-validation-for="PaymentForm.Amount" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="PaymentForm.Method" class="form-label small fw-bold"></label>
+                            <select asp-for="PaymentForm.Method" class="form-select">
+                                <option value="Cash">Cash</option>
+                                <option value="Whish">Whish</option>
+                                <option value="Card">Card</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="PaymentForm.Notes" class="form-label small fw-bold"></label>
+                            <input asp-for="PaymentForm.Notes" class="form-control" placeholder="Optional receipt note" />
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary fw-semibold w-100">Post payment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="bk-crm-panel p-4">
+                <div class="bk-crm-panel-title mb-3">Schedule</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Due</th>
+                                <th class="text-end">Due amt</th>
+                                <th class="text-end">Paid</th>
+                                <th class="text-end">Remaining</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            @foreach (var row in Model.Schedule)
+                            {
+                                <tr>
+                                    <td class="font-monospace">@row.Sequence</td>
+                                    <td>@row.DueDate.ToString("MMM d, yyyy", money)</td>
+                                    <td class="text-end font-monospace">@row.AmountDue.ToString("C", money)</td>
+                                    <td class="text-end font-monospace">@row.AmountPaid.ToString("C", money)</td>
+                                    <td class="text-end font-monospace fw-semibold">@row.Remaining.ToString("C", money)</td>
+                                    <td>
+                                        <span class="badge @InstallmentScheduleItemStatusLabels.BadgeClass(row.Status)">
+                                            @InstallmentScheduleItemStatusLabels.Title(row.Status)
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="bk-crm-panel p-4">
+                <div class="bk-crm-panel-title mb-3">Payment history</div>
+                @if (Model.Payments.Count == 0)
+                {
+                    <div class="bk-empty py-3">No payments recorded yet.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var p in Model.Payments)
+                        {
+                            <li class="list-group-item px-0 bg-transparent">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <div>
+                                        <div class="fw-semibold font-monospace">@p.Amount.ToString("C", money)</div>
+                                        <div class="small text-muted">
+                                            @p.ReceivedAtUtc.ToLocalTime().ToString("f", money) · @p.Method
+                                            @if (p.ScheduleSequence is int seq)
+                                            {
+                                                <span> · Inst. #@seq</span>
+                                            }
+                                        </div>
+                                        @if (!string.IsNullOrWhiteSpace(p.Notes))
+                                        {
+                                            <div class="small">@p.Notes</div>
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

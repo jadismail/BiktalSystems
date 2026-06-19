@@ -1,0 +1,86 @@
+@model AdminIndexViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Administration";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "Tenant-wide configuration and operational controls.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-admin">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <section class="bk-admin-kpis" aria-label="Admin snapshot">
+        <article class="bk-admin-kpi">
+            <div class="bk-admin-kpi-icon" aria-hidden="true"><i class="bi bi-shop"></i></div>
+            <div>
+                <div class="bk-admin-kpi-label">Branches</div>
+                <div class="bk-admin-kpi-value">@Model.ActiveBranchCount.ToString("N0", n)<span class="bk-admin-kpi-sub">/ @Model.BranchCount.ToString("N0", n) total</span></div>
+            </div>
+        </article>
+        <article class="bk-admin-kpi">
+            <div class="bk-admin-kpi-icon" aria-hidden="true"><i class="bi bi-people"></i></div>
+            <div>
+                <div class="bk-admin-kpi-label">Identity users</div>
+                <div class="bk-admin-kpi-value">@Model.UserCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-admin-kpi">
+            <div class="bk-admin-kpi-icon" aria-hidden="true"><i class="bi bi-cloud-check"></i></div>
+            <div>
+                <div class="bk-admin-kpi-label">Last backup</div>
+                <div class="bk-admin-kpi-value bk-admin-kpi-value--sm">
+                    @if (Model.LastSuccessfulBackup is { } backup)
+                    {
+                        @backup.CompletedAtUtc.ToLocalTime().ToString("MMM d, HH:mm", n)
+                    }
+                    else
+                    {
+                        <span class="text-muted">None yet</span>
+                    }
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <p class="small text-muted fw-semibold mb-3">Store: <strong class="text-body">@Model.StoreDisplayName</strong></p>
+
+    <div class="bk-grid-tiles bk-admin-tiles">
+        <a asp-action="Settings" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-sliders"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Settings</h2>
+            <p class="small text-muted mb-0 fw-semibold">Receipts, locale, store name.</p>
+        </a>
+        <a asp-action="Branches" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-shop"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Branches</h2>
+            <p class="small text-muted mb-0 fw-semibold">Stores, warehouses, permissions.</p>
+        </a>
+        <a asp-action="Tax" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-percent"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Tax & currency</h2>
+            <p class="small text-muted mb-0 fw-semibold">VAT rate and POS pricing mode.</p>
+        </a>
+        <a asp-action="Users" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-shield-lock"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Users & roles</h2>
+            <p class="small text-muted mb-0 fw-semibold">ASP.NET Identity RBAC.</p>
+        </a>
+        <a asp-action="Backups" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-cloud-arrow-down"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Backups</h2>
+            <p class="small text-muted mb-0 fw-semibold">Schedules and restore drills.</p>
+        </a>
+        <a asp-action="DataReset" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-arrow-counterclockwise"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Reset data</h2>
+            <p class="small text-muted mb-0 fw-semibold">Clear POS, inventory, finance, and more.</p>
+        </a>
+        <a asp-controller="License" asp-action="Index" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-key"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">License</h2>
+            <p class="small text-muted mb-0 fw-semibold">Subscription + weekly validation.</p>
+        </a>
+    </div>
+</div>

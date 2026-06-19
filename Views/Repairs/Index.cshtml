@@ -1,0 +1,38 @@
+@model RepairsIndexViewModel
+@{
+    ViewData["Title"] = "Repair center";
+    ViewData["Module"] = "Repairs";
+    ViewData["ModuleSubtitle"] = "Device intake, technician workflow, parts, and customer updates.";
+}
+<div class="container pb-5 pt-3">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a asp-action="New" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>New check-in</a>
+        <a asp-action="Tickets" class="btn btn-outline-secondary">Open board</a>
+    </div>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="bk-card bk-card-glow p-4 h-100">
+                <div class="bk-kpi-label">Open repairs</div>
+                <div class="bk-kpi">@Model.OpenRepairsCount.ToString("N0")</div>
+                <p class="small text-muted mb-0 mt-2 fw-semibold">Tickets not delivered or cancelled.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bk-card p-4 h-100">
+                <div class="bk-kpi-label">Delivered (all time)</div>
+                <div class="bk-kpi">@Model.DeliveredTicketsCount.ToString("N0")</div>
+                <p class="small text-muted mb-0 mt-2 fw-semibold">Completed pickups from the board.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bk-card p-4 h-100">
+                <div class="bk-kpi-label">Open purchase orders</div>
+                <div class="bk-kpi">@Model.OpenPurchaseOrdersCount.ToString("N0")</div>
+                <p class="small text-muted mb-0 mt-2 fw-semibold">Draft or open POs from <a asp-controller="Inventory" asp-action="PurchaseOrders" class="fw-semibold">inventory</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+@model AdminBranchesPageViewModel
+@{
+    ViewData["Title"] = "Branches";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "Stores, warehouses, and branch-level permissions.";
+}
+<div class="container pb-5 pt-3 bk-admin">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["AdminMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-admin-toolbar mb-3">
+        <a asp-action="NewBranch" class="btn btn-primary fw-semibold"><i class="bi bi-plus-lg me-1"></i>Add branch</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Admin home</a>
+    </div>
+
+    <div class="bk-table-wrap bk-admin-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Branch</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Timezone</th>
+                        <th scope="col">Status</th>
+                        <th class="text-end" scope="col" style="width:8rem">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Branches.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5"><div class="bk-empty">No branches yet — add your first location.</div></td>
+                        </tr>
+                    }
+                    @foreach (var b in Model.Branches)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@b.Name</td>
+                            <td><span class="font-monospace">@b.Code</span></td>
+                            <td>@b.TimezoneId</td>
+                            <td>
+                                @if (b.IsActive)
+                                {
+                                    <span class="badge rounded-pill text-bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill text-bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="EditBranch" asp-route-id="@b.Id" class="btn btn-sm btn-outline-secondary fw-semibold">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

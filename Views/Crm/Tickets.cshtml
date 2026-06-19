@@ -1,0 +1,81 @@
+@model CrmTicketsPageViewModel
+@{
+    ViewData["Title"] = "Support tickets";
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Complaints and general support separate from repair tickets.";
+    string StBadge(CrmSupportTicketStatus s) => s switch
+    {
+        CrmSupportTicketStatus.New => "text-bg-primary",
+        CrmSupportTicketStatus.InProgress => "text-bg-info",
+        CrmSupportTicketStatus.WaitingCustomer => "text-bg-warning",
+        CrmSupportTicketStatus.Resolved => "text-bg-success",
+        CrmSupportTicketStatus.Closed => "text-bg-secondary",
+        _ => "text-bg-light border"
+    };
+    string PrBadge(CrmSupportTicketPriority p) => p switch
+    {
+        CrmSupportTicketPriority.High => "text-bg-danger",
+        CrmSupportTicketPriority.Normal => "text-bg-light border",
+        CrmSupportTicketPriority.Low => "text-bg-secondary",
+        _ => "text-bg-light border"
+    };
+}
+<div class="container pb-5 pt-3 bk-crm">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["CrmMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-crm-toolbar mb-3">
+        <a asp-action="NewTicket" class="btn btn-primary fw-semibold"><i class="bi bi-plus-lg me-1"></i>New ticket</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">CRM home</a>
+    </div>
+
+    <div class="bk-table-wrap bk-crm-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Ticket</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Topic</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Status</th>
+                        <th class="text-end" scope="col" style="width:6rem"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tickets.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6"><div class="bk-empty">No support tickets — repair workflow stays under Repairs.</div></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Tickets)
+                        {
+                            <tr>
+                                <td class="font-monospace fw-bold">@row.TicketNumber</td>
+                                <td class="small">@(string.IsNullOrWhiteSpace(row.CustomerName) ? "—" : row.CustomerName)</td>
+                                <td class="fw-semibold">@row.Subject</td>
+                                <td><span class="badge @PrBadge(row.Priority)">@CrmSupportTicketPriorityLabels.Title(row.Priority)</span></td>
+                                <td><span class="badge @StBadge(row.Status)">@CrmSupportTicketStatusLabels.Title(row.Status)</span></td>
+                                <td class="text-end">
+                                    <a asp-action="SupportTicket" asp-route-id="@row.Id" class="btn btn-sm btn-outline-primary fw-semibold">Open</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+@model StaffTeamPageViewModel
+@{
+    ViewData["Title"] = "Team";
+    ViewData["Module"] = "Staff";
+    ViewData["ModuleSubtitle"] = "Active and inactive team members.";
+}
+<div class="container pb-5 pt-3 bk-staff">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["StaffMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["StaffError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-staff-toolbar mb-3">
+        <a asp-action="NewMember" class="btn btn-primary fw-semibold"><i class="bi bi-person-plus me-1"></i>Add member</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Staff home</a>
+    </div>
+
+    <div class="bk-table-wrap bk-staff-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Email</th>
+                        <th class="text-end" scope="col" style="width:10rem">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Members.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5"><div class="bk-empty">No team members yet — add your first profile.</div></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Members)
+                        {
+                            <tr class="@(!row.IsActive ? "opacity-75" : null)">
+                                <td class="fw-semibold">
+                                    <a asp-action="Member" asp-route-id="@row.Id" class="text-decoration-none">@row.DisplayName</a>
+                                    @if (!row.IsActive)
+                                    {
+                                        <span class="badge text-bg-secondary ms-1">Inactive</span>
+                                    }
+                                </td>
+                                <td class="small">@row.JobTitle</td>
+                                <td class="small font-monospace">@row.EmployeeCode</td>
+                                <td class="small">@(string.IsNullOrWhiteSpace(row.WorkEmail) ? "—" : row.WorkEmail)</td>
+                                <td class="text-end">
+                                    <a asp-action="Member" asp-route-id="@row.Id" class="btn btn-sm btn-outline-primary fw-semibold">Edit</a>
+                                    @if (row.IsActive)
+                                    {
+                                        <form asp-action="DeactivateMember" method="post" class="d-inline" onsubmit="return confirm('Mark this member inactive?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary">Deactivate</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="ReactivateMember" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-success">Reactivate</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

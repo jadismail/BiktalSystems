@@ -1,0 +1,133 @@
+@model StaffAttendancePageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Attendance";
+    ViewData["Module"] = "Staff";
+    ViewData["ModuleSubtitle"] = "Clock in and out; recent sessions.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-staff">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["StaffMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["StaffError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="bk-staff-panel p-4 h-100">
+                <div class="bk-staff-panel-title">Clock in</div>
+                <form asp-action="ClockIn" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+                    <div class="mb-3">
+                        <label asp-for="ClockInForm.StaffMemberId" class="form-label small fw-bold"></label>
+                        <select asp-for="ClockInForm.StaffMemberId" class="form-select" asp-items="@(new SelectList(Model.ActiveMembersForClockIn, "Id", "Label"))">
+                            <option value="">Select team member…</option>
+                        </select>
+                        <span asp-validation-for="ClockInForm.StaffMemberId" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ClockInForm.Notes" class="form-label small fw-bold"></label>
+                        <textarea asp-for="ClockInForm.Notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary fw-semibold"><i class="bi bi-box-arrow-in-right me-1"></i>Clock in</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="bk-staff-panel p-4">
+                <div class="bk-staff-panel-title">Open sessions</div>
+                @if (Model.OpenSessions.Count == 0)
+                {
+                    <div class="bk-empty mb-0">No open clock-ins.</div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0 bk-staff-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Clock in (UTC)</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var s in Model.OpenSessions)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@s.DisplayName <span class="text-muted small font-monospace">@s.EmployeeCode</span></td>
+                                        <td class="small font-monospace">@s.ClockInUtc.ToString("yyyy-MM-dd HH:mm", n)</td>
+                                        <td class="text-end">
+                                            <form asp-action="ClockOut" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="AttendanceEntryId" value="@s.EntryId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-primary fw-semibold">Clock out</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="bk-staff-panel p-4 mt-4">
+        <div class="bk-staff-panel-title">Recent sessions</div>
+        <div class="bk-table-wrap bk-staff-table">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Member</th>
+                            <th>Clock in (UTC)</th>
+                            <th>Clock out (UTC)</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentEntries.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="4"><div class="bk-empty">No attendance rows yet.</div></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var e in Model.RecentEntries)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@e.DisplayName <span class="text-muted small font-monospace">@e.EmployeeCode</span></td>
+                                    <td class="small font-monospace">@e.ClockInUtc.ToString("yyyy-MM-dd HH:mm", n)</td>
+                                    <td class="small font-monospace">@(e.ClockOutUtc is { } co ? co.ToString("yyyy-MM-dd HH:mm", n) : "—")</td>
+                                    <td class="small text-muted">@(string.IsNullOrWhiteSpace(e.Notes) ? "—" : e.Notes)</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,87 @@
+@model InsightsRevenueMarginViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Product profitability";
+    ViewData["Module"] = "Operations";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var pct = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports bk-operations">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+    <div class="bk-reports-toolbar mb-3">
+        <span class="badge text-bg-light border fw-semibold">@Model.PeriodLabel</span>
+        <a asp-action="Sales" class="btn btn-outline-secondary btn-sm fw-semibold ms-auto">Full sales report</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Operations hub</a>
+    </div>
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Gross margin</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalMargin.ToString("C0", money)</div>
+            <div class="bk-reports-kpi-hint">@Model.MarginPercent.ToString("0.#", pct)% on @Model.TotalRevenue.ToString("C0", money) revenue</div>
+        </article>
+    </section>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Margin by category</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>Category</th><th class="text-end">Margin</th><th class="text-end">Margin %</th></tr></thead>
+                        <tbody>
+                            @foreach (var row in Model.MarginByCategory)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@row.Label</td>
+                                    <td class="text-end font-monospace">@row.MarginAmount.ToString("C", money)</td>
+                                    <td class="text-end font-monospace fw-bold">@row.MarginPercent.ToString("0.#", pct)%</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Margin by brand</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>Brand</th><th class="text-end">Margin</th><th class="text-end">Margin %</th></tr></thead>
+                        <tbody>
+                            @foreach (var row in Model.MarginByBrand)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@row.Label</td>
+                                    <td class="text-end font-monospace">@row.MarginAmount.ToString("C", money)</td>
+                                    <td class="text-end font-monospace fw-bold">@row.MarginPercent.ToString("0.#", pct)%</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Most profitable products</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>SKU</th><th>Product</th><th class="text-end">Revenue</th><th class="text-end">Margin</th></tr></thead>
+                        <tbody>
+                            @foreach (var p in Model.TopProducts.OrderByDescending(x => x.Margin))
+                            {
+                                <tr>
+                                    <td class="font-monospace small">@p.Sku</td>
+                                    <td class="fw-semibold">@p.Name</td>
+                                    <td class="text-end font-monospace">@p.Revenue.ToString("C", money)</td>
+                                    <td class="text-end font-monospace text-success">@p.Margin.ToString("C", money)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+@model AdminDataResetPageViewModel
+@using Biktal.Infrastructure.Persistence
+@{
+    ViewData["Title"] = "Reset data";
+    ViewData["Module"] = "Admin";
+}
+
+<div class="container pb-5 pt-3 bk-admin">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["AdminMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["AdminError"] is string errMsg)
+    {
+        <div class="alert alert-danger border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+        <div class="d-flex gap-2">
+            <i class="bi bi-exclamation-octagon-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>
+                <strong>Destructive actions.</strong> Reset buttons permanently delete data in the selected area.
+                Login users, store settings, branches, backups, and your chart of accounts are <strong>not</strong> removed.
+                Type <kbd>RESET</kbd> to confirm each action.
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        @foreach (var area in Model.Areas)
+        {
+            var isEverything = area.Key == nameof(BusinessDataResetArea.Everything);
+            <div class="col-lg-6">
+                <div class="bk-card p-4 h-100 rounded-3 border @(isEverything ? "border-danger border-2" : "")">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <h2 class="h6 fw-bold mb-0">@area.Title</h2>
+                        @if (isEverything)
+                        {
+                            <span class="badge text-bg-danger">Full reset</span>
+                        }
+                    </div>
+                    <p class="small text-muted fw-semibold mb-2">@area.Description</p>
+                    <p class="small mb-3"><span class="text-muted">Currently:</span> @area.CountLabel</p>
+
+                    <form asp-action="DataReset" method="post"
+                          onsubmit="return confirm(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(area.ConfirmMessage + " Type RESET in the box to proceed.")));">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Area" value="@area.Key" />
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" for="confirm-@area.Key">Type RESET to confirm</label>
+                            <input type="text" class="form-control form-control-sm font-monospace" id="confirm-@area.Key"
+                                   name="Confirmation" autocomplete="off" spellcheck="false" placeholder="RESET" required />
+                        </div>
+                        <button type="submit" class="btn btn-sm fw-semibold @(isEverything ? "btn-danger" : "btn-outline-danger")">
+                            <i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Reset @area.Title
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>

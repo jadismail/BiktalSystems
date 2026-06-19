@@ -1,0 +1,127 @@
+@model AdminEditUserFormModel
+@{
+    ViewData["Title"] = "Manage user";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = Model.Email;
+    var passwordInvalid = ViewData["PasswordFormInvalid"] as bool? == true;
+}
+<div class="container pb-5 pt-3 bk-admin" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+    <nav class="bk-admin-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Users">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Email</li>
+        </ol>
+    </nav>
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["AdminMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-admin-panel p-4 p-lg-5 mb-4">
+        <div class="bk-admin-panel-title">Profile & roles</div>
+        <form asp-action="EditUser" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="UserId" />
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+
+            <div class="mb-3">
+                <label class="form-label small fw-bold">Email</label>
+                <input class="form-control" value="@Model.Email" readonly />
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label asp-for="DisplayName" class="form-label small fw-bold"></label>
+                    <input asp-for="DisplayName" class="form-control" />
+                    <span asp-validation-for="DisplayName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="HireDate" class="form-label small fw-bold"></label>
+                    <input asp-for="HireDate" class="form-control" type="date" />
+                    <span asp-validation-for="HireDate" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <span class="form-label small fw-bold d-block mb-2">Roles</span>
+            @if (!Model.CanAssignAdminRole)
+            {
+                <p class="small text-muted mb-2">Only administrators can assign the Admin role.</p>
+            }
+            @foreach (var role in Model.AllRoles)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role" id="edit-role-@role"
+                           @(Model.SelectedRoles.Contains(role) ? "checked" : null) />
+                    <label class="form-check-label small fw-semibold" for="edit-role-@role">@role</label>
+                </div>
+            }
+
+            <div class="form-check mt-3">
+                <input asp-for="LockAccount" class="form-check-input" />
+                <label asp-for="LockAccount" class="form-check-label small fw-semibold">Lock account (blocks sign-in)</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4 fw-semibold">Save changes</button>
+            <a asp-action="Users" class="btn btn-outline-secondary mt-4 ms-2 fw-semibold">Cancel</a>
+        </form>
+    </div>
+
+    <div class="bk-admin-panel p-4 p-lg-5 mb-4">
+        <div class="bk-admin-panel-title">Reset password</div>
+        <form asp-action="ResetUserPassword" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="UserId" value="@Model.UserId" />
+            @if (passwordInvalid)
+            {
+                <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            }
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold" for="NewPassword">New password</label>
+                    <input class="form-control" id="NewPassword" name="NewPassword" type="password" autocomplete="new-password" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold" for="ConfirmPassword">Confirm new password</label>
+                    <input class="form-control" id="ConfirmPassword" name="ConfirmPassword" type="password" autocomplete="new-password" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-outline-primary mt-3 fw-semibold">Set new password</button>
+        </form>
+    </div>
+
+    @if (Model.CanDelete)
+    {
+        <div class="bk-card-muted border border-danger border-opacity-25 p-4">
+            <h2 class="h6 fw-bold text-danger mb-2">Danger zone</h2>
+            <p class="small text-muted mb-3">Permanently removes this account. This cannot be undone.</p>
+            <form asp-action="DeleteUser" method="post" class="bk-admin-delete-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.UserId" />
+                <button type="button"
+                        class="btn btn-outline-danger fw-semibold"
+                        data-bk-delete-user
+                        data-delete-name="@Model.DisplayName"
+                        data-delete-email="@Model.Email">
+                    <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete user
+                </button>
+            </form>
+        </div>
+    }
+    else if (Model.IsCurrentUser)
+    {
+        <p class="small text-muted mb-0">You cannot delete your own account while signed in.</p>
+    }
+</div>
+
+<partial name="_DeleteUserModal" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/admin-users.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,47 @@
+@model AdminBranchFormModel
+@{
+    ViewData["Title"] = "Add branch";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "Create a store or warehouse location.";
+}
+<div class="container pb-5 pt-3 bk-admin" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+    <nav class="bk-admin-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Branches">Branches</a></li>
+            <li class="breadcrumb-item active" aria-current="page">New</li>
+        </ol>
+    </nav>
+    <partial name="_ModuleHeader" />
+    <div class="bk-admin-panel p-4 p-lg-5">
+        <div class="bk-admin-panel-title">Branch details</div>
+        <form asp-action="CreateBranch" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="Name" class="form-label small fw-bold"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Code" class="form-label small fw-bold"></label>
+                    <input asp-for="Code" class="form-control font-monospace" placeholder="MAIN" />
+                    <span asp-validation-for="Code" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="TimezoneId" class="form-label small fw-bold"></label>
+                    <input asp-for="TimezoneId" class="form-control" placeholder="UTC" />
+                    <span asp-validation-for="TimezoneId" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="IsActive" class="form-check-input" />
+                        <label asp-for="IsActive" class="form-check-label small fw-semibold">Active</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 fw-semibold">Create branch</button>
+        </form>
+    </div>
+</div>

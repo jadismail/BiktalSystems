@@ -1,0 +1,44 @@
+@model IReadOnlyList<InsightsInventoryLowStockRowViewModel>
+@using System.Globalization
+@{
+    ViewData["Title"] = "Low stock alerts";
+    ViewData["Module"] = "Operations";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-reports bk-operations">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+    <div class="bk-reports-toolbar mb-3">
+        <a asp-controller="Inventory" asp-action="Stock" class="btn btn-primary btn-sm fw-semibold">Stock levels</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Operations hub</a>
+    </div>
+    <div class="bk-reports-panel p-4">
+        <div class="bk-reports-panel-title">SKUs needing reorder</div>
+        @if (Model.Count == 0)
+        {
+            <p class="small text-muted mb-0">All catalog SKUs are above the low-stock threshold.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr><th>SKU</th><th>Product</th><th>Category</th><th class="text-end">Qty</th><th class="text-end">Retail</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model)
+                        {
+                            <tr>
+                                <td class="font-monospace small">@r.Sku</td>
+                                <td class="fw-semibold">@r.Name</td>
+                                <td class="small text-muted">@r.Category</td>
+                                <td class="text-end font-monospace fw-bold text-danger">@r.StockQuantity</td>
+                                <td class="text-end font-monospace">@r.Price.ToString("C", money)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,93 @@
+@model CrmCustomersPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Customers";
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Profiles, purchase history, notes, and segmentation.";
+}
+<div class="container pb-5 pt-3 bk-crm">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["CrmMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["CrmError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-crm-toolbar mb-3">
+        <a asp-action="NewCustomer" class="btn btn-primary fw-semibold"><i class="bi bi-person-plus me-1"></i>Add customer</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">CRM home</a>
+    </div>
+
+    <div class="bk-table-wrap bk-crm-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
+                        <th class="text-end" scope="col">Loyalty points</th>
+                        <th class="text-end" scope="col" style="width:10rem">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Customers.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5"><div class="bk-empty">No customers yet — add your first profile.</div></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Customers)
+                        {
+                            <tr class="@(!row.IsActive ? "opacity-75" : null)">
+                                <td class="fw-semibold">
+                                    <a asp-action="Customer" asp-route-id="@row.Id" class="text-decoration-none">@row.FullName</a>
+                                    @if (!row.IsActive)
+                                    {
+                                        <span class="badge text-bg-secondary ms-1">Inactive</span>
+                                    }
+                                </td>
+                                <td class="small">@(string.IsNullOrWhiteSpace(row.Phone) ? "—" : row.Phone)</td>
+                                <td class="small">@(string.IsNullOrWhiteSpace(row.Email) ? "—" : row.Email)</td>
+                                <td class="text-end font-monospace fw-semibold">@row.LoyaltyPoints.ToString("N0", CultureInfo.InvariantCulture)</td>
+                                <td class="text-end">
+                                    <a asp-action="Customer" asp-route-id="@row.Id" class="btn btn-sm btn-outline-primary fw-semibold">Edit</a>
+                                    @if (row.IsActive)
+                                    {
+                                        <form asp-action="DeactivateCustomer" method="post" class="d-inline" onsubmit="return confirm('Mark this customer inactive?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary">Deactivate</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="ReactivateCustomer" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-success">Reactivate</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+@model RepairTicketsPageViewModel
+@using Biktal.Domain.Repairs
+@{
+    ViewData["Title"] = "Repair tickets";
+    ViewData["Module"] = "Repairs";
+    ViewData["ModuleSubtitle"] = "Statuses from inspection through delivery.";
+}
+<div class="container pb-5 pt-3">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["RepairMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["RepairError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <a asp-action="New" class="btn btn-primary btn-sm fw-semibold"><i class="bi bi-plus-lg me-1"></i>New check-in</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Overview</a>
+    </div>
+
+    <div class="bk-ticket-board">
+        @foreach (var col in Model.Columns)
+        {
+            <div class="bk-ticket-col">
+                <h3>@col.Title</h3>
+                @if (col.Tickets.Count == 0)
+                {
+                    <div class="bk-mini-card text-muted fw-semibold">No tickets</div>
+                }
+                else
+                {
+                    foreach (var t in col.Tickets)
+                    {
+                        <a asp-action="Ticket" asp-route-id="@t.Id" class="bk-mini-card">
+                            <span class="font-monospace text-primary">@t.TicketNumber</span>
+                            <span class="text-muted">·</span>
+                            @t.DeviceSummary
+                            <span class="d-block small text-muted fw-semibold mt-1">@t.CustomerName</span>
+                        </a>
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    @if (Model.ClosedTickets.Count > 0)
+    {
+        <div class="mt-5">
+            <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Delivered &amp; cancelled</h2>
+            <div class="row g-2">
+                @foreach (var t in Model.ClosedTickets)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <a asp-action="Ticket" asp-route-id="@t.Id" class="bk-mini-card mb-0 h-100">
+                            <span class="font-monospace text-primary">@t.TicketNumber</span>
+                            <span class="text-muted">·</span>
+                            @t.DeviceSummary
+                            <span class="badge @(t.Status == RepairTicketStatus.Delivered ? "text-bg-success" : "text-bg-dark") ms-2 align-middle">@RepairTicketStatusLabels.Title(t.Status)</span>
+                            <span class="d-block small text-muted fw-semibold mt-1">@t.CustomerName</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <p class="small text-muted fw-semibold mt-4 mb-0">Click a card to view details and change status. Drag-and-drop can be added later.</p>
+</div>

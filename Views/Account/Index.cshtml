@@ -1,0 +1,38 @@
+@model AccountIndexViewModel
+@{
+    ViewData["Title"] = "Account";
+}
+
+<div class="container py-4" style="max-width: 40rem;">
+    <h1 class="h3 fw-bold mb-1">Account</h1>
+    <p class="text-muted small mb-4">Your sign-in profile for Biktal Systems.</p>
+
+    <div class="bk-card p-4 mb-3">
+        <dl class="row mb-0 small">
+            <dt class="col-sm-3 text-muted">Display name</dt>
+            <dd class="col-sm-9 fw-semibold">@Model.DisplayName</dd>
+            <dt class="col-sm-3 text-muted">Email</dt>
+            <dd class="col-sm-9 fw-semibold text-break">@Model.Email</dd>
+            <dt class="col-sm-3 text-muted">Roles</dt>
+            <dd class="col-sm-9">
+                @if (Model.Roles.Count == 0)
+                {
+                    <span class="text-muted">None assigned</span>
+                }
+                else
+                {
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var role in Model.Roles)
+                        {
+                            <span class="badge rounded-pill bg-secondary">@role</span>
+                        }
+                    </div>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+        <button type="submit" class="btn btn-primary">Sign out</button>
+    </form>
+</div>

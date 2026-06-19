@@ -1,0 +1,60 @@
+@model Biktal.WebMVC.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<div class="bk-auth-shell">
+    <div class="bk-auth-card">
+        <div class="text-center mb-4">
+            <div class="bk-brand-mark mx-auto mb-3" style="width: 48px; height: 48px; font-size: 1.1rem;">B</div>
+            <h1 class="h3 fw-bold bk-hero-title">Welcome back</h1>
+            <p class="text-muted small mb-0 fw-semibold">Sign in to open your Biktal workspace.</p>
+        </div>
+
+        <div class="bk-card p-4 p-lg-5">
+            <form asp-action="Login" method="post" novalidate>
+                <input type="hidden" asp-for="ReturnUrl" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3 py-2" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label small fw-bold"></label>
+                    <input asp-for="Email" class="form-control form-control-lg" autocomplete="username" autofocus />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label small fw-bold"></label>
+                    <input asp-for="Password" class="form-control form-control-lg" autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label small fw-semibold"></label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">Continue</button>
+            </form>
+        </div>
+
+        @if (ViewData["BootstrapAdminHint"] is string bootstrapHint)
+        {
+            <div class="alert alert-info border-0 small mt-3 mb-0 py-2 px-3" role="note">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>@bootstrapHint
+            </div>
+        }
+
+        @if (ViewData["ShowRegisterLink"] as bool? == true)
+        {
+            <p class="text-center small text-muted mt-3 mb-0 fw-semibold">
+                New here?
+                <a asp-action="Register">Create an account</a>
+                <span class="d-block mt-1 text-muted">If the database is empty, the first account becomes Administrator.</span>
+            </p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

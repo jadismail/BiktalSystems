@@ -1,0 +1,127 @@
+@model AccountsPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Chart of accounts";
+    ViewData["Module"] = "Finance";
+    ViewData["ModuleSubtitle"] = "Assets, liabilities, equity, revenue, and expenses.";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-finance">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["FinanceMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["FinanceError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-finance-panel p-4 mb-4">
+        <div class="bk-finance-panel-title">New account</div>
+        <form asp-action="CreateAccount" method="post" class="row g-3 align-items-end">
+            @Html.AntiForgeryToken()
+            <div class="col-md-2">
+                <label asp-for="CreateForm.AccountCode" class="form-label small fw-bold"></label>
+                <input asp-for="CreateForm.AccountCode" class="form-control" placeholder="e.g. 7100" autocomplete="off" />
+                <span asp-validation-for="CreateForm.AccountCode" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CreateForm.Name" class="form-label small fw-bold"></label>
+                <input asp-for="CreateForm.Name" class="form-control" placeholder="Display name" />
+                <span asp-validation-for="CreateForm.Name" class="text-danger small"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="CreateForm.Type" class="form-label small fw-bold"></label>
+                <select asp-for="CreateForm.Type" class="form-select" asp-items="Html.GetEnumSelectList<GlAccountType>()"></select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">Save account</button>
+            </div>
+        </form>
+        <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mt-2 mb-0"></div>
+    </div>
+
+    <div class="bk-table-wrap bk-finance-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Code</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th class="text-end" scope="col">Posted balance</th>
+                        <th class="text-end" scope="col" style="width:9rem">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Accounts.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="bk-empty">No accounts yet — add your first row above.</div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Accounts)
+                        {
+                            var balClass = row.PostedBalance >= 0 ? "bk-finance-amount-pos" : "bk-finance-amount-neg";
+                            <tr class="@(!row.IsActive ? "inactive-row" : null)">
+                                <td class="font-monospace fw-bold">@row.AccountCode</td>
+                                <td class="fw-semibold">@row.Name</td>
+                                <td><span class="@FinTypeClass(row.Type)">@GlAccountTypeLabels.Title(row.Type)</span></td>
+                                <td class="text-end font-monospace @balClass">@row.PostedBalance.ToString("N2", money)</td>
+                                <td class="text-end">
+                                    @if (row.IsActive)
+                                    {
+                                        <form asp-action="DeactivateAccount" method="post" class="d-inline" onsubmit="return confirm('Deactivate this account? It will be hidden from new journals.');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-outline-secondary btn-sm">Deactivate</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="ReactivateAccount" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@row.Id" />
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">Reactivate</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p class="small text-muted fw-semibold mt-3 mb-0">Posted balance follows normal trial-balance sign by account type (assets/expenses debit-positive).</p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@functions {
+    private static string FinTypeClass(GlAccountType t) => t switch
+    {
+        GlAccountType.Asset => "bk-finance-type bk-finance-type--asset",
+        GlAccountType.Liability => "bk-finance-type bk-finance-type--liability",
+        GlAccountType.Equity => "bk-finance-type bk-finance-type--equity",
+        GlAccountType.Revenue => "bk-finance-type bk-finance-type--revenue",
+        GlAccountType.Expense => "bk-finance-type bk-finance-type--expense",
+        _ => "bk-finance-type"
+    };
+}

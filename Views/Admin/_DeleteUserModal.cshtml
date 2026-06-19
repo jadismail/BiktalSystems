@@ -1,0 +1,29 @@
+<div class="bk-admin-modal d-none" id="bk-admin-delete-modal" role="dialog" aria-modal="true" aria-labelledby="bk-admin-delete-title" aria-describedby="bk-admin-delete-desc">
+    <div class="bk-admin-modal-backdrop" data-bk-delete-dismiss tabindex="-1" aria-hidden="true"></div>
+    <div class="bk-admin-modal-panel" role="document">
+        <button type="button" class="bk-admin-modal-close" data-bk-delete-dismiss aria-label="Close">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <div class="bk-admin-modal-icon" aria-hidden="true">
+            <i class="bi bi-person-x"></i>
+        </div>
+        <h2 class="bk-admin-modal-title" id="bk-admin-delete-title">Delete user account?</h2>
+        <p class="bk-admin-modal-desc" id="bk-admin-delete-desc">
+            This will permanently remove the account and revoke access. This action cannot be undone.
+        </p>
+        <div class="bk-admin-modal-user">
+            <div class="bk-admin-modal-user-name" id="bk-admin-delete-name"></div>
+            <div class="bk-admin-modal-user-email" id="bk-admin-delete-email"></div>
+        </div>
+        <ul class="bk-admin-modal-notes">
+            <li>Signed-in sessions will end immediately</li>
+            <li>Role assignments are removed</li>
+        </ul>
+        <div class="bk-admin-modal-actions">
+            <button type="button" class="btn btn-light border fw-semibold" data-bk-delete-dismiss>Cancel</button>
+            <button type="button" class="btn btn-danger fw-semibold" id="bk-admin-delete-confirm">
+                <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete account
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,145 @@
+@model OperationsHubViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Operations";
+    ViewData["Module"] = "Operations";
+    ViewData["ModuleSubtitle"] = "Daily store activity — sales, inventory, repairs, and supply chain.";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports bk-operations">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    <section class="bk-reports-kpis mb-4" aria-label="Operations pulse">
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-sun"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Daily sales</div>
+                <div class="bk-reports-kpi-value">@Model.DailySalesToday.ToString("C0", money)</div>
+                <div class="bk-reports-kpi-hint">@Model.DailySaleCountToday.ToString("N0", n) transactions today</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-calendar3"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Monthly sales</div>
+                <div class="bk-reports-kpi-value">@Model.MonthlySalesMtd.ToString("C0", money)</div>
+                <div class="bk-reports-kpi-hint">@Model.PeriodLabel · @Model.MonthlySaleCountMtd.ToString("N0", n) sales</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-exclamation-triangle"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Low stock alerts</div>
+                <div class="bk-reports-kpi-value">@Model.LowStockSkuCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">SKUs at or below reorder threshold</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-truck"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Open purchase orders</div>
+                <div class="bk-reports-kpi-value">@Model.OpenPurchaseOrderCount.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">Draft or open, not received</div>
+            </div>
+        </article>
+    </section>
+
+    <h2 class="h6 fw-bold bk-hero-title mb-3">Sales</h2>
+    <div class="bk-grid-tiles bk-reports-tiles mb-4">
+        <a asp-action="DailySales" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-sun"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Daily sales</h3>
+            <p class="small text-muted mb-0 fw-semibold">Today's POS and repair revenue.</p>
+        </a>
+        <a asp-action="MonthlySales" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-calendar3"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Monthly sales</h3>
+            <p class="small text-muted mb-0 fw-semibold">Month-to-date totals by channel.</p>
+        </a>
+        <a asp-action="Sales" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-grid-3x3-gap"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Sales by category</h3>
+            <p class="small text-muted mb-0 fw-semibold">Category, brand, product, and channel mix.</p>
+        </a>
+        <a asp-action="Sales" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-tags"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Sales by brand</h3>
+            <p class="small text-muted mb-0 fw-semibold">Brand revenue and margin in the sales report.</p>
+        </a>
+        <a asp-action="Sales" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-upc-scan"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Sales by product</h3>
+            <p class="small text-muted mb-0 fw-semibold">SKU-level revenue from POS lines.</p>
+        </a>
+        <a asp-action="Sales" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-trophy"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Top selling products</h3>
+            <p class="small text-muted mb-0 fw-semibold">Best performers by quantity and revenue.</p>
+        </a>
+        <a asp-action="SalesTrends" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-graph-up"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Sales trends</h3>
+            <p class="small text-muted mb-0 fw-semibold">Daily and weekly revenue charts.</p>
+        </a>
+        <a asp-action="ProductProfitability" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-percent"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Product profitability</h3>
+            <p class="small text-muted mb-0 fw-semibold">Margin by category, brand, and SKU.</p>
+        </a>
+    </div>
+
+    <h2 class="h6 fw-bold bk-hero-title mb-3">Inventory</h2>
+    <div class="bk-grid-tiles bk-reports-tiles mb-4">
+        <a asp-action="Inventory" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-boxes"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Real-time inventory</h3>
+            <p class="small text-muted mb-0 fw-semibold">Valuation, categories, and movement summary.</p>
+        </a>
+        <a asp-action="LowStock" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-exclamation-triangle"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Low stock alerts</h3>
+            <p class="small text-muted mb-0 fw-semibold">SKUs that need reorder attention.</p>
+        </a>
+        <a asp-action="InventoryAging" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-hourglass-split"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Inventory aging</h3>
+            <p class="small text-muted mb-0 fw-semibold">Slow movers and days on shelf.</p>
+        </a>
+        <a asp-action="StockMovement" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-arrow-left-right"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Stock movement</h3>
+            <p class="small text-muted mb-0 fw-semibold">@Model.InventoryMovementCountMtd.ToString("N0", n) movements MTD.</p>
+        </a>
+        <a asp-action="ImeiTracking" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-upc"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">IMEI tracking</h3>
+            <p class="small text-muted mb-0 fw-semibold">Serial-level device registry.</p>
+        </a>
+        <a asp-action="WarrantyTracking" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-shield-check"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Warranty tracking</h3>
+            <p class="small text-muted mb-0 fw-semibold">Active warranties and expiry alerts.</p>
+        </a>
+    </div>
+
+    <h2 class="h6 fw-bold bk-hero-title mb-3">Repairs &amp; supply</h2>
+    <div class="bk-grid-tiles bk-reports-tiles">
+        <a asp-action="Repairs" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-tools"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Repair revenue</h3>
+            <p class="small text-muted mb-0 fw-semibold">Pipeline, delivered MTD, and recent tickets.</p>
+        </a>
+        <a asp-action="TechnicianPerformance" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-person-gear"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Technician performance</h3>
+            <p class="small text-muted mb-0 fw-semibold">Tickets and revenue by technician.</p>
+        </a>
+        <a asp-action="PurchaseOrders" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-truck"></i></div>
+            <h3 class="h6 fw-bold bk-hero-title text-reset">Purchase orders</h3>
+            <p class="small text-muted mb-0 fw-semibold">Open PO pipeline and recent orders.</p>
+        </a>
+    </div>
+</div>

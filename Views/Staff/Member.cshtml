@@ -1,0 +1,89 @@
+@model StaffMemberDetailPageViewModel
+@{
+    ViewData["Title"] = Model.Form.DisplayName;
+    ViewData["Module"] = "Staff";
+    ViewData["ModuleSubtitle"] = "Edit team member profile.";
+}
+<div class="container pb-5 pt-3 bk-staff" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <nav class="bk-staff-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Team">Team</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Form.DisplayName</li>
+        </ol>
+    </nav>
+
+    @if (TempData["StaffMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-staff-panel p-4 p-lg-5">
+        <div class="bk-staff-panel-title">Profile</div>
+        <form asp-action="UpdateMember" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Form.Id" />
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="Form.DisplayName" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.DisplayName" class="form-control" />
+                    <span asp-validation-for="Form.DisplayName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.JobTitle" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.JobTitle" class="form-control" />
+                    <span asp-validation-for="Form.JobTitle" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.EmployeeCode" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.EmployeeCode" class="form-control font-monospace" />
+                    <span asp-validation-for="Form.EmployeeCode" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.WorkEmail" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.WorkEmail" class="form-control" />
+                    <span asp-validation-for="Form.WorkEmail" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.Phone" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.Phone" class="form-control" />
+                    <span asp-validation-for="Form.Phone" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.HireDate" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.HireDate" class="form-control" type="date" />
+                    <span asp-validation-for="Form.HireDate" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.TerminationDate" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.TerminationDate" class="form-control" type="date" />
+                    <span asp-validation-for="Form.TerminationDate" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Form.HourlyRate" class="form-label small fw-bold"></label>
+                    <input asp-for="Form.HourlyRate" class="form-control text-end" inputmode="decimal" />
+                    <span asp-validation-for="Form.HourlyRate" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Form.Notes" class="form-label small fw-bold"></label>
+                    <textarea asp-for="Form.Notes" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-primary fw-semibold px-4">Save changes</button>
+                <a asp-action="Team" class="btn btn-outline-secondary">Back to team</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

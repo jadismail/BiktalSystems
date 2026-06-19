@@ -1,0 +1,86 @@
+@model ReportsFinancialPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Accounting";
+    ViewData["Module"] = "Finance";
+    ViewData["ModuleSubtitle"] = "Premium ERP — trial balance, journals, ledgers, tax, and expenses.";
+    var n = CultureInfo.InvariantCulture;
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-finance">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    <p class="small mb-4">
+        <span class="badge bg-dark">Premium</span>
+        <span class="text-muted fw-semibold ms-2">Business insights are under <a asp-controller="Insights" asp-action="Index" class="fw-semibold">Insights</a>; operational reports under <a asp-controller="Operations" asp-action="Index" class="fw-semibold">Operations</a>.</span>
+    </p>
+
+    <div class="bk-reports-toolbar mb-3 d-flex flex-wrap gap-2">
+        <a asp-action="Accounts" class="btn btn-primary btn-sm fw-semibold">Chart of accounts</a>
+        <a asp-action="Journal" class="btn btn-outline-secondary btn-sm fw-semibold">Journals</a>
+        <a asp-action="Expenses" class="btn btn-outline-secondary btn-sm fw-semibold">Expenses</a>
+        <a asp-controller="Admin" asp-action="Tax" class="btn btn-outline-secondary btn-sm fw-semibold">Tax</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Finance home</a>
+    </div>
+
+    <section class="bk-finance-kpis mb-4" aria-label="Accounting snapshot">
+        <article class="bk-finance-kpi">
+            <div class="bk-finance-kpi-label">GL accounts</div>
+            <div class="bk-finance-kpi-value">@Model.ActiveGlAccountCount.ToString("N0")</div>
+        </article>
+        <article class="bk-finance-kpi">
+            <div class="bk-finance-kpi-label">Journal entries</div>
+            <div class="bk-finance-kpi-value">@Model.JournalEntryCount.ToString("N0")</div>
+        </article>
+        <article class="bk-finance-kpi">
+            <div class="bk-finance-kpi-label">This month</div>
+            <div class="bk-finance-kpi-value">@Model.JournalEntriesThisMonth.ToString("N0")</div>
+        </article>
+        <article class="bk-finance-kpi">
+            <div class="bk-finance-kpi-label">Expenses MTD</div>
+            <div class="bk-finance-kpi-value">@Model.ExpensesThisMonth.ToString("C0", money)</div>
+        </article>
+    </section>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="bk-finance-panel p-4">
+                <div class="bk-finance-panel-title">Accounts by type</div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var a in Model.AccountsByType)
+                    {
+                        <li class="list-group-item d-flex justify-content-between px-0 bg-transparent">
+                            <span>@GlAccountTypeReportLabels.Title(a.Type)</span>
+                            <span class="badge text-bg-light border">@a.Count</span>
+                        </li>
+                    }
+                </ul>
+                <p class="small text-muted mt-3 mb-0">Full P&amp;L and balance sheet views ship in the next finance release.</p>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="bk-finance-panel p-4">
+                <div class="bk-finance-panel-title">Trial balance preview</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr><th>Code</th><th>Account</th><th>Type</th><th class="text-end">Balance</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model.TrialBalancePreview)
+                            {
+                                <tr>
+                                    <td class="font-monospace small">@r.AccountCode</td>
+                                    <td>@r.Name</td>
+                                    <td>@GlAccountTypeReportLabels.Title(r.Type)</td>
+                                    <td class="text-end font-monospace">@r.Balance.ToString("C", money)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

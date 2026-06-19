@@ -1,0 +1,49 @@
+@model AdminSettingsFormModel
+@{
+    ViewData["Title"] = "System settings";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "Locale, numbering, receipt templates, and integrations.";
+}
+<div class="container pb-5 pt-3 bk-admin" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["AdminMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-admin-panel p-4 p-lg-5">
+        <div class="bk-admin-panel-title">Store profile</div>
+        <form asp-action="Settings" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="mb-3">
+                <label asp-for="StoreDisplayName" class="form-label small fw-bold"></label>
+                <input asp-for="StoreDisplayName" class="form-control" />
+                <span asp-validation-for="StoreDisplayName" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DefaultLocale" class="form-label small fw-bold"></label>
+                <select asp-for="DefaultLocale" class="form-select">
+                    <option value="en-US">en-US</option>
+                    <option value="en-GB">en-GB</option>
+                    <option value="ar-LB">ar-LB</option>
+                    <option value="fr-FR">fr-FR</option>
+                </select>
+                <span asp-validation-for="DefaultLocale" class="text-danger small"></span>
+            </div>
+            <div class="mb-0">
+                <label asp-for="ReceiptFooter" class="form-label small fw-bold"></label>
+                <textarea asp-for="ReceiptFooter" class="form-control" rows="3" placeholder="Thank you for shopping…"></textarea>
+                <span asp-validation-for="ReceiptFooter" class="text-danger small"></span>
+                <p class="form-text small mb-0">Shown on POS printed receipts.</p>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 fw-semibold">Save changes</button>
+        </form>
+    </div>
+</div>

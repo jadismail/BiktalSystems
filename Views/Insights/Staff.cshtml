@@ -1,0 +1,52 @@
+@model InsightsStaffViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Staff performance";
+    ViewData["Module"] = "Insights";
+    var n = CultureInfo.InvariantCulture;
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-reports bk-insights">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+    <div class="bk-reports-toolbar mb-3">
+        <a asp-controller="Staff" asp-action="Team" class="btn btn-primary btn-sm fw-semibold">Team</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Insights hub</a>
+    </div>
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Active staff</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.ActiveStaff.ToString("N0", n)</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Attendance entries MTD</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.AttendanceEntriesMtd.ToString("N0", n)</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Payroll drafts</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.PayrollDraftTotal.ToString("C0", money)</div>
+        </article>
+    </section>
+    <div class="bk-reports-panel p-4">
+        <div class="bk-reports-panel-title">Team (MTD attendance)</div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Name</th><th>Role</th><th class="text-end">Days</th><th class="text-end">Hours</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model.Team)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@m.DisplayName</td>
+                            <td class="small text-muted">@m.JobTitle</td>
+                            <td class="text-end font-monospace">@m.AttendanceDaysMtd</td>
+                            <td class="text-end font-monospace">@m.HoursMtd.ToString("N1", n)</td>
+                            <td>@(m.IsActive ? "Active" : "Inactive")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

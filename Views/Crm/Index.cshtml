@@ -1,0 +1,80 @@
+@model CrmIndexViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "CRM";
+    ViewData["Module"] = "CRM";
+    ViewData["ModuleSubtitle"] = "Customers, loyalty, installments, campaigns, and support.";
+    var n = CultureInfo.InvariantCulture;
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-crm">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <section class="bk-crm-kpis" aria-label="CRM snapshot">
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-people"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Active customers</div>
+                <div class="bk-crm-kpi-value">@Model.ActiveCustomerCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-life-preserver"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Open support tickets</div>
+                <div class="bk-crm-kpi-value">@Model.OpenSupportTicketCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-megaphone"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Active campaigns</div>
+                <div class="bk-crm-kpi-value">@Model.ActiveCampaignCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-wallet2"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Installments outstanding</div>
+                <div class="bk-crm-kpi-value">@Model.InstallmentOutstanding.ToString("C0", money)</div>
+            </div>
+        </article>
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-stars"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Loyalty points outstanding</div>
+                <div class="bk-crm-kpi-value">@Model.TotalLoyaltyPointsOutstanding.ToString("N0", n)</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="bk-grid-tiles bk-crm-tiles">
+        <a asp-action="Customers" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-person-vcard"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Customers</h2>
+            <p class="small text-muted mb-0 fw-semibold">Profiles, notes, and loyalty balance.</p>
+        </a>
+        <a asp-controller="Installments" asp-action="Index" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-calendar2-range"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Installments</h2>
+            <p class="small text-muted mb-0 fw-semibold">@Model.ActiveInstallmentPlanCount.ToString("N0", n) active plan(s) · payment schedules.</p>
+        </a>
+        <a asp-action="Loyalty" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-stars"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Loyalty</h2>
+            <p class="small text-muted mb-0 fw-semibold">Leaderboard and point adjustments.</p>
+        </a>
+        <a asp-action="Campaigns" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-megaphone"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Campaigns</h2>
+            <p class="small text-muted mb-0 fw-semibold">Channels, dates, and status.</p>
+        </a>
+        <a asp-action="Tickets" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-life-preserver"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Support tickets</h2>
+            <p class="small text-muted mb-0 fw-semibold">Non-repair cases (separate from Repairs).</p>
+        </a>
+    </div>
+</div>

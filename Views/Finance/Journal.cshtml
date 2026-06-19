@@ -1,0 +1,68 @@
+@model JournalListPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Journal entries";
+    ViewData["Module"] = "Finance";
+    ViewData["ModuleSubtitle"] = "Manual journals, reversals, and posting controls.";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-finance">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["FinanceMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-finance-toolbar">
+        <a asp-action="NewJournal" class="btn btn-primary fw-semibold"><i class="bi bi-plus-lg me-1"></i>New journal</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Finance home</a>
+        <span class="small text-muted fw-semibold ms-md-auto d-none d-md-inline">Last 100 entries · debits = credits per row</span>
+    </div>
+
+    <div class="bk-table-wrap bk-finance-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Memo</th>
+                        <th class="text-end" scope="col">Total</th>
+                        <th class="text-end" scope="col" style="width:6rem"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Entries.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="bk-empty">No journals yet — post your first entry.</div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Entries)
+                        {
+                            <tr>
+                                <td class="text-nowrap small text-muted">@row.EntryDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</td>
+                                <td class="font-monospace fw-bold">@row.Reference</td>
+                                <td class="small">@(string.IsNullOrWhiteSpace(row.Memo) ? "—" : row.Memo)</td>
+                                <td class="text-end font-monospace bk-finance-amount-pos fw-semibold">@row.TotalDebits.ToString("N2", money)</td>
+                                <td class="text-end">
+                                    <a asp-action="JournalDetail" asp-route-id="@row.Id" class="btn btn-sm btn-outline-primary fw-semibold">View</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

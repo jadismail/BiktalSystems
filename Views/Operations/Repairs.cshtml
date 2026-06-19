@@ -1,0 +1,71 @@
+@model InsightsRepairsViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Repair revenue";
+    ViewData["Module"] = "Operations";
+    var n = CultureInfo.InvariantCulture;
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var pct = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports bk-operations">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+    <div class="bk-reports-toolbar mb-3">
+        <a asp-controller="Repairs" asp-action="Tickets" class="btn btn-primary btn-sm fw-semibold">Tickets</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Operations hub</a>
+    </div>
+    <p class="small text-muted fw-semibold mb-3">@Model.PeriodLabel — margin = customer quote minus parts cost.</p>
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Open pipeline</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.EstimatedOpenRevenue.ToString("C0", money)</div>
+            <div class="bk-reports-kpi-hint">@Model.OpenTickets open tickets</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Delivered MTD</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.DeliveredRevenueMtd.ToString("C0", money)</div>
+            <div class="bk-reports-kpi-hint">@Model.DeliveredCountMtd delivered · margin @Model.DeliveredMarginMtd.ToString("C0", money)</div>
+        </article>
+    </section>
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">By status</div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var s in Model.StatusCounts)
+                    {
+                        <li class="list-group-item d-flex justify-content-between px-0 bg-transparent">
+                            <span>@RepairTicketStatusLabels.Title(s.Status)</span>
+                            <span class="badge text-bg-secondary">@s.Count</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Recent tickets</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr><th>Ticket</th><th>Customer</th><th>Status</th><th class="text-end">Quote</th><th class="text-end">Parts</th><th class="text-end">Margin</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.RecentTickets)
+                            {
+                                <tr>
+                                    <td><a asp-controller="Repairs" asp-action="Ticket" asp-route-id="@t.Id" class="fw-semibold font-monospace">@t.TicketNumber</a></td>
+                                    <td>@t.CustomerName</td>
+                                    <td>@RepairTicketStatusLabels.Title(t.Status)</td>
+                                    <td class="text-end font-monospace">@(t.EstimatedPrice?.ToString("C", money) ?? "—")</td>
+                                    <td class="text-end font-monospace">@(t.PartsCost?.ToString("C", money) ?? "—")</td>
+                                    <td class="text-end font-monospace fw-semibold">@(t.MarginAmount?.ToString("C", money) ?? "—")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

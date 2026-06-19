@@ -1,0 +1,129 @@
+@model AdminBackupsPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Backups";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "On-prem backup jobs and restore drills.";
+    var n = CultureInfo.InvariantCulture;
+    string FormatBytes(long? bytes)
+    {
+        if (bytes is null or <= 0) return "—";
+        var b = (double)bytes.Value;
+        string[] units = ["B", "KB", "MB", "GB"];
+        var i = 0;
+        while (b >= 1024 && i < units.Length - 1) { b /= 1024; i++; }
+        return $"{b:0.##} {units[i]}";
+    }
+}
+<div class="container pb-5 pt-3 bk-admin">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["AdminMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+            <div class="bk-admin-panel p-4 h-100">
+                <h2 class="h6 fw-bold mb-3">Schedule</h2>
+                <form asp-action="SaveBackupSchedule" method="post" class="mb-0">
+                    @Html.AntiForgeryToken()
+                    <label class="form-label small fw-bold" for="backup-notes">Notes</label>
+                    <textarea class="form-control mb-3" id="backup-notes" name="BackupScheduleNotes" rows="3">@Model.BackupScheduleNotes</textarea>
+                    <button type="submit" class="btn btn-outline-secondary btn-sm fw-semibold">Save schedule notes</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="bk-card-muted p-4 h-100">
+                <h2 class="h6 fw-bold mb-3">Last successful backup</h2>
+                @if (Model.LastSuccessfulBackup is { } last)
+                {
+                    <dl class="row small mb-0">
+                        <dt class="col-5 text-muted">When</dt>
+                        <dd class="col-7 fw-semibold mb-2">@last.CompletedAtUtc.ToLocalTime().ToString("f", n)</dd>
+                        <dt class="col-5 text-muted">Label</dt>
+                        <dd class="col-7 fw-semibold mb-2">@last.Label</dd>
+                        <dt class="col-5 text-muted">Checksum</dt>
+                        <dd class="col-7 font-monospace mb-2">@(last.Checksum ?? "—")</dd>
+                        <dt class="col-5 text-muted">Size</dt>
+                        <dd class="col-7 fw-semibold mb-0">@FormatBytes(last.SizeBytes)</dd>
+                    </dl>
+                }
+                else
+                {
+                    <div class="bk-empty py-3 mb-0">No successful backup recorded yet.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="bk-admin-panel p-4 mb-4">
+        <div class="bk-admin-panel-title">Log manual backup</div>
+        <form asp-action="LogBackup" method="post" class="row g-3 align-items-end">
+            @Html.AntiForgeryToken()
+            <div class="col-md-5">
+                <label class="form-label small fw-bold" for="log-label">Label</label>
+                <input class="form-control" id="log-label" name="Label" value="Manual backup" required maxlength="256" />
+            </div>
+            <div class="col-md-5">
+                <label class="form-label small fw-bold" for="log-notes">Notes</label>
+                <input class="form-control" id="log-notes" name="Notes" maxlength="2000" placeholder="Optional" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">Record</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bk-table-wrap bk-admin-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Completed</th>
+                        <th scope="col">Label</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Checksum</th>
+                        <th scope="col">Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RecentBackups.Count == 0)
+                    {
+                        <tr><td colspan="5"><div class="bk-empty">No backup history.</div></td></tr>
+                    }
+                    @foreach (var b in Model.RecentBackups)
+                    {
+                        <tr>
+                            <td class="small">@b.CompletedAtUtc.ToLocalTime().ToString("g", n)</td>
+                            <td class="fw-semibold">@b.Label</td>
+                            <td>
+                                @switch (b.Status)
+                                {
+                                    case AdminBackupStatus.Success:
+                                        <span class="badge rounded-pill text-bg-success">Success</span>
+                                        break;
+                                    case AdminBackupStatus.Failed:
+                                        <span class="badge rounded-pill text-bg-danger">Failed</span>
+                                        break;
+                                    default:
+                                        <span class="badge rounded-pill text-bg-warning">In progress</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="font-monospace small">@(b.Checksum ?? "—")</td>
+                            <td class="small">@FormatBytes(b.SizeBytes)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

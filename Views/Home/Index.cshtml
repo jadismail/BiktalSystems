@@ -1,0 +1,189 @@
+﻿@{
+    ViewData["Title"] = "Retail platform for tech stores";
+    ViewData["BodyClass"] = "bk-page-landing";
+}
+
+<div class="bk-landing">
+    <section class="bk-landing-hero" aria-labelledby="bk-landing-title">
+        <div class="bk-landing-hero-bg" aria-hidden="true"></div>
+        <div class="bk-landing-orbs" aria-hidden="true">
+            <span class="bk-landing-orb bk-landing-orb--a"></span>
+            <span class="bk-landing-orb bk-landing-orb--b"></span>
+            <span class="bk-landing-orb bk-landing-orb--c"></span>
+        </div>
+        <div class="container bk-landing-hero-inner">
+            <div class="row align-items-center g-5 g-lg-5">
+                <div class="col-lg-6">
+                    <p class="bk-landing-eyebrow">
+                        <span class="bk-landing-eyebrow-dot" aria-hidden="true"></span>
+                        Biktal Systems
+                    </p>
+                    <h1 id="bk-landing-title" class="bk-landing-title">
+                        Run your <span class="bk-landing-title-accent">mobile store</span> from one calm workspace.
+                    </h1>
+                    <p class="bk-landing-lead">
+                        Point of sale, inventory, repairs, CRM, finance, staff, and reports — composed as modules so your team moves fast without juggling spreadsheets.
+                    </p>
+                    <div class="bk-landing-cta d-flex flex-wrap gap-2">
+                        <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Login">
+                            <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Sign in
+                        </a>
+                        <a class="btn btn-outline-secondary btn-lg" asp-controller="Account" asp-action="Register">
+                            Create account
+                        </a>
+                    </div>
+                    <ul class="bk-landing-trust list-unstyled mb-0">
+                        <li><i class="bi bi-shield-check" aria-hidden="true"></i> Role-based access</li>
+                        <li><i class="bi bi-database" aria-hidden="true"></i> PostgreSQL-backed</li>
+                        <li><i class="bi bi-moon-stars" aria-hidden="true"></i> Light &amp; dark theme</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <div class="bk-landing-preview" aria-hidden="true">
+                        <div class="bk-landing-preview-chrome">
+                            <span class="bk-landing-preview-dot"></span>
+                            <span class="bk-landing-preview-dot"></span>
+                            <span class="bk-landing-preview-dot"></span>
+                            <span class="bk-landing-preview-label">POS · Live preview</span>
+                        </div>
+                        <div class="bk-landing-preview-body">
+                            <div class="bk-landing-preview-row bk-landing-preview-row--head">
+                                <span>Cart</span>
+                                <span class="bk-landing-preview-pill">3 items</span>
+                            </div>
+                            <div class="bk-landing-preview-line">
+                                <div>
+                                    <strong>iPhone 15 Pro 256GB</strong>
+                                    <small>PHONE-15P-256</small>
+                                </div>
+                                <span>$1,099.00</span>
+                            </div>
+                            <div class="bk-landing-preview-line">
+                                <div>
+                                    <strong>USB-C Fast Charger</strong>
+                                    <small>ACC-UC35</small>
+                                </div>
+                                <span>$29.99</span>
+                            </div>
+                            <div class="bk-landing-preview-line">
+                                <div>
+                                    <strong>Tempered Glass</strong>
+                                    <small>ACC-TG-UNI</small>
+                                </div>
+                                <span>$12.50</span>
+                            </div>
+                            <div class="bk-landing-preview-totals">
+                                <div><span>Subtotal</span><span>$1,141.49</span></div>
+                                <div><span>Tax</span><span>$102.73</span></div>
+                                <div class="bk-landing-preview-total"><span>Total</span><span>$1,244.22</span></div>
+                            </div>
+                            <div class="bk-landing-preview-lbp">
+                                <span>LBP change helper</span>
+                                <strong>358,000 LBP</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bk-landing-modules" aria-labelledby="bk-landing-modules-title">
+        <div class="container">
+            <div class="bk-landing-section-head text-center">
+                <h2 id="bk-landing-modules-title" class="bk-landing-section-title">Everything in one platform</h2>
+                <p class="bk-landing-section-lead">Open the modules you need today — each area is built for phone and accessory retail workflows.</p>
+            </div>
+            <div class="bk-landing-module-grid">
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--pos"><i class="bi bi-cash-stack" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">POS</h3>
+                    <p class="bk-landing-module-desc">Fast checkout, tax, receipts, and LBP change split for cashiers.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--inv"><i class="bi bi-box-seam" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">Inventory</h3>
+                    <p class="bk-landing-module-desc">Products, stock, warehouses, and purchase orders.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--rep"><i class="bi bi-tools" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">Repairs</h3>
+                    <p class="bk-landing-module-desc">Device check-in, tickets, and repair status tracking.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--fin"><i class="bi bi-bank" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">Finance</h3>
+                    <p class="bk-landing-module-desc">Chart of accounts, journals, expenses, and cashbox.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--crm"><i class="bi bi-people" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">CRM</h3>
+                    <p class="bk-landing-module-desc">Customers, loyalty, campaigns, and support tickets.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--rpt"><i class="bi bi-clipboard-data" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">Operations</h3>
+                    <p class="bk-landing-module-desc">Daily sales, inventory, repairs, and purchase order reports.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--rpt"><i class="bi bi-lightbulb" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">Insights</h3>
+                    <p class="bk-landing-module-desc">Business health — revenue, margin, expenses, and cash position.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--stf"><i class="bi bi-person-badge" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">Staff</h3>
+                    <p class="bk-landing-module-desc">Team profiles, attendance, and payroll runs.</p>
+                </article>
+                <article class="bk-landing-module">
+                    <div class="bk-landing-module-icon bk-landing-module-icon--adm"><i class="bi bi-gear" aria-hidden="true"></i></div>
+                    <h3 class="bk-landing-module-name">Admin</h3>
+                    <p class="bk-landing-module-desc">Store settings, branches, users, tax, and backups.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="bk-landing-features" aria-labelledby="bk-landing-features-title">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="bk-landing-feature-card h-100">
+                        <div class="bk-landing-feature-icon"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i></div>
+                        <h3 class="h6 fw-bold mb-2">Built for the counter</h3>
+                        <p class="small text-muted mb-0 fw-semibold">POS is tuned for quick scans, cart edits, and printing receipts — with optional Lebanese pound change math at the register.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="bk-landing-feature-card h-100">
+                        <div class="bk-landing-feature-icon"><i class="bi bi-wrench-adjustable" aria-hidden="true"></i></div>
+                        <h3 class="h6 fw-bold mb-2">Repairs + retail together</h3>
+                        <p class="small text-muted mb-0 fw-semibold">Track repair tickets alongside phone sales and accessories — one store, one system.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="bk-landing-feature-card h-100">
+                        <div class="bk-landing-feature-icon"><i class="bi bi-journal-check" aria-hidden="true"></i></div>
+                        <h3 class="h6 fw-bold mb-2">Finance that scales</h3>
+                        <p class="small text-muted mb-0 fw-semibold">Structured general ledger, journal entries, and reports when you are ready to close the books properly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bk-landing-cta-band" aria-labelledby="bk-landing-cta-title">
+        <div class="container">
+            <div class="bk-landing-cta-card">
+                <div class="bk-landing-cta-copy">
+                    <h2 id="bk-landing-cta-title" class="h4 fw-bold mb-2">Ready to open your workspace?</h2>
+                    <p class="small text-muted mb-0 fw-semibold">Sign in with your store account, or create the first user to become administrator on a fresh database.</p>
+                </div>
+                <div class="bk-landing-cta-actions d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Login">Sign in</a>
+                    <a class="btn btn-outline-secondary btn-lg" asp-controller="Account" asp-action="Register">Get started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

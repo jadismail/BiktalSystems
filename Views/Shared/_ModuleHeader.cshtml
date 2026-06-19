@@ -1,0 +1,15 @@
+@{
+    var module = ViewData["Module"] as string;
+    var subtitle = ViewData["ModuleSubtitle"] as string;
+}
+<div class="bk-module-head mb-4">
+    @if (!string.IsNullOrWhiteSpace(module))
+    {
+        <p class="bk-landing-badge">@module</p>
+    }
+    <h1 class="h2 fw-bold bk-hero-title mb-1">@ViewData["Title"]</h1>
+    @if (!string.IsNullOrWhiteSpace(subtitle))
+    {
+        <p class="text-muted mb-0 fw-semibold small">@subtitle</p>
+    }
+</div>

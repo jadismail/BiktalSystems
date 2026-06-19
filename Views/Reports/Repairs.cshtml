@@ -1,0 +1,97 @@
+@model ReportsRepairsPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Repair reports";
+    ViewData["Module"] = "Reports";
+    ViewData["ModuleSubtitle"] = "Status funnel and recent tickets from the repairs board.";
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-reports">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-reports-toolbar mb-3">
+        <a asp-controller="Repairs" asp-action="Tickets" class="btn btn-primary btn-sm fw-semibold">Repair tickets</a>
+        <a asp-controller="Repairs" asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Repairs home</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">Reports home</a>
+    </div>
+
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4" aria-label="Repair totals">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-icon bk-reports-kpi-icon--sm" aria-hidden="true"><i class="bi bi-ticket-detailed"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">All tickets</div>
+                <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalTickets.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-icon bk-reports-kpi-icon--sm" aria-hidden="true"><i class="bi bi-hourglass-split"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Open pipeline</div>
+                <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.OpenTickets.ToString("N0", n)</div>
+                <div class="bk-reports-kpi-hint">Not delivered / cancelled</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-4">
+            <div class="bk-reports-panel p-4 h-100">
+                <div class="bk-reports-panel-title">By status</div>
+                <ul class="list-group list-group-flush">
+                    @if (Model.StatusCounts.Count == 0)
+                    {
+                        <li class="list-group-item px-0 bg-transparent border-0"><div class="bk-empty mb-0">No repair data.</div></li>
+                    }
+                    else
+                    {
+                        @foreach (var s in Model.StatusCounts)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent border-secondary-subtle">
+                                <span>@RepairTicketStatusLabels.Title(s.Status)</span>
+                                <span class="badge text-bg-secondary rounded-pill">@s.Count.ToString("N0", n)</span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="bk-reports-panel p-4">
+                <div class="bk-reports-panel-title">Recent tickets</div>
+                <div class="bk-table-wrap bk-reports-table">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ticket</th>
+                                    <th>Customer</th>
+                                    <th>Device</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Est.</th>
+                                    <th class="text-end" style="width:6rem"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var t in Model.RecentTickets)
+                                {
+                                    <tr>
+                                        <td class="font-monospace fw-semibold">@t.TicketNumber</td>
+                                        <td class="small">@t.CustomerName</td>
+                                        <td class="small text-muted">@t.DeviceSummary</td>
+                                        <td><span class="badge text-bg-light border">@RepairTicketStatusLabels.Title(t.Status)</span></td>
+                                        <td class="text-end font-monospace small">@(t.EstimatedPrice is { } ep ? ep.ToString("N2", n) : "—")</td>
+                                        <td class="text-end">
+                                            <a asp-controller="Repairs" asp-action="Ticket" asp-route-id="@t.Id" class="btn btn-sm btn-outline-primary fw-semibold">Open</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

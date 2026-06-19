@@ -1,0 +1,79 @@
+@model NewRepairTicketFormModel
+@{
+    ViewData["Title"] = "New check-in";
+    ViewData["Module"] = "Repairs";
+    ViewData["ModuleSubtitle"] = "Capture device, issue, accessories, and customer contact.";
+}
+<div class="container pb-5 pt-3" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-card p-4 p-lg-5">
+        <form asp-action="CreateTicket" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="CustomerName" class="form-label small fw-bold"></label>
+                    <input asp-for="CustomerName" class="form-control" autocomplete="name" />
+                    <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="DeviceSummary" class="form-label small fw-bold"></label>
+                    <input asp-for="DeviceSummary" class="form-control" placeholder="e.g. iPhone 15 Pro 256GB" />
+                    <span asp-validation-for="DeviceSummary" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Phone" class="form-label small fw-bold"></label>
+                    <input asp-for="Phone" class="form-control" autocomplete="tel" />
+                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label small fw-bold"></label>
+                    <input asp-for="Email" class="form-control" autocomplete="email" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="SerialOrImei" class="form-label small fw-bold"></label>
+                    <input asp-for="SerialOrImei" class="form-control" placeholder="Scan or type" />
+                    <span asp-validation-for="SerialOrImei" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="IssueDescription" class="form-label small fw-bold"></label>
+                    <textarea asp-for="IssueDescription" class="form-control" rows="4" placeholder="Customer reported problem…"></textarea>
+                    <span asp-validation-for="IssueDescription" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="AccessoriesNotes" class="form-label small fw-bold"></label>
+                    <input asp-for="AccessoriesNotes" class="form-control" placeholder="Case, SIM tool, …" />
+                    <span asp-validation-for="AccessoriesNotes" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="EstimatedPrice" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="EstimatedPrice" class="form-control" inputmode="decimal" placeholder="Customer quote" />
+                    </div>
+                    <span asp-validation-for="EstimatedPrice" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PartsCost" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="PartsCost" class="form-control" inputmode="decimal" placeholder="Parts & materials" />
+                    </div>
+                    <span asp-validation-for="PartsCost" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Create ticket</button>
+                <a asp-action="Tickets" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

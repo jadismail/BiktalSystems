@@ -1,0 +1,314 @@
+@model Biktal.WebMVC.Models.PosIndexViewModel
+@using System.Globalization
+@using System.Text.Json
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    ViewData["Title"] = "Point of Sale";
+    var jsonOpts = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    var catalogJson = JsonSerializer.Serialize(Model.Catalog, jsonOpts);
+    var taxPct = Model.TaxRate * 100m;
+    var lbpFmt = Model.LbpPerUsd.ToString("N0", CultureInfo.InvariantCulture);
+    var antiforgery = Antiforgery.GetAndStoreTokens(Context);
+}
+<script type="application/json" id="bk-pos-catalog-json">@Html.Raw(catalogJson)</script>
+
+<div id="bk-pos-root"
+     class="bk-pos-v2"
+     data-tax-rate="@Model.TaxRate.ToString(CultureInfo.InvariantCulture)"
+     data-tax-percent="@taxPct.ToString("0.##", CultureInfo.InvariantCulture)"
+     data-store-name="@Model.StoreName"
+     data-receipt-footer="@Model.ReceiptFooter"
+     data-prices-tax-inclusive="@Model.PricesTaxInclusive.ToString().ToLowerInvariant()"
+     data-currency="@Model.CurrencyCode"
+     data-complete-url="@Url.Action("CompleteSale", "Pos")"
+     data-antiforgery="@antiforgery.RequestToken"
+     data-lbp-per-usd="@Model.LbpPerUsd.ToString(CultureInfo.InvariantCulture)">
+    <header class="bk-pos-v2-header">
+        <div class="bk-pos-v2-header-inner">
+            <div class="bk-pos-v2-header-left">
+                <a class="bk-pos-v2-icon-btn" asp-controller="Dashboard" asp-action="Index" aria-label="Back to dashboard">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                </a>
+                <div>
+                    <h1 class="bk-pos-v2-title">Point of Sale</h1>
+                    <p class="bk-pos-v2-subtitle d-none d-sm-block">Process sales and transactions</p>
+                </div>
+            </div>
+            <button type="button"
+                    class="btn btn-dark bk-pos-v2-scan"
+                    id="bk-pos-new-session"
+                    aria-label="Start a new POS session">
+                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>
+                <span class="d-none d-sm-inline">New session</span>
+            </button>
+        </div>
+        <div class="bk-pos-v2-sessions-wrap">
+            <div class="bk-pos-v2-sessions" id="bk-pos-sessions" role="tablist" aria-label="POS sessions"></div>
+        </div>
+    </header>
+
+    <main class="bk-pos-v2-main">
+        <div class="bk-pos-v2-grid">
+            <!-- Shopping cart (2 cols on lg) -->
+            <section class="bk-pos-v2-card bk-pos-v2-cart" aria-label="Shopping cart">
+                <div class="bk-pos-v2-card-head">
+                    <h2 class="bk-pos-v2-card-title">Shopping cart</h2>
+                    <button type="button" class="bk-pos-v2-danger-link" id="bk-pos-cart-clear">
+                        <i class="bi bi-trash me-1" aria-hidden="true"></i>Clear
+                    </button>
+                </div>
+
+                <div class="bk-pos-v2-field">
+                    <label class="bk-pos-v2-label" for="bk-pos-customer-search">Customer</label>
+                    <div class="bk-pos-v2-input-row">
+                        <div class="bk-pos-v2-dd-wrap flex-grow-1">
+                            <input type="text"
+                                   class="form-control bk-pos-v2-input"
+                                   id="bk-pos-customer-search"
+                                   placeholder="Search or select customer…"
+                                   autocomplete="off" />
+                            <div class="bk-pos-v2-dropdown d-none" id="bk-pos-customer-dd" role="listbox"></div>
+                        </div>
+                        <button type="button" class="btn btn-light border bk-pos-v2-icon-only" id="bk-pos-customer-add" aria-label="Add customer">
+                            <i class="bi bi-person-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="bk-pos-v2-chip d-none" id="bk-pos-customer-chip">
+                        <span class="bk-pos-v2-chip-text" id="bk-pos-customer-chip-name"></span>
+                        <button type="button" class="bk-pos-v2-chip-x" id="bk-pos-customer-clear" aria-label="Clear customer">
+                            <i class="bi bi-x-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bk-pos-v2-field">
+                    <label class="bk-pos-v2-label" for="bk-pos-product-search">Search products</label>
+                    <div class="bk-pos-v2-input-row">
+                        <div class="bk-pos-v2-dd-wrap flex-grow-1">
+                            <input type="text"
+                                   class="form-control bk-pos-v2-input"
+                                   id="bk-pos-product-search"
+                                   placeholder="Search by name, SKU, or barcode…"
+                                   autocomplete="off" />
+                            <div class="bk-pos-v2-dropdown d-none" id="bk-pos-product-dd" role="listbox"></div>
+                        </div>
+                        <button type="button"
+                                class="btn btn-dark bk-pos-v2-scan bk-pos-v2-scan-inline"
+                                id="bk-pos-scan-open"
+                                aria-label="Scan barcode">
+                            <i class="bi bi-upc-scan" aria-hidden="true"></i>
+                            <span class="d-none d-md-inline ms-1">Scan</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bk-pos-v2-cart-shell">
+                    <div class="bk-pos-v2-cart-lines" id="bk-pos-cart-lines"></div>
+                </div>
+
+            </section>
+
+            <!-- Payment summary -->
+            <aside class="bk-pos-v2-card bk-pos-v2-summary" aria-label="Payment summary">
+                <h2 class="bk-pos-v2-card-title mb-4">Payment summary</h2>
+
+                <div class="bk-pos-v2-sum-rows">
+                    <div class="bk-pos-v2-sum-row">
+                        <span>Subtotal</span>
+                        <span id="bk-pos-subtotal">$0.00</span>
+                    </div>
+                    <div class="bk-pos-v2-sum-row">
+                        <span>Discount</span>
+                        <span class="bk-pos-v2-success" id="bk-pos-discount">−$0.00</span>
+                    </div>
+                    <div class="bk-pos-v2-sum-row">
+                        <span>Tax (<span id="bk-pos-tax-pct"></span>%)</span>
+                        <span id="bk-pos-tax">$0.00</span>
+                    </div>
+                    <div class="bk-pos-v2-sum-row bk-pos-v2-sum-total">
+                        <span>Total</span>
+                        <span id="bk-pos-total">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="bk-pos-v2-field">
+                    <label class="bk-pos-v2-label" for="bk-pos-promo">Discount ($)</label>
+                    <div class="bk-pos-v2-input-row">
+                        <input type="number" class="form-control bk-pos-v2-input" id="bk-pos-promo" min="0" step="0.01" placeholder="0.00" autocomplete="off" />
+                        <button type="button" class="btn btn-light border" id="bk-pos-promo-apply">Apply</button>
+                    </div>
+                </div>
+
+                <div class="bk-pos-v2-field bk-pos-v2-payments">
+                    <div class="bk-pos-v2-payments-head">
+                        <label class="bk-pos-v2-label mb-0">Payment</label>
+                        <div class="bk-pos-v2-pay-quick" role="group" aria-label="Quick payment">
+                            <button type="button" class="bk-pos-v2-pay-quick-btn" data-pay-all="Cash" title="Pay full amount in cash">Cash</button>
+                            <button type="button" class="bk-pos-v2-pay-quick-btn" data-pay-all="Whish" title="Pay full amount with Whish">Whish</button>
+                            <button type="button" class="bk-pos-v2-pay-quick-btn" data-pay-all="Card" title="Pay full amount by card">Card</button>
+                        </div>
+                    </div>
+
+                    <div class="bk-pos-v2-payment-split">
+                        <div class="bk-pos-v2-payment-row">
+                            <span class="bk-pos-v2-payment-label"><i class="bi bi-cash-stack" aria-hidden="true"></i> Cash</span>
+                            <input type="number" class="form-control bk-pos-v2-input bk-pos-v2-payment-input" id="bk-pos-pay-cash" data-pay-method="Cash" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+                            <button type="button" class="bk-pos-v2-payment-fill" data-pay-fill="Cash">Rest</button>
+                        </div>
+                        <div class="bk-pos-v2-payment-row">
+                            <span class="bk-pos-v2-payment-label"><i class="bi bi-phone" aria-hidden="true"></i> Whish</span>
+                            <input type="number" class="form-control bk-pos-v2-input bk-pos-v2-payment-input" id="bk-pos-pay-whish" data-pay-method="Whish" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+                            <button type="button" class="bk-pos-v2-payment-fill" data-pay-fill="Whish">Rest</button>
+                        </div>
+                        <div class="bk-pos-v2-payment-row">
+                            <span class="bk-pos-v2-payment-label"><i class="bi bi-credit-card" aria-hidden="true"></i> Card</span>
+                            <input type="number" class="form-control bk-pos-v2-input bk-pos-v2-payment-input" id="bk-pos-pay-card" data-pay-method="Card" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+                            <button type="button" class="bk-pos-v2-payment-fill" data-pay-fill="Card">Rest</button>
+                        </div>
+                    </div>
+
+                    <div class="bk-pos-v2-payment-status">
+                        <span>Paid <strong id="bk-pos-pay-paid">$0.00</strong></span>
+                        <span class="bk-pos-v2-payment-remaining" id="bk-pos-pay-remaining-wrap">Due <strong id="bk-pos-pay-remaining">$0.00</strong></span>
+                    </div>
+
+                    <div class="bk-pos-v2-field mb-0 d-none" id="bk-pos-cash-tendered-wrap">
+                        <label class="bk-pos-v2-label" for="bk-pos-cash-tendered">Amount received (cash)</label>
+                        <input type="number" class="form-control bk-pos-v2-input" id="bk-pos-cash-tendered" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+                    </div>
+
+                    <p class="bk-pos-v2-change d-none" id="bk-pos-change-wrap">
+                        <span id="bk-pos-change-label">Change</span>:
+                        <span id="bk-pos-change">$0.00</span>
+                    </p>
+                </div>
+
+                <div class="bk-pos-v2-lbp d-none" id="bk-pos-lbp-wrap" aria-label="Lebanese pound change helper">
+                    <div class="bk-pos-v2-lbp-head">
+                        <span class="bk-pos-v2-lbp-title"><i class="bi bi-cash-coin me-1" aria-hidden="true"></i>Lebanese pound (LBP)</span>
+                        <span class="bk-pos-v2-lbp-rate" id="bk-pos-lbp-rate-label">1 USD = @lbpFmt LBP</span>
+                    </div>
+                    <p class="bk-pos-v2-lbp-hint small text-muted mb-2 mb-md-3">
+                        Split change: enter how much you return in USD; the rest is shown in LBP for the customer.
+                    </p>
+                    <div class="bk-pos-v2-lbp-total">
+                        <span>Total change</span>
+                        <strong id="bk-pos-lbp-total-change">— LBP</strong>
+                    </div>
+                    <label class="bk-pos-v2-label small" for="bk-pos-lbp-usd">Change returned in USD</label>
+                    <input type="number" class="form-control bk-pos-v2-input bk-pos-v2-lbp-input" id="bk-pos-lbp-usd" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+                    <div class="bk-pos-v2-lbp-remain">
+                        <span>Give back in LBP</span>
+                        <strong id="bk-pos-lbp-remain">— LBP</strong>
+                    </div>
+                </div>
+
+                <div class="bk-pos-v2-invoice-opt">
+                    <input class="form-check-input" type="checkbox" id="bk-pos-issue-invoice" />
+                    <label class="form-check-label" for="bk-pos-issue-invoice">
+                        Issue invoice <span class="text-muted">(requires customer)</span>
+                    </label>
+                </div>
+
+                <button type="button" class="btn bk-pos-v2-complete w-100" id="bk-pos-complete" disabled>
+                    <i class="bi bi-check-circle me-2" aria-hidden="true"></i>Complete sale
+                </button>
+                <button type="button" class="btn btn-outline-secondary w-100 mt-2" id="bk-pos-print" disabled>
+                    <i class="bi bi-printer me-2" aria-hidden="true"></i>Print receipt
+                </button>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Barcode modal -->
+    <div class="bk-pos-v2-modal d-none" id="bk-pos-modal-scan" role="dialog" aria-modal="true" aria-labelledby="bk-pos-modal-scan-title">
+        <div class="bk-pos-v2-modal-backdrop" data-close-modal="scan"></div>
+        <div class="bk-pos-v2-modal-panel">
+            <div class="bk-pos-v2-modal-head">
+                <h3 class="bk-pos-v2-modal-title" id="bk-pos-modal-scan-title">Scan barcode</h3>
+                <button type="button" class="bk-pos-v2-icon-btn" data-close-modal="scan" aria-label="Close">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="bk-pos-v2-scan-placeholder">
+                <i class="bi bi-camera-video" aria-hidden="true"></i>
+                <p>Camera scanner hooks here (initBarcodeScanner in your Blazor app).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add customer modal -->
+    <div class="bk-pos-v2-modal d-none" id="bk-pos-modal-customer" role="dialog" aria-modal="true" aria-labelledby="bk-pos-modal-cust-title">
+        <div class="bk-pos-v2-modal-backdrop" data-close-modal="customer"></div>
+        <div class="bk-pos-v2-modal-panel bk-pos-v2-modal-panel--sm">
+            <div class="bk-pos-v2-modal-head">
+                <h3 class="bk-pos-v2-modal-title" id="bk-pos-modal-cust-title">Add customer</h3>
+                <button type="button" class="bk-pos-v2-icon-btn" data-close-modal="customer" aria-label="Close">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="bk-pos-v2-modal-body">
+                <div class="mb-3">
+                    <label class="form-label" for="bk-pos-new-cust-name">Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="bk-pos-new-cust-name" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="bk-pos-new-cust-email">Email</label>
+                    <input type="email" class="form-control" id="bk-pos-new-cust-email" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="bk-pos-new-cust-phone">Phone</label>
+                    <input type="tel" class="form-control" id="bk-pos-new-cust-phone" />
+                </div>
+                <div class="d-flex gap-2 pt-2">
+                    <button type="button" class="btn btn-outline-secondary flex-fill" data-close-modal="customer">Cancel</button>
+                    <button type="button" class="btn btn-primary flex-fill" id="bk-pos-new-cust-save">Save customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sale receipt / invoice -->
+    <div class="bk-pos-v2-modal d-none" id="bk-pos-modal-receipt" role="dialog" aria-modal="true" aria-labelledby="bk-pos-modal-receipt-title">
+        <div class="bk-pos-v2-modal-backdrop" data-close-modal="receipt"></div>
+        <div class="bk-pos-v2-modal-panel bk-pos-v2-modal-panel--receipt" id="bk-pos-sale-doc-panel">
+            <div class="bk-pos-v2-modal-head">
+                <h3 class="bk-pos-v2-modal-title" id="bk-pos-modal-receipt-title">Sale complete</h3>
+                <button type="button" class="bk-pos-v2-icon-btn" data-close-modal="receipt" aria-label="Close">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="bk-pos-v2-modal-body bk-pos-v2-receipt-wrap">
+                <div class="bk-pos-v2-doc-tabs" role="tablist" aria-label="Document type">
+                    <button type="button" class="bk-pos-v2-doc-tab is-active" data-doc-view="receipt" role="tab" aria-selected="true">Receipt</button>
+                    <button type="button" class="bk-pos-v2-doc-tab" data-doc-view="invoice" role="tab" aria-selected="false">Invoice</button>
+                </div>
+                <div class="bk-pos-v2-receipt" id="bk-pos-receipt-print-area">
+                    <div id="bk-pos-receipt-body"></div>
+                </div>
+                <div class="bk-pos-v2-receipt-actions d-flex flex-wrap gap-2 pt-3">
+                    <button type="button" class="btn btn-primary flex-fill" id="bk-pos-receipt-print">
+                        <i class="bi bi-printer me-2" aria-hidden="true"></i>Print receipt
+                    </button>
+                    <button type="button" class="btn btn-outline-primary flex-fill" id="bk-pos-invoice-print">
+                        <i class="bi bi-file-earmark-text me-2" aria-hidden="true"></i>Print invoice
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary flex-fill" data-close-modal="receipt">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="bk-pos-v2-toast d-none" id="bk-pos-toast" role="status">
+        <i class="bi bk-pos-v2-toast-icon" id="bk-pos-toast-icon" aria-hidden="true"></i>
+        <p class="bk-pos-v2-toast-msg mb-0" id="bk-pos-toast-msg"></p>
+        <button type="button" class="bk-pos-v2-toast-close" id="bk-pos-toast-close" aria-label="Dismiss">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/pos.js" asp-append-version="true"></script>
+}

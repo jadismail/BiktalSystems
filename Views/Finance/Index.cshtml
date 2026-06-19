@@ -1,0 +1,77 @@
+@model FinanceIndexViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Finance";
+    ViewData["Module"] = "Finance";
+    ViewData["ModuleSubtitle"] = "General ledger, cashbox, and financial statements.";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+<div class="container pb-5 pt-3 bk-finance">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    <section class="bk-finance-kpis" aria-label="Finance snapshot">
+        <article class="bk-finance-kpi bk-finance-kpi--accounts">
+            <div class="bk-finance-kpi-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></div>
+            <div class="bk-finance-kpi-body">
+                <div class="bk-finance-kpi-label">Active GL accounts</div>
+                <div class="bk-finance-kpi-value">@Model.ActiveAccountCount.ToString("N0")</div>
+            </div>
+        </article>
+        <article class="bk-finance-kpi bk-finance-kpi--journals">
+            <div class="bk-finance-kpi-icon" aria-hidden="true"><i class="bi bi-columns-gap"></i></div>
+            <div class="bk-finance-kpi-body">
+                <div class="bk-finance-kpi-label">Journal entries</div>
+                <div class="bk-finance-kpi-value">@Model.JournalEntryCount.ToString("N0")</div>
+            </div>
+        </article>
+        <article class="bk-finance-kpi bk-finance-kpi--month">
+            <div class="bk-finance-kpi-icon" aria-hidden="true"><i class="bi bi-calendar3"></i></div>
+            <div class="bk-finance-kpi-body">
+                <div class="bk-finance-kpi-label">This month</div>
+                <div class="bk-finance-kpi-value">@Model.JournalEntriesThisMonth.ToString("N0")</div>
+            </div>
+        </article>
+        <article class="bk-finance-kpi bk-finance-kpi--expense">
+            <div class="bk-finance-kpi-icon" aria-hidden="true"><i class="bi bi-cash-stack"></i></div>
+            <div class="bk-finance-kpi-body">
+                <div class="bk-finance-kpi-label">Expenses (MTD)</div>
+                <div class="bk-finance-kpi-value">@Model.ExpensesThisMonthTotal.ToString("C0", money)</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="bk-grid-tiles bk-finance-tiles">
+        <a asp-action="Accounts" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-journal-text"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Chart of accounts</h2>
+            <p class="small text-muted mb-0 fw-semibold">Five bucket COA with posting balances.</p>
+        </a>
+        <a asp-action="Journal" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-pencil-square"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Journal entries</h2>
+            <p class="small text-muted mb-0 fw-semibold">Balanced double-entry journals.</p>
+        </a>
+        <a asp-action="Cashbox" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-safe"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Cashbox</h2>
+            <p class="small text-muted mb-0 fw-semibold">Open the drawer, reconcile Current Cash &amp; Whish daily.</p>
+        </a>
+        <a asp-action="Expenses" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-receipt"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Expenses</h2>
+            <p class="small text-muted mb-0 fw-semibold">Operating costs log (GL link later).</p>
+        </a>
+        <a asp-action="Aging" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-graph-up-arrow"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Aging</h2>
+            <p class="small text-muted mb-0 fw-semibold">AR/AP buckets (coming next).</p>
+        </a>
+        <a asp-action="Accounting" class="bk-tile text-decoration-none">
+            <div class="bk-tile-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Accounting <span class="badge bg-dark ms-1" style="font-size:0.65rem">Premium</span></h2>
+            <p class="small text-muted mb-0 fw-semibold">Trial balance, journals, ledgers, tax, expenses.</p>
+        </a>
+    </div>
+</div>

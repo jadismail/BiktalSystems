@@ -1,0 +1,269 @@
+@model CashboxPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Cashbox";
+    ViewData["Module"] = "Finance";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var active = Model.ActiveSession;
+}
+
+<div class="container pb-5 pt-3 bk-finance">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["FinanceMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["FinanceError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-finance-callout mb-4" role="status">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <div>
+            Open the drawer each morning with your starting cash and Whish balance. POS sales during the session update expected totals.
+            At close, count each account and compare to the system expected amount.
+            Full chart of accounts is under <a asp-action="Accounts" class="fw-semibold">Chart of accounts</a>.
+        </div>
+    </div>
+
+    <section class="mb-4" aria-label="Payment accounts">
+        <div class="bk-finance-panel-title mb-3">Payment accounts</div>
+        <div class="row g-3">
+            @foreach (var acct in Model.PaymentAccounts)
+            {
+                <div class="col-md-6">
+                    <div class="bk-finance-panel p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <div>
+                                <div class="text-muted small fw-semibold text-uppercase">@acct.AccountCode</div>
+                                <h2 class="h5 fw-bold mb-0">@acct.Name</h2>
+                            </div>
+                            <span class="badge text-bg-light border">GL balance</span>
+                        </div>
+                        <div class="bk-finance-kpi-value mb-1">@acct.PostedBalance.ToString("C", money)</div>
+                        @if (active is not null)
+                        {
+                            <p class="small text-muted mb-0 fw-semibold">
+                                Today's session sales: <span class="text-dark">@acct.SessionSales.ToString("C", money)</span>
+                            </p>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <div class="row g-4 mb-4">
+        @if (active is null)
+        {
+            <div class="col-lg-6">
+                <div class="bk-finance-panel p-4 h-100">
+                    <div class="bk-finance-panel-title">Open session</div>
+                    <p class="small text-muted fw-semibold mb-3">
+                        Count the cash in the drawer and your Whish wallet balance before the first sale.
+                    </p>
+                    <form asp-action="OpenCashboxSession" method="post" class="row g-3">
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-6">
+                            <label asp-for="OpenForm.OpeningCashFloat" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="OpenForm.OpeningCashFloat" class="form-control" inputmode="decimal" step="0.01" min="0" />
+                            </div>
+                            <span asp-validation-for="OpenForm.OpeningCashFloat" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OpenForm.OpeningWhishBalance" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="OpenForm.OpeningWhishBalance" class="form-control" inputmode="decimal" step="0.01" min="0" />
+                            </div>
+                            <span asp-validation-for="OpenForm.OpeningWhishBalance" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="OpenForm.Notes" class="form-label small fw-bold"></label>
+                            <textarea asp-for="OpenForm.Notes" class="form-control" rows="2" placeholder="Optional — shift notes, cashier name, etc."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary fw-semibold">
+                                <i class="bi bi-unlock me-1" aria-hidden="true"></i>Open cashbox
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="bk-card-muted p-4 h-100 rounded-3 border">
+                    <h2 class="h6 fw-bold mb-3 text-uppercase letter-spacing text-muted">No active session</h2>
+                    <p class="small text-muted mb-0">
+                        Sales completed without an open session still post to the general ledger, but they will not appear in daily reconciliation until you open the drawer.
+                    </p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-lg-7">
+                <div class="bk-finance-panel p-4 h-100">
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                        <div>
+                            <div class="bk-finance-panel-title mb-1">Today's session</div>
+                            <p class="small text-muted fw-semibold mb-0">
+                                Opened @active.OpenedAtUtc.ToLocalTime().ToString("f", money)
+                                · @active.SaleCount sale@(active.SaleCount == 1 ? "" : "s")
+                            </p>
+                        </div>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">Open</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th class="text-end" scope="col">Current Cash</th>
+                                    <th class="text-end" scope="col">Whish account</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-monospace small">
+                                <tr>
+                                    <td class="fw-semibold">Opening</td>
+                                    <td class="text-end">@active.OpeningCashFloat.ToString("C", money)</td>
+                                    <td class="text-end">@active.OpeningWhishBalance.ToString("C", money)</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold">+ POS sales</td>
+                                    <td class="text-end text-success">+@active.CashSalesTotal.ToString("C", money)</td>
+                                    <td class="text-end text-success">+@active.WhishSalesTotal.ToString("C", money)</td>
+                                </tr>
+                                <tr class="table-light fw-bold">
+                                    <td>Expected now</td>
+                                    <td class="text-end">@active.ExpectedCash.ToString("C", money)</td>
+                                    <td class="text-end">@active.ExpectedWhish.ToString("C", money)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(active.OpenNotes))
+                    {
+                        <p class="small text-muted mt-3 mb-0"><span class="fw-bold">Open notes:</span> @active.OpenNotes</p>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="bk-finance-panel p-4 h-100 border border-primary border-opacity-25">
+                    <div class="bk-finance-panel-title">Close day</div>
+                    <p class="small text-muted fw-semibold mb-3">
+                        Count physical cash and check your Whish app balance, then enter the real amounts.
+                    </p>
+                    <form asp-action="CloseCashboxSession" method="post" class="row g-3"
+                          onsubmit="return confirm('Close today\'s cashbox session? This cannot be undone.');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="CloseForm.SessionId" />
+                        <div class="col-12">
+                            <label asp-for="CloseForm.CountedCash" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="CloseForm.CountedCash" class="form-control" inputmode="decimal" step="0.01" min="0"
+                                       placeholder="@active.ExpectedCash.ToString("F2", CultureInfo.InvariantCulture)" />
+                            </div>
+                            <div class="form-text">Expected: @active.ExpectedCash.ToString("C", money)</div>
+                            <span asp-validation-for="CloseForm.CountedCash" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="CloseForm.CountedWhish" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="CloseForm.CountedWhish" class="form-control" inputmode="decimal" step="0.01" min="0"
+                                       placeholder="@active.ExpectedWhish.ToString("F2", CultureInfo.InvariantCulture)" />
+                            </div>
+                            <div class="form-text">Expected: @active.ExpectedWhish.ToString("C", money)</div>
+                            <span asp-validation-for="CloseForm.CountedWhish" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="CloseForm.Notes" class="form-label small fw-bold"></label>
+                            <textarea asp-for="CloseForm.Notes" class="form-control" rows="2" placeholder="Explain any variance, drops, payouts, etc."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-dark fw-semibold w-100">
+                                <i class="bi bi-lock me-1" aria-hidden="true"></i>Close &amp; reconcile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <section aria-label="Recent closes">
+        <div class="bk-finance-panel p-4">
+            <div class="bk-finance-panel-title mb-3">Recent closes</div>
+            @if (Model.RecentCloses.Count == 0)
+            {
+                <div class="bk-empty py-4">No closed sessions yet — your variance history will appear here.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th class="text-end" scope="col">Opening cash</th>
+                                <th class="text-end" scope="col">Expected cash</th>
+                                <th class="text-end" scope="col">Counted cash</th>
+                                <th class="text-end" scope="col">Cash var.</th>
+                                <th class="text-end" scope="col">Expected Whish</th>
+                                <th class="text-end" scope="col">Counted Whish</th>
+                                <th class="text-end" scope="col">Whish var.</th>
+                                <th class="text-end" scope="col">Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            @foreach (var row in Model.RecentCloses)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="fw-semibold">@row.SessionDate.ToString("MMM d, yyyy", money)</span>
+                                        <span class="text-muted d-block">@row.ClosedAtUtc.ToLocalTime().ToString("t", money)</span>
+                                    </td>
+                                    <td class="text-end font-monospace">@row.OpeningCashFloat.ToString("C", money)</td>
+                                    <td class="text-end font-monospace">@row.ExpectedCash.ToString("C", money)</td>
+                                    <td class="text-end font-monospace">@row.CountedCash.ToString("C", money)</td>
+                                    <td class="text-end font-monospace @VarianceClass(row.CashVariance)">@FormatVariance(row.CashVariance, money)</td>
+                                    <td class="text-end font-monospace">@row.ExpectedWhish.ToString("C", money)</td>
+                                    <td class="text-end font-monospace">@row.CountedWhish.ToString("C", money)</td>
+                                    <td class="text-end font-monospace @VarianceClass(row.WhishVariance)">@FormatVariance(row.WhishVariance, money)</td>
+                                    <td class="text-end">@row.SaleCount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@functions {
+    private static string VarianceClass(decimal variance) =>
+        variance == 0m ? "text-muted" : variance > 0m ? "text-success fw-semibold" : "text-danger fw-semibold";
+
+    private static string FormatVariance(decimal variance, CultureInfo money) =>
+        variance == 0m ? "—" : variance.ToString("+$0.00;-$0.00", money);
+}

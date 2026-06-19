@@ -1,0 +1,61 @@
+@model AdminCreateUserFormModel
+@{
+    ViewData["Title"] = "Create user";
+    ViewData["Module"] = "Admin";
+    ViewData["ModuleSubtitle"] = "Add a staff login with roles.";
+}
+<div class="container pb-5 pt-3 bk-admin" style="max-width: 720px;">
+    @await Component.InvokeAsync("ModuleNav")
+    <nav class="bk-admin-bc mb-2" aria-label="Breadcrumb">
+        <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a asp-action="Users">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">New</li>
+        </ol>
+    </nav>
+    <partial name="_ModuleHeader" />
+    <div class="bk-admin-panel p-4 p-lg-5">
+        <form asp-action="CreateUser" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="Email" class="form-label small fw-bold"></label>
+                    <input asp-for="Email" class="form-control" autocomplete="email" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="DisplayName" class="form-label small fw-bold"></label>
+                    <input asp-for="DisplayName" class="form-control" />
+                    <span asp-validation-for="DisplayName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="HireDate" class="form-label small fw-bold"></label>
+                    <input asp-for="HireDate" class="form-control" type="date" />
+                    <span asp-validation-for="HireDate" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label small fw-bold"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="ConfirmPassword" class="form-label small fw-bold"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <span class="form-label small fw-bold d-block mb-2">Roles</span>
+                    @foreach (var role in Model.AllRoles)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role" id="role-@role"
+                                   @(Model.SelectedRoles.Contains(role) ? "checked" : null) />
+                            <label class="form-check-label small" for="role-@role">@role</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 fw-semibold">Create user</button>
+        </form>
+    </div>
+</div>

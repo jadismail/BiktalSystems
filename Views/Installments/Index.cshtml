@@ -1,0 +1,105 @@
+@model InstallmentsIndexViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Installments";
+    ViewData["Module"] = "CRM";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var n = CultureInfo.InvariantCulture;
+}
+<div class="container pb-5 pt-3 bk-crm">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["CrmMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["CrmError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <section class="bk-crm-kpis mb-4" aria-label="Installments snapshot">
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-wallet2"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Outstanding balance</div>
+                <div class="bk-crm-kpi-value">@Model.TotalOutstanding.ToString("C0", money)</div>
+            </div>
+        </article>
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-calendar-check"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Active plans</div>
+                <div class="bk-crm-kpi-value">@Model.ActivePlanCount.ToString("N0", n)</div>
+            </div>
+        </article>
+        <article class="bk-crm-kpi">
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-exclamation-circle"></i></div>
+            <div>
+                <div class="bk-crm-kpi-label">Overdue installments</div>
+                <div class="bk-crm-kpi-value">@Model.OverdueInstallmentCount.ToString("N0", n)</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="bk-crm-toolbar mb-3">
+        <a asp-action="New" class="btn btn-primary fw-semibold"><i class="bi bi-plus-lg me-1"></i>New plan</a>
+        <a asp-controller="Crm" asp-action="Customers" class="btn btn-outline-secondary btn-sm fw-semibold">Customers</a>
+    </div>
+
+    <div class="bk-table-wrap bk-crm-table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Plan</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Description</th>
+                        <th class="text-end" scope="col">Total</th>
+                        <th class="text-end" scope="col">Balance</th>
+                        <th scope="col">Next due</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Plans.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="bk-empty">No installment plans yet — create one for a customer on terms.</div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Plans)
+                        {
+                            <tr>
+                                <td class="font-monospace small fw-semibold">
+                                    <a asp-action="Detail" asp-route-id="@row.Id" class="text-decoration-none">@row.PlanNumber</a>
+                                </td>
+                                <td class="fw-semibold">@row.CustomerName</td>
+                                <td class="small text-muted">@row.Description</td>
+                                <td class="text-end font-monospace">@row.TotalAmount.ToString("C", money)</td>
+                                <td class="text-end font-monospace fw-semibold">@row.BalanceDue.ToString("C", money)</td>
+                                <td class="small">@(row.NextDueDate?.ToString("MMM d, yyyy", money) ?? "—")</td>
+                                <td>
+                                    <span class="badge @InstallmentPlanStatusLabels.BadgeClass(row.Status)">
+                                        @InstallmentPlanStatusLabels.Title(row.Status)
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+@model InventoryMovementsPageViewModel
+@using System.Globalization
+@using Biktal.Domain.Inventory
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Inventory movements";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var movementTypes = new[]
+    {
+        InventoryMovementType.CustomerReturn,
+        InventoryMovementType.SupplierReturn,
+        InventoryMovementType.Transfer,
+        InventoryMovementType.Damage
+    };
+}
+<div class="container pb-5 pt-3 bk-inv">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["MovementMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm mb-4">@okMsg</div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="bk-card p-4 h-100">
+                <h2 class="h6 fw-bold mb-2">Record movement</h2>
+                <p class="small text-muted fw-semibold mb-3">
+                    Purchases use <a asp-action="PurchaseOrders">PO receive</a>; sales use <a asp-controller="Pos" asp-action="Index">POS</a>.
+                    Other types post GL journals automatically (transfers are audit-only).
+                </p>
+                <form asp-action="CreateMovement" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Form.Type" class="form-label small fw-bold"></label>
+                        <select asp-for="Form.Type" class="form-select" asp-items="@(movementTypes.Select(t => new SelectListItem(InventoryMovementLabels.For(t), ((int)t).ToString())))"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Form.CatalogProductId" class="form-label small fw-bold"></label>
+                        <select asp-for="Form.CatalogProductId" class="form-select" required>
+                            <option value="">— Select product —</option>
+                            @foreach (var p in Model.Products)
+                            {
+                                <option value="@p.Id" selected="@(Model.Form.CatalogProductId == p.Id)">
+                                    @p.Label (stock @p.StockQuantity.ToString("N0", money), cost @p.Cost.ToString("C", money))
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="Form.CatalogProductId" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Form.Quantity" class="form-label small fw-bold"></label>
+                        <input asp-for="Form.Quantity" class="form-control" type="number" min="1" />
+                        <span asp-validation-for="Form.Quantity" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Form.UnitCost" class="form-label small fw-bold"></label>
+                        <input asp-for="Form.UnitCost" class="form-control text-end font-monospace" inputmode="decimal" placeholder="Defaults to product cost" />
+                    </div>
+                    <div class="mb-3" id="bk-mov-refund-wrap">
+                        <label asp-for="Form.RefundAmount" class="form-label small fw-bold"></label>
+                        <input asp-for="Form.RefundAmount" class="form-control text-end font-monospace" inputmode="decimal" />
+                        <p class="form-text small mb-0">Optional cash refund (Dr Sales, Cr Cash).</p>
+                    </div>
+                    <div class="mb-3" id="bk-mov-supplier-wrap">
+                        <label asp-for="Form.SourceReference" class="form-label small fw-bold"></label>
+                        <input asp-for="Form.SourceReference" class="form-control" placeholder="PO or supplier ref" />
+                    </div>
+                    <div class="row g-2 mb-3" id="bk-mov-warehouse-wrap">
+                        <div class="col-6">
+                            <label asp-for="Form.FromWarehouseId" class="form-label small fw-bold"></label>
+                            <select asp-for="Form.FromWarehouseId" class="form-select">
+                                <option value="">—</option>
+                                @foreach (var w in Model.Warehouses)
+                                {
+                                    <option value="@w.Id">@w.Label</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Form.ToWarehouseId" class="form-label small fw-bold"></label>
+                            <select asp-for="Form.ToWarehouseId" class="form-select">
+                                <option value="">—</option>
+                                @foreach (var w in Model.Warehouses)
+                                {
+                                    <option value="@w.Id">@w.Label</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Form.Notes" class="form-label small fw-bold"></label>
+                        <textarea asp-for="Form.Notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary fw-semibold w-100">Post movement</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="bk-card p-4">
+                <h2 class="h6 fw-bold mb-3">Recent movements</h2>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>When</th>
+                                <th>Type</th>
+                                <th>Product</th>
+                                <th class="text-end">Qty Δ</th>
+                                <th class="text-end">Cost</th>
+                                <th>GL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentMovements.Count == 0)
+                            {
+                                <tr><td colspan="6" class="text-muted small">No movements yet.</td></tr>
+                            }
+                            else
+                            {
+                                foreach (var m in Model.RecentMovements)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap small text-muted">@m.CreatedAtUtc.LocalDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                        <td class="small fw-semibold">@m.TypeLabel</td>
+                                        <td class="small">
+                                            <div class="fw-semibold">@m.ProductName</div>
+                                            <div class="text-muted">@m.MovementNumber</div>
+                                        </td>
+                                        <td class="text-end font-monospace @(m.QuantityDelta > 0 ? "text-success" : m.QuantityDelta < 0 ? "text-danger" : "")">
+                                            @(m.QuantityDelta > 0 ? "+" : "")@m.QuantityDelta.ToString("N0", money)
+                                        </td>
+                                        <td class="text-end font-monospace">@m.TotalCost.ToString("C", money)</td>
+                                        <td class="small">
+                                            @if (!string.IsNullOrEmpty(m.JournalReference))
+                                            {
+                                                <a asp-controller="Finance" asp-action="Journal" class="fw-semibold">@m.JournalReference</a>
+                                            }
+                                            else if (!string.IsNullOrEmpty(m.GlSkipReason))
+                                            {
+                                                <span class="text-muted" title="@m.GlSkipReason">—</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bk-card p-4 mt-3 small text-muted">
+                <p class="fw-bold text-body mb-2">GL patterns</p>
+                <ul class="mb-0 ps-3">
+                    <li><strong>Buy (PO)</strong> — Dr Inventory, Cr AP</li>
+                    <li><strong>Sell (POS)</strong> — Dr Cash, Cr Sales (+ tax); Dr COGS, Cr Inventory</li>
+                    <li><strong>Customer return</strong> — Dr Inventory, Cr COGS (+ refund lines if entered)</li>
+                    <li><strong>Supplier return</strong> — Dr AP, Cr Inventory</li>
+                    <li><strong>Transfer</strong> — movement log only (total inventory unchanged)</li>
+                    <li><strong>Damage</strong> — Dr Shrinkage (6500), Cr Inventory</li>
+                    <li><strong>Stock count (Stock page)</strong> — Dr/Cr Inventory vs 3900 / 6500</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const typeSel = document.getElementById("Form_Type");
+            const refund = document.getElementById("bk-mov-refund-wrap");
+            const supplier = document.getElementById("bk-mov-supplier-wrap");
+            const wh = document.getElementById("bk-mov-warehouse-wrap");
+            if (!typeSel) return;
+            const customerReturn = "@((int)InventoryMovementType.CustomerReturn)";
+            const supplierReturn = "@((int)InventoryMovementType.SupplierReturn)";
+            const transfer = "@((int)InventoryMovementType.Transfer)";
+            function sync() {
+                const v = typeSel.value;
+                refund?.classList.toggle("d-none", v !== customerReturn);
+                supplier?.classList.toggle("d-none", v !== supplierReturn);
+                wh?.classList.toggle("d-none", v !== transfer);
+            }
+            typeSel.addEventListener("change", sync);
+            sync();
+        })();
+    </script>
+}

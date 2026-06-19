@@ -1,0 +1,148 @@
+@model Biktal.WebMVC.Models.WarehousesPageViewModel
+
+<div class="container pb-5 pt-3 bk-warehouses-page">
+    @await Component.InvokeAsync("ModuleNav")
+
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["WarehouseMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="bk-inv-toolbar bk-card p-3 p-md-4 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h2 class="h5 fw-bold mb-1">Locations</h2>
+            <p class="small text-muted mb-0 fw-semibold">@Model.Warehouses.Count @(Model.Warehouses.Count == 1 ? "warehouse" : "warehouses") · stock is still <strong>store-wide</strong> on the <a asp-action="Stock" class="fw-semibold">Stock</a> page until splits are added.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-outline-secondary fw-semibold px-3" disabled title="Transfers need per-warehouse quantities (coming later).">
+                <i class="bi bi-arrow-left-right me-1" aria-hidden="true"></i>New transfer
+            </button>
+            <button type="button" class="btn btn-primary fw-semibold px-4" data-bs-toggle="modal" data-bs-target="#bk-add-warehouse-modal" id="bk-open-add-warehouse">
+                <i class="bi bi-building-add me-1" aria-hidden="true"></i>Add warehouse
+            </button>
+        </div>
+    </div>
+
+    <div class="bk-table-wrap">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-end" scope="col" style="width:5rem">Sort</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Description</th>
+                        <th class="text-end" scope="col" style="width:7rem">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Warehouses.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="bk-empty py-5">
+                                    <i class="bi bi-building-add d-block fs-1 mb-2 opacity-50" aria-hidden="true"></i>
+                                    <p class="fw-semibold mb-1">No warehouses yet</p>
+                                    <p class="small text-muted mb-0">Click <strong>Add warehouse</strong> to define your first location.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Warehouses)
+                        {
+                            <tr>
+                                <td class="text-end font-monospace small text-muted">@row.SortOrder</td>
+                                <td class="fw-semibold">@row.Name</td>
+                                <td class="font-monospace small">
+                                    @if (string.IsNullOrWhiteSpace(row.Code))
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                    else
+                                    {
+                                        @row.Code
+                                    }
+                                </td>
+                                <td class="small text-muted">@(string.IsNullOrWhiteSpace(row.Description) ? "—" : row.Description)</td>
+                                <td class="text-end">
+                                    <form asp-action="DeleteWarehouse" method="post" class="d-inline" onsubmit="return confirm('Delete this warehouse? This cannot be undone.');">
+                                        <input type="hidden" name="id" value="@row.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete warehouse">
+                                            <i class="bi bi-trash3" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bk-add-warehouse-modal" tabindex="-1" aria-labelledby="bk-add-warehouse-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h2 class="modal-title h5 fw-bold" id="bk-add-warehouse-modal-title">Add warehouse</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <form asp-action="AddWarehouse" method="post" id="bk-add-warehouse-form">
+                    @if (ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger py-2 small mb-3" role="alert"></div>
+                    }
+                    <div class="mb-3">
+                        <label asp-for="NewWarehouse.Name" class="form-label fw-semibold small"></label>
+                        <input asp-for="NewWarehouse.Name" class="form-control" autocomplete="off" placeholder="e.g. Main store" />
+                        <span asp-validation-for="NewWarehouse.Name" class="text-danger small d-block mt-1"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewWarehouse.Code" class="form-label fw-semibold small"></label>
+                        <input asp-for="NewWarehouse.Code" class="form-control font-monospace" autocomplete="off" placeholder="Optional — MAIN, LAB…" maxlength="32" />
+                        <span asp-validation-for="NewWarehouse.Code" class="text-danger small d-block mt-1"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewWarehouse.Description" class="form-label fw-semibold small"></label>
+                        <textarea asp-for="NewWarehouse.Description" class="form-control" rows="2" placeholder="Optional internal note"></textarea>
+                        <span asp-validation-for="NewWarehouse.Description" class="text-danger small d-block mt-1"></span>
+                    </div>
+                    <div class="mb-0">
+                        <label asp-for="NewWarehouse.SortOrder" class="form-label fw-semibold small"></label>
+                        <input asp-for="NewWarehouse.SortOrder" class="form-control" type="number" step="1" placeholder="Leave blank for auto (end of list)" />
+                        <span asp-validation-for="NewWarehouse.SortOrder" class="text-danger small d-block mt-1"></span>
+                        <p class="form-text small mb-0">Lower numbers appear first in this list.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="bk-add-warehouse-form" class="btn btn-primary fw-semibold">Save warehouse</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    @if (Model.OpenAddModal)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var el = document.getElementById('bk-add-warehouse-modal');
+                if (el && window.bootstrap && bootstrap.Modal) {
+                    bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            });
+        </script>
+    }
+}
