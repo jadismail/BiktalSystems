@@ -4793,6 +4793,137 @@ body.bk-page-inventory .bk-main {
   white-space: nowrap;
 }
 
+/* —— Insights bar charts —— */
+.bk-chart {
+  --bk-chart-rev: color-mix(in srgb, var(--bk-reports-accent) 78%, #6366f1);
+  --bk-chart-profit: color-mix(in srgb, #16a34a 80%, var(--bk-accent-2));
+  --bk-chart-expense: color-mix(in srgb, #ef4444 78%, #f97316);
+  width: 100%;
+}
+
+.bk-chart--scroll {
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+}
+
+.bk-chart-track {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  height: 240px;
+  min-width: 100%;
+}
+
+.bk-chart--scroll .bk-chart-track {
+  min-width: 640px;
+}
+
+.bk-chart-col {
+  flex: 1 1 0;
+  min-width: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.bk-chart-bars {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  min-height: 0;
+}
+
+.bk-chart-bars--group .bk-chart-bar {
+  width: 32%;
+}
+
+.bk-chart-bar {
+  width: 62%;
+  min-height: 2px;
+  border-radius: 5px 5px 0 0;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.bk-chart-bar:hover {
+  filter: brightness(1.08);
+  transform: scaleY(1.01);
+}
+
+.bk-chart-bar--rev {
+  background: linear-gradient(180deg, var(--bk-chart-rev), color-mix(in srgb, var(--bk-chart-rev) 60%, transparent));
+}
+
+.bk-chart-bar--profit {
+  background: linear-gradient(180deg, var(--bk-chart-profit), color-mix(in srgb, var(--bk-chart-profit) 60%, transparent));
+}
+
+.bk-chart-bar--expense {
+  background: linear-gradient(180deg, var(--bk-chart-expense), color-mix(in srgb, var(--bk-chart-expense) 60%, transparent));
+}
+
+.bk-chart-label {
+  margin-top: 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--bk-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bk-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.bk-chart-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--bk-muted);
+}
+
+.bk-chart-swatch {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 4px;
+}
+
+.bk-chart-legend {
+  --bk-chart-rev: color-mix(in srgb, var(--bk-reports-accent) 78%, #6366f1);
+  --bk-chart-profit: color-mix(in srgb, #16a34a 80%, var(--bk-accent-2));
+  --bk-chart-expense: color-mix(in srgb, #ef4444 78%, #f97316);
+}
+
+.bk-chart-swatch--rev {
+  background: var(--bk-chart-rev);
+}
+
+.bk-chart-swatch--profit {
+  background: var(--bk-chart-profit);
+}
+
+.bk-chart-swatch--expense {
+  background: var(--bk-chart-expense);
+}
+
+.bk-breakdown-figure {
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--bk-radius-sm);
+  border: 1px solid var(--bk-border);
+  background: var(--bk-surface-2);
+}
+
+.bk-breakdown-meta {
+  line-height: 1.6;
+}
+
 /* —— Admin module —— */
 .bk-admin {
   --bk-admin-accent: color-mix(in srgb, #ea580c 55%, var(--bk-accent));

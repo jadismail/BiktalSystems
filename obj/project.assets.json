@@ -1351,49 +1351,6 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
-      },
-      "Biktal.Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "dependencies": {
-          "Biktal.Domain": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Biktal.Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Biktal.Application.dll": {}
-        }
-      },
-      "Biktal.Domain/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "compile": {
-          "bin/placeholder/Biktal.Domain.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Biktal.Domain.dll": {}
-        }
-      },
-      "Biktal.Infrastructure/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "dependencies": {
-          "Biktal.Application": "1.0.0",
-          "Biktal.Domain": "1.0.0",
-          "ClosedXML": "0.104.2",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "9.0.4",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
-        },
-        "compile": {
-          "bin/placeholder/Biktal.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Biktal.Infrastructure.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       }
     }
   },
@@ -3843,45 +3800,33 @@
         "system.threading.channels.nuspec",
         "useSharedDesignerContext.txt"
       ]
-    },
-    "Biktal.Application/1.0.0": {
-      "type": "project",
-      "path": "../Biktal.Application/Biktal.Application.csproj",
-      "msbuildProject": "../Biktal.Application/Biktal.Application.csproj"
-    },
-    "Biktal.Domain/1.0.0": {
-      "type": "project",
-      "path": "../Biktal.Domain/Biktal.Domain.csproj",
-      "msbuildProject": "../Biktal.Domain/Biktal.Domain.csproj"
-    },
-    "Biktal.Infrastructure/1.0.0": {
-      "type": "project",
-      "path": "../Biktal.Infrastructure/Biktal.Infrastructure.csproj",
-      "msbuildProject": "../Biktal.Infrastructure/Biktal.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Biktal.Application >= 1.0.0",
-      "Biktal.Infrastructure >= 1.0.0",
+      "ClosedXML >= 0.104.2",
+      "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 9.0.4",
+      "Microsoft.EntityFrameworkCore >= 9.0.4",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.4",
-      "Serilog.AspNetCore >= 9.0.0"
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4",
+      "Serilog.AspNetCore >= 9.0.0",
+      "Serilog.Sinks.File >= 6.0.0"
     ]
   },
   "packageFolders": {
-    "/Users/jaismail/.nuget/packages/": {}
+    "C:\\Users\\POS\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Biktal.WebMVC.csproj",
+      "projectUniqueName": "D:\\SYSTEMS\\BiktalSystems\\Biktal.WebMVC.csproj",
       "projectName": "Biktal.WebMVC",
-      "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/Biktal.WebMVC.csproj",
-      "packagesPath": "/Users/jaismail/.nuget/packages/",
-      "outputPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.WebMVC/obj/",
+      "projectPath": "D:\\SYSTEMS\\BiktalSystems\\Biktal.WebMVC.csproj",
+      "packagesPath": "C:\\Users\\POS\\.nuget\\packages\\",
+      "outputPath": "D:\\SYSTEMS\\BiktalSystems\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/jaismail/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\POS\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -3892,14 +3837,7 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {
-            "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj": {
-              "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Application/Biktal.Application.csproj"
-            },
-            "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/Biktal.Infrastructure.csproj": {
-              "projectPath": "/Users/jaismail/Desktop/BiktalSystems - Mobile Store/Biktal.Infrastructure/Biktal.Infrastructure.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -3912,21 +3850,41 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "ClosedXML": {
+            "target": "Package",
+            "version": "[0.104.2, )"
+          },
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[9.0.4, )"
+          },
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[9.0.4, )"
+          },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
             "version": "[9.0.4, )"
           },
+          "Npgsql.EntityFrameworkCore.PostgreSQL": {
+            "target": "Package",
+            "version": "[9.0.4, )"
+          },
           "Serilog.AspNetCore": {
             "target": "Package",
             "version": "[9.0.0, )"
+          },
+          "Serilog.Sinks.File": {
+            "target": "Package",
+            "version": "[6.0.0, )"
           }
         },
         "imports": [
@@ -3943,15 +3901,19 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[9.0.10, 9.0.10]"
+            "version": "[9.0.14, 9.0.14]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.osx-arm64",
-            "version": "[9.0.10, 9.0.10]"
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[9.0.14, 9.0.14]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[9.0.10, 9.0.10]"
+            "version": "[9.0.14, 9.0.14]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[9.0.14, 9.0.14]"
           }
         ],
         "frameworkReferences": {
@@ -3962,7 +3924,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100-rc.2.25502.107/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -54,6 +54,169 @@ public sealed class InsightsExpenseCategoryRowViewModel
     public int Count { get; init; }
 }
 
+/// <summary>A single revenue/profit slice for a category or brand drop-down.</summary>
+public sealed class InsightsBreakdownRowViewModel
+{
+    public string Label { get; init; } = string.Empty;
+
+    public decimal Revenue { get; init; }
+
+    public decimal Cost { get; init; }
+
+    public decimal Profit => Revenue - Cost;
+
+    public decimal MarginPercent => Revenue > 0m ? Profit / Revenue * 100m : 0m;
+
+    public int UnitsSold { get; init; }
+}
+
+/// <summary>Drives one selectable "top category / top brand" drop-down panel.</summary>
+public sealed class InsightsBreakdownPanelViewModel
+{
+    public string Title { get; init; } = string.Empty;
+
+    public string SelectLabel { get; init; } = string.Empty;
+
+    /// <summary>When true the panel is sorted by (and highlights) profit; otherwise revenue.</summary>
+    public bool ByProfit { get; init; }
+
+    public IReadOnlyList<InsightsBreakdownRowViewModel> Rows { get; init; } =
+        Array.Empty<InsightsBreakdownRowViewModel>();
+}
+
+/// <summary>A bar in a time-bucketed chart (hour, week, or month).</summary>
+public sealed class InsightsBarBucketViewModel
+{
+    public string Label { get; init; } = string.Empty;
+
+    public decimal Revenue { get; init; }
+
+    public decimal GrossProfit { get; init; }
+
+    public decimal Expenses { get; init; }
+
+    public int Count { get; init; }
+}
+
+/// <summary>A single transaction shown in the daily activity log.</summary>
+public sealed class InsightsRecordRowViewModel
+{
+    public DateTimeOffset TimeUtc { get; init; }
+
+    public string Type { get; init; } = string.Empty;
+
+    public string Reference { get; init; } = string.Empty;
+
+    public string Description { get; init; } = string.Empty;
+
+    public string PaymentMethod { get; init; } = string.Empty;
+
+    public decimal Amount { get; init; }
+}
+
+public sealed class InsightsDailyViewModel
+{
+    public DateOnly Date { get; init; }
+
+    public string DateInputValue => Date.ToString("yyyy-MM-dd");
+
+    public string PeriodLabel => Date.ToString("dddd, dd MMMM yyyy");
+
+    public decimal TotalRevenue { get; init; }
+
+    public decimal PosSales { get; init; }
+
+    public decimal RepairDelivered { get; init; }
+
+    public decimal GrossProfit { get; init; }
+
+    public decimal GrossProfitPercent => TotalRevenue > 0m ? GrossProfit / TotalRevenue * 100m : 0m;
+
+    public int PosSaleCount { get; init; }
+
+    public int RepairCount { get; init; }
+
+    public IReadOnlyList<InsightsBarBucketViewModel> Hourly { get; init; } =
+        Array.Empty<InsightsBarBucketViewModel>();
+
+    public IReadOnlyList<InsightsRecordRowViewModel> Records { get; init; } =
+        Array.Empty<InsightsRecordRowViewModel>();
+}
+
+public sealed class InsightsMonthlyViewModel
+{
+    public int Year { get; init; }
+
+    public int Month { get; init; }
+
+    public string MonthInputValue => $"{Year:D4}-{Month:D2}";
+
+    public string PeriodLabel { get; init; } = string.Empty;
+
+    public decimal TotalRevenue { get; init; }
+
+    public decimal PosSales { get; init; }
+
+    public decimal RepairDelivered { get; init; }
+
+    public decimal GrossProfit { get; init; }
+
+    public decimal GrossProfitPercent => TotalRevenue > 0m ? GrossProfit / TotalRevenue * 100m : 0m;
+
+    public decimal Expenses { get; init; }
+
+    public decimal NetProfit => GrossProfit - Expenses;
+
+    public int PosSaleCount { get; init; }
+
+    public int RepairCount { get; init; }
+
+    public IReadOnlyList<InsightsBarBucketViewModel> Weekly { get; init; } =
+        Array.Empty<InsightsBarBucketViewModel>();
+
+    public IReadOnlyList<InsightsBreakdownRowViewModel> Categories { get; init; } =
+        Array.Empty<InsightsBreakdownRowViewModel>();
+
+    public IReadOnlyList<InsightsBreakdownRowViewModel> Brands { get; init; } =
+        Array.Empty<InsightsBreakdownRowViewModel>();
+}
+
+public sealed class InsightsYearlyViewModel
+{
+    public int Year { get; init; }
+
+    public string PeriodLabel { get; init; } = string.Empty;
+
+    public IReadOnlyList<int> AvailableYears { get; init; } = Array.Empty<int>();
+
+    public decimal TotalRevenue { get; init; }
+
+    public decimal PosSales { get; init; }
+
+    public decimal RepairDelivered { get; init; }
+
+    public decimal GrossProfit { get; init; }
+
+    public decimal GrossProfitPercent => TotalRevenue > 0m ? GrossProfit / TotalRevenue * 100m : 0m;
+
+    public decimal Expenses { get; init; }
+
+    public decimal NetProfit => GrossProfit - Expenses;
+
+    public int PosSaleCount { get; init; }
+
+    public int RepairCount { get; init; }
+
+    public IReadOnlyList<InsightsBarBucketViewModel> Monthly { get; init; } =
+        Array.Empty<InsightsBarBucketViewModel>();
+
+    public IReadOnlyList<InsightsBreakdownRowViewModel> Categories { get; init; } =
+        Array.Empty<InsightsBreakdownRowViewModel>();
+
+    public IReadOnlyList<InsightsBreakdownRowViewModel> Brands { get; init; } =
+        Array.Empty<InsightsBreakdownRowViewModel>();
+}
+
 public sealed class InsightsMarginRowViewModel
 {
     public string Label { get; init; } = string.Empty;

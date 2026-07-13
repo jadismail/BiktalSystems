@@ -1,0 +1,407 @@
+is_global = true
+build_property.TargetFramework = net9.0
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v9.0
+build_property.RootNamespace = Biktal.WebMVC
+build_property.RootNamespace = Biktal.WebMVC
+build_property.ProjectDir = d:\Systems\BiktalSystems\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = d:\Systems\BiktalSystems
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[d:/Systems/BiktalSystems/Views/Account/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Account/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/Backups.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQmFja3Vwcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/Branches.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQnJhbmNoZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/DataReset.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGF0YVJlc2V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/EditBranch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdEJyYW5jaC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/EditUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdFVzZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/NewBranch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTmV3QnJhbmNoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/NewUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTmV3VXNlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/Settings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2V0dGluZ3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/Tax.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVGF4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/Users.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Admin/_DeleteUserModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0RlbGV0ZVVzZXJNb2RhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/Campaigns.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXENhbXBhaWducy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/Customer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXEN1c3RvbWVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/Customers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXEN1c3RvbWVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/Loyalty.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXExveWFsdHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/NewCustomer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXE5ld0N1c3RvbWVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/NewTicket.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXE5ld1RpY2tldC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/SupportTicket.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXFN1cHBvcnRUaWNrZXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Crm/Tickets.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JtXFRpY2tldHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/Accounting.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxBY2NvdW50aW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/Accounts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxBY2NvdW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/Aging.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxBZ2luZy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/Cashbox.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxDYXNoYm94LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/Expenses.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxFeHBlbnNlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/Journal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxKb3VybmFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/JournalDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxKb3VybmFsRGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Finance/NewJournal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxOZXdKb3VybmFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Insights/Customers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zaWdodHNcQ3VzdG9tZXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Insights/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zaWdodHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Insights/Inventory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zaWdodHNcSW52ZW50b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Insights/Repairs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zaWdodHNcUmVwYWlycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Insights/RevenueMargin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zaWdodHNcUmV2ZW51ZU1hcmdpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Insights/Staff.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zaWdodHNcU3RhZmYuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Installments/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdGFsbG1lbnRzXERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Installments/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdGFsbG1lbnRzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Installments/New.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdGFsbG1lbnRzXE5ldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Brands.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XEJyYW5kcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Categories.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XENhdGVnb3JpZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Import.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XEltcG9ydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Movements.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XE1vdmVtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Products.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFByb2R1Y3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/PurchaseOrderDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFB1cmNoYXNlT3JkZXJEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/PurchaseOrders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFB1cmNoYXNlT3JkZXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Stock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFN0b2NrLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Suppliers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFN1cHBsaWVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Inventory/Warehouses.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFdhcmVob3VzZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/License/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGljZW5zZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/ComingSoon.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xDb21pbmdTb29uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/DailySales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xEYWlseVNhbGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/Inventory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xJbnZlbnRvcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/LowStock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xMb3dTdG9jay5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/MonthlySales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xNb250aGx5U2FsZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/ProductProfitability.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xQcm9kdWN0UHJvZml0YWJpbGl0eS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/PurchaseOrders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xQdXJjaGFzZU9yZGVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/Repairs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xSZXBhaXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/Sales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xTYWxlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Operations/StockMovement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3BlcmF0aW9uc1xTdG9ja01vdmVtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Pos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9zXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Repairs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwYWlyc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Repairs/New.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwYWlyc1xOZXcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Repairs/Ticket.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwYWlyc1xUaWNrZXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Repairs/Tickets.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwYWlyc1xUaWNrZXRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Reports/Financial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xGaW5hbmNpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Reports/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Reports/Inventory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xJbnZlbnRvcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Reports/Repairs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xSZXBhaXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Reports/Sales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xTYWxlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Shared/Components/ModuleNav/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcTW9kdWxlTmF2XERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Shared/_ModuleHeader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Nb2R1bGVIZWFkZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/Activity.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcQWN0aXZpdHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/Attendance.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcQXR0ZW5kYW5jZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/Member.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcTWVtYmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/NewMember.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcTmV3TWVtYmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/Payroll.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcUGF5cm9sbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/PayrollRun.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcUGF5cm9sbFJ1bi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Staff/Team.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcVGVhbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Systems/BiktalSystems/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-82d6szetot

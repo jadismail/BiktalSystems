@@ -1,0 +1,297 @@
+[09:09:30 ERR] Failed executing DbCommand (34ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = DateTime), @p2='?' (DbType = Guid), @p3='?', @p4='?' (DbType = DateTime), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?' (DbType = DateTime), @p11='?' (DbType = Guid), @p12='?', @p13='?' (DbType = DateTime), @p14='?' (DbType = Int32), @p15='?' (DbType = Int32), @p16='?', @p17='?'], CommandType='Text', CommandTimeout='30']
+INSERT INTO "CrmSupportTickets" ("Id", "CreatedAtUtc", "CustomerId", "Description", "ModifiedAtUtc", "Priority", "Status", "Subject", "TicketNumber")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+INSERT INTO "CrmSupportTickets" ("Id", "CreatedAtUtc", "CustomerId", "Description", "ModifiedAtUtc", "Priority", "Status", "Subject", "TicketNumber")
+VALUES (@p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17);
+[09:09:30 ERR] An exception occurred in the database while saving changes for context type 'Biktal.Infrastructure.Persistence.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "CrmSupportTickets" violates foreign key constraint "FK_CrmSupportTickets_CrmCustomers_CustomerId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "CrmSupportTickets" violates foreign key constraint "FK_CrmSupportTickets_CrmCustomers_CustomerId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: CrmSupportTickets
+    ConstraintName: FK_CrmSupportTickets_CrmCustomers_CustomerId
+    File: ri_triggers.c
+    Line: 2783
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "CrmSupportTickets" violates foreign key constraint "FK_CrmSupportTickets_CrmCustomers_CustomerId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "CrmSupportTickets" violates foreign key constraint "FK_CrmSupportTickets_CrmCustomers_CustomerId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: CrmSupportTickets
+    ConstraintName: FK_CrmSupportTickets_CrmCustomers_CustomerId
+    File: ri_triggers.c
+    Line: 2783
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+[09:09:30 ERR] Database migration or seed failed. Check PostgreSQL is running and ConnectionStrings:DefaultConnection is correct.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "CrmSupportTickets" violates foreign key constraint "FK_CrmSupportTickets_CrmCustomers_CustomerId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "CrmSupportTickets" violates foreign key constraint "FK_CrmSupportTickets_CrmCustomers_CustomerId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: CrmSupportTickets
+    ConstraintName: FK_CrmSupportTickets_CrmCustomers_CustomerId
+    File: ri_triggers.c
+    Line: 2783
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Biktal.Infrastructure.Persistence.CrmDataSeeder.SeedIfEmptyAsync(ApplicationDbContext db, CancellationToken cancellationToken)
+   at Program.<Main>$(String[] args) in d:\Systems\BiktalSystems\Program.cs:line 71
+[09:09:30 WRN] Continuing without a successful migration/seed. Auth and data pages may fail until the database is available.
+[09:09:30 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[09:09:30 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[09:09:30 WRN] No XML encryptor configured. Key {43ef1b2e-7e82-459d-b20c-45a3a6c9f70f} may be persisted to storage in unencrypted form.
+[09:09:30 INF] Application started. Press Ctrl+C to shut down.
+[09:09:30 INF] Hosting environment: Production
+[09:09:30 INF] Content root path: D:\Systems\BiktalSystems\publish
+[09:09:30 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {a5ff0545-adcb-4f2e-9be8-92b1b205aa21} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[09:09:30 INF] HTTP GET /Account/Login responded 200 in 395.7878 ms
+[09:09:31 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 182.6190 ms
+[09:09:31 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 156.9139 ms
+[09:09:31 INF] HTTP GET /css/site.css responded 200 in 183.2735 ms
+[09:09:31 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 184.1843 ms
+[09:09:31 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 124.2793 ms
+[09:09:31 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 160.0624 ms
+[09:09:31 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 185.0863 ms
+[09:09:31 INF] HTTP GET /js/site.js responded 200 in 161.4293 ms
+[09:09:43 INF] HTTP POST /Account/Login responded 302 in 600.4593 ms
+[09:09:43 INF] HTTP GET /Inventory/Products responded 200 in 472.0591 ms
+[09:09:43 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.4718 ms
+[09:09:43 INF] HTTP GET /css/site.css responded 200 in 4.0547 ms
+[09:09:43 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 44.1443 ms
+[09:09:44 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 36.1113 ms
+[09:09:44 INF] HTTP GET /js/site.js responded 304 in 21.8284 ms
+[09:09:44 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 24.1225 ms
+[09:09:44 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 23.2588 ms
+[09:09:44 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 28.5121 ms
+[09:09:44 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 107.7469 ms
+[09:10:55 INF] HTTP GET /Finance responded 200 in 101.6627 ms
+[09:10:55 INF] HTTP GET /css/site.css responded 200 in 3.9888 ms
+[09:10:55 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 7.0959 ms
+[09:10:55 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 2.4593 ms
+[09:10:55 INF] HTTP GET /js/site.js responded 200 in 2.0028 ms
+[09:10:55 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 6.3676 ms
+[09:10:55 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.3584 ms
+[09:11:00 INF] HTTP GET /Crm responded 200 in 97.8546 ms
+[09:11:00 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 5.1129 ms
+[09:11:00 INF] HTTP GET /css/site.css responded 200 in 3.0047 ms
+[09:11:00 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.2634 ms
+[09:11:00 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 4.4753 ms
+[09:11:00 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.8181 ms
+[09:11:00 INF] HTTP GET /js/site.js responded 304 in 0.7379 ms
+[09:11:01 INF] HTTP GET /Installments responded 200 in 113.5234 ms
+[09:11:01 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.8553 ms
+[09:11:01 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 3.9391 ms
+[09:11:01 INF] HTTP GET /css/site.css responded 304 in 3.8985 ms
+[09:11:01 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.4632 ms
+[09:11:01 INF] HTTP GET /js/site.js responded 304 in 0.4875 ms
+[09:11:01 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.5714 ms
+[09:13:16 INF] HTTP GET /Finance responded 200 in 16.5526 ms
+[09:13:16 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 6.0128 ms
+[09:13:16 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 1.0792 ms
+[09:13:16 INF] HTTP GET /js/site.js responded 200 in 0.9011 ms
+[09:13:16 INF] HTTP GET /css/site.css responded 200 in 0.9508 ms
+[09:13:16 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.9602 ms
+[09:13:16 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.9954 ms
+[09:13:34 INF] HTTP GET /Finance/Cashbox responded 200 in 320.2290 ms
+[09:13:34 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 2.2898 ms
+[09:13:34 INF] HTTP GET /css/site.css responded 200 in 4.4972 ms
+[09:13:34 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.1504 ms
+[09:13:34 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.9561 ms
+[09:13:34 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 2.2537 ms
+[09:13:34 INF] HTTP GET /js/site.js responded 200 in 2.8670 ms
+[09:13:34 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 3.7082 ms
+[09:13:34 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 1.1786 ms
+[09:16:23 INF] HTTP GET /Finance/Accounts responded 200 in 119.0740 ms
+[09:16:23 INF] HTTP GET /css/site.css responded 200 in 1.3794 ms
+[09:16:23 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.2879 ms
+[09:16:23 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 5.8422 ms
+[09:16:23 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.9135 ms
+[09:16:23 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 6.8293 ms
+[09:16:23 INF] HTTP GET /js/site.js responded 200 in 0.9771 ms
+[09:16:23 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 1.0758 ms
+[09:16:23 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 1.2882 ms
+[09:16:30 INF] HTTP GET /Finance responded 200 in 17.8326 ms
+[09:16:30 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.1479 ms
+[09:16:30 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.6959 ms
+[09:16:30 INF] HTTP GET /css/site.css responded 200 in 1.0159 ms
+[09:16:30 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.6372 ms
+[09:16:30 INF] HTTP GET /js/site.js responded 304 in 0.7014 ms
+[09:16:30 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 8.4027 ms
+[09:16:38 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[09:16:38 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[09:16:38 INF] HTTP GET /Operations responded 200 in 104.7410 ms
+[09:16:38 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 8.5562 ms
+[09:16:38 INF] HTTP GET /css/site.css responded 200 in 1.0631 ms
+[09:16:38 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.4802 ms
+[09:16:38 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 3.3052 ms
+[09:16:38 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.4648 ms
+[09:16:38 INF] HTTP GET /js/site.js responded 304 in 0.4301 ms
+[09:16:41 INF] HTTP GET /Operations/DailySales responded 200 in 43.2101 ms
+[09:16:41 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 2.7092 ms
+[09:16:41 INF] HTTP GET /css/site.css responded 200 in 1.5115 ms
+[09:16:41 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.9009 ms
+[09:16:41 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.2895 ms
+[09:16:41 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.5499 ms
+[09:16:41 INF] HTTP GET /js/site.js responded 304 in 0.4924 ms
+[09:16:45 INF] HTTP GET /Operations responded 200 in 18.3601 ms
+[09:16:45 INF] HTTP GET /css/site.css responded 304 in 2.1624 ms
+[09:16:45 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.5188 ms
+[09:16:45 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.5981 ms
+[09:16:45 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.5938 ms
+[09:16:45 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 1.1470 ms
+[09:16:45 INF] HTTP GET /js/site.js responded 304 in 0.7713 ms
+[09:16:47 INF] HTTP GET /Operations/DailySales responded 200 in 15.2533 ms
+[09:16:47 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 6.0502 ms
+[09:16:47 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.6468 ms
+[09:16:47 INF] HTTP GET /css/site.css responded 304 in 0.4210 ms
+[09:16:47 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.5529 ms
+[09:16:47 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.4635 ms
+[09:16:47 INF] HTTP GET /js/site.js responded 304 in 0.5752 ms
+[09:16:49 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[09:16:49 INF] HTTP GET /Pos responded 200 in 123.9913 ms
+[09:16:49 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.6848 ms
+[09:16:49 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3115 ms
+[09:16:49 INF] HTTP GET /css/site.css responded 304 in 0.3999 ms
+[09:16:49 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 3.4099 ms
+[09:16:49 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.7038 ms
+[09:16:49 INF] HTTP GET /js/site.js responded 304 in 1.4337 ms
+[09:16:49 INF] HTTP GET /js/pos.js responded 200 in 21.0951 ms
+[09:31:37 INF] HTTP GET /Finance responded 200 in 105.6017 ms
+[09:31:38 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 31.2408 ms
+[09:31:38 INF] HTTP GET /js/site.js responded 200 in 23.0260 ms
+[09:31:38 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 81.9232 ms
+[09:31:38 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 56.2957 ms
+[09:31:38 INF] HTTP GET /css/site.css responded 200 in 55.6015 ms
+[09:31:38 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 32.3024 ms
+[09:31:42 INF] HTTP GET /Finance/Cashbox responded 200 in 43.5626 ms
+[09:31:42 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.3346 ms
+[09:31:42 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.6614 ms
+[09:31:42 INF] HTTP GET /css/site.css responded 200 in 1.8271 ms
+[09:31:42 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.4431 ms
+[09:31:42 INF] HTTP GET /js/site.js responded 304 in 0.5026 ms
+[09:31:42 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 4.5933 ms
+[09:31:43 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 22.1736 ms
+[09:31:43 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 23.0342 ms
+[09:32:49 INF] HTTP POST /Finance/CloseCashboxSession responded 302 in 122.1116 ms
+[09:32:49 INF] HTTP GET /Finance/Cashbox responded 200 in 28.6277 ms
+[09:32:49 INF] HTTP GET /css/site.css responded 200 in 3.6159 ms
+[09:32:49 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 3.3742 ms
+[09:32:49 INF] HTTP GET /js/site.js responded 200 in 4.9062 ms
+[09:32:49 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 6.2243 ms
+[09:32:49 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 0.7892 ms
+[09:32:49 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 11.7025 ms
+[09:32:49 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.1442 ms
+[09:32:49 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.6957 ms
+[09:32:58 INF] HTTP POST /Finance/OpenCashboxSession responded 302 in 30.6165 ms
+[09:32:58 INF] HTTP GET /Finance/Cashbox responded 200 in 12.5420 ms
+[09:32:58 INF] HTTP GET /css/site.css responded 200 in 0.6950 ms
+[09:32:58 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.0896 ms
+[09:32:58 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.7714 ms
+[09:32:58 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.5011 ms
+[09:32:58 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 2.7239 ms
+[09:32:58 INF] HTTP GET /js/site.js responded 304 in 2.5626 ms
+[09:32:58 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.5422 ms
+[09:32:58 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.4630 ms
+[09:33:06 INF] HTTP GET /Inventory responded 200 in 96.0913 ms
+[09:33:07 INF] HTTP GET /css/site.css responded 200 in 1.3883 ms
+[09:33:07 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.9083 ms
+[09:33:07 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.9910 ms
+[09:33:07 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.5573 ms
+[09:33:07 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.5663 ms
+[09:33:07 INF] HTTP GET /js/site.js responded 304 in 0.5252 ms
+[09:33:09 INF] HTTP GET /Inventory/Products responded 200 in 98.2328 ms
+[09:33:09 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.8348 ms
+[09:33:09 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.6639 ms
+[09:33:09 INF] HTTP GET /css/site.css responded 200 in 8.7305 ms
+[09:33:10 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3185 ms
+[09:33:10 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 1.7611 ms
+[09:33:10 INF] HTTP GET /js/site.js responded 304 in 0.8144 ms
+[09:33:10 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.5241 ms
+[09:33:10 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 1.1795 ms
+[09:33:10 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 24.6020 ms
+[09:53:12 INF] Application is shutting down...

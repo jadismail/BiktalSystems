@@ -83,7 +83,9 @@ public sealed class ModuleNavViewComponent : ViewComponent
             ],
             ["Insights"] =
             [
-                new("Business insights", "Index")
+                new("Daily", "Daily"),
+                new("Monthly", "Monthly"),
+                new("Yearly", "Yearly")
             ],
             ["Admin"] =
             [

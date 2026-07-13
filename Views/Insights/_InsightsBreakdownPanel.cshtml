@@ -1,0 +1,44 @@
+@model InsightsBreakdownPanelViewModel
+@using System.Globalization
+@{
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var pct = CultureInfo.InvariantCulture;
+    var rows = (Model.ByProfit
+            ? Model.Rows.OrderByDescending(r => r.Profit)
+            : Model.Rows.OrderByDescending(r => r.Revenue))
+        .ToList();
+}
+<div class="bk-reports-panel p-4 h-100 bk-breakdown" data-breakdown>
+    <div class="bk-reports-panel-title">@Model.Title</div>
+    @if (rows.Count == 0)
+    {
+        <p class="small text-muted mb-0">No product sales in this period.</p>
+    }
+    else
+    {
+        <label class="bk-reports-kpi-label d-block mb-1">@Model.SelectLabel</label>
+        <select class="form-select form-select-sm mb-3" data-breakdown-select aria-label="@Model.SelectLabel">
+            @foreach (var row in rows)
+            {
+                <option
+                    data-revenue="@row.Revenue.ToString("C0", money)"
+                    data-profit="@row.Profit.ToString("C0", money)"
+                    data-margin="@row.MarginPercent.ToString("0.#", pct)%"
+                    data-units="@row.UnitsSold.ToString("N0", pct)">
+                    @row.Label
+                </option>
+            }
+        </select>
+        <div class="bk-breakdown-figure">
+            <div class="bk-reports-kpi-label">@(Model.ByProfit ? "Profit" : "Revenue")</div>
+            <div class="bk-reports-kpi-value" data-field="@(Model.ByProfit ? "profit" : "revenue")"></div>
+        </div>
+        <div class="bk-breakdown-meta small text-muted fw-semibold mt-2">
+            <span>@(Model.ByProfit ? "Revenue" : "Profit") <span class="text-body" data-field="@(Model.ByProfit ? "revenue" : "profit")"></span></span>
+            <span class="mx-2">·</span>
+            <span>Margin <span class="text-body" data-field="margin"></span></span>
+            <span class="mx-2">·</span>
+            <span>Units <span class="text-body" data-field="units"></span></span>
+        </div>
+    }
+</div>

@@ -1,4 +1,5 @@
 using Biktal.Infrastructure;
+using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,8 @@ builder.Host.UseSerilog((ctx, services, cfg) =>
 });
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddScoped<CashboxSessionService>();
+builder.Services.AddScoped<InstallmentPlanService>();
 
 builder.Services.AddAuthorization();
 
@@ -74,11 +77,7 @@ using (var scope = app.Services.CreateScope())
     {
         logger.LogError(ex,
             "Database migration or seed failed. Check PostgreSQL is running and ConnectionStrings:DefaultConnection is correct.");
-
-        if (!app.Environment.IsDevelopment())
-            throw;
-
-        logger.LogWarning("Continuing in Development without a successful migration. Auth and data pages will fail until the database is available.");
+        logger.LogWarning("Continuing without a successful migration/seed. Auth and data pages may fail until the database is available.");
     }
 }
 
