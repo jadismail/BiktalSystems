@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "CRM";
     ViewData["Module"] = "CRM";
-    ViewData["ModuleSubtitle"] = "Customers, loyalty, installments, campaigns, and support.";
+    ViewData["ModuleSubtitle"] = "Customers, loyalty, debits, campaigns, and support.";
     var n = CultureInfo.InvariantCulture;
     var money = CultureInfo.GetCultureInfo("en-US");
 }
@@ -37,7 +37,7 @@
         <article class="bk-crm-kpi">
             <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-wallet2"></i></div>
             <div>
-                <div class="bk-crm-kpi-label">Installments outstanding</div>
+                <div class="bk-crm-kpi-label">Debits outstanding</div>
                 <div class="bk-crm-kpi-value">@Model.InstallmentOutstanding.ToString("C0", money)</div>
             </div>
         </article>
@@ -58,8 +58,8 @@
         </a>
         <a asp-controller="Installments" asp-action="Index" class="bk-tile text-decoration-none">
             <div class="bk-tile-icon"><i class="bi bi-calendar2-range"></i></div>
-            <h2 class="h6 fw-bold bk-hero-title text-reset">Installments</h2>
-            <p class="small text-muted mb-0 fw-semibold">@Model.ActiveInstallmentPlanCount.ToString("N0", n) active plan(s) · payment schedules.</p>
+            <h2 class="h6 fw-bold bk-hero-title text-reset">Debits</h2>
+            <p class="small text-muted mb-0 fw-semibold">@Model.ActiveInstallmentPlanCount.ToString("N0", n) open debit(s) · balances owed.</p>
         </a>
         <a asp-action="Loyalty" class="bk-tile text-decoration-none">
             <div class="bk-tile-icon"><i class="bi bi-stars"></i></div>

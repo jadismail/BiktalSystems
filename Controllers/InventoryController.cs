@@ -2,6 +2,7 @@ using Biktal.Domain.Inventory;
 using Biktal.Infrastructure.Inventory;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,6 @@ namespace Biktal.WebMVC.Controllers;
 [Authorize]
 public sealed class InventoryController : Controller
 {
-    private const int LowStockThreshold = 5;
-
     private readonly ApplicationDbContext _db;
     private readonly InventoryMovementService _movements;
     private readonly CatalogProductExcelImportService _productImport;
@@ -28,54 +27,7 @@ public sealed class InventoryController : Controller
         _productImport = productImport;
     }
 
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
-    {
-        ViewData["BodyClass"] = "bk-page-inventory";
-        ViewData["Title"] = "Inventory";
-        ViewData["Module"] = "Inventory";
-        ViewData["ModuleSubtitle"] = "Products, stock, warehouses, and purchasing in one hub.";
-
-        var monthStart = new DateTimeOffset(
-            DateTime.UtcNow.Year,
-            DateTime.UtcNow.Month,
-            1,
-            0,
-            0,
-            0,
-            TimeSpan.Zero);
-
-        var skuCount = await _db.CatalogProducts.AsNoTracking().CountAsync(cancellationToken);
-        var lowStock = await _db.CatalogProducts.AsNoTracking()
-            .CountAsync(p => p.StockQuantity > 0 && p.StockQuantity <= LowStockThreshold, cancellationToken);
-        var outOfStock = await _db.CatalogProducts.AsNoTracking()
-            .CountAsync(p => p.StockQuantity <= 0, cancellationToken);
-        var okStock = Math.Max(0, skuCount - lowStock - outOfStock);
-
-        var model = new InventoryOverviewViewModel
-        {
-            SkuCount = skuCount,
-            WarehouseCount = await _db.CatalogWarehouses.AsNoTracking().CountAsync(cancellationToken),
-            OpenPurchaseOrderCount = await _db.PurchaseOrders.AsNoTracking()
-                .CountAsync(
-                    po => po.Status != PurchaseOrderStatus.Received && po.Status != PurchaseOrderStatus.Cancelled,
-                    cancellationToken),
-            CategoryCount = await _db.CatalogCategories.AsNoTracking().CountAsync(cancellationToken),
-            BrandCount = await _db.CatalogBrands.AsNoTracking().CountAsync(cancellationToken),
-            SupplierCount = await _db.CatalogSuppliers.AsNoTracking().CountAsync(cancellationToken),
-            LowStockSkuCount = lowStock,
-            OkStockSkuCount = okStock,
-            OutOfStockSkuCount = outOfStock,
-            LowStockThreshold = LowStockThreshold,
-            TotalStockUnits = await _db.CatalogProducts.AsNoTracking()
-                .SumAsync(p => (int?)p.StockQuantity, cancellationToken) ?? 0,
-            InventoryRetailValue = await _db.CatalogProducts.AsNoTracking()
-                .SumAsync(p => (decimal?)(p.Price * p.StockQuantity), cancellationToken) ?? 0m,
-            MovementsThisMonth = await _db.InventoryMovements.AsNoTracking()
-                .CountAsync(m => m.CreatedAtUtc >= monthStart, cancellationToken)
-        };
-
-        return View(model);
-    }
+    public IActionResult Index() => RedirectToAction(nameof(Products));
 
     public async Task<IActionResult> Products(Guid? editId, CancellationToken cancellationToken)
     {
@@ -369,13 +321,58 @@ public sealed class InventoryController : Controller
     }
 
     [HttpGet]
-    public IActionResult DownloadImportTemplate()
+    public async Task<IActionResult> DownloadImportTemplate(CancellationToken cancellationToken)
     {
-        var bytes = CatalogProductExcelImportService.BuildTemplateWorkbook();
+        var products = await _db.CatalogProducts.AsNoTracking()
+            .OrderBy(p => p.Sku)
+            .Select(p => new
+            {
+                p.Sku,
+                p.Name,
+                p.Category,
+                Brand = p.Brand != null ? p.Brand.Name : null,
+                p.Barcode,
+                p.Cost,
+                p.Price,
+                p.StockQuantity
+            })
+            .ToListAsync(cancellationToken);
+
+        using var workbook = new XLWorkbook();
+        var sheet = workbook.Worksheets.Add("Products");
+        sheet.Cell(1, 1).Value = "SKU";
+        sheet.Cell(1, 2).Value = "Name";
+        sheet.Cell(1, 3).Value = "Category";
+        sheet.Cell(1, 4).Value = "Brand";
+        sheet.Cell(1, 5).Value = "Barcode";
+        sheet.Cell(1, 6).Value = "Cost";
+        sheet.Cell(1, 7).Value = "Price";
+        sheet.Cell(1, 8).Value = "Stock";
+        sheet.Row(1).Style.Font.Bold = true;
+        sheet.Column(5).Style.NumberFormat.Format = "@";
+
+        var row = 2;
+        foreach (var product in products)
+        {
+            sheet.Cell(row, 1).Value = product.Sku;
+            sheet.Cell(row, 2).Value = product.Name;
+            sheet.Cell(row, 3).Value = product.Category;
+            sheet.Cell(row, 4).Value = product.Brand ?? string.Empty;
+            sheet.Cell(row, 5).Value = product.Barcode ?? string.Empty;
+            sheet.Cell(row, 6).Value = product.Cost;
+            sheet.Cell(row, 7).Value = product.Price;
+            sheet.Cell(row, 8).Value = product.StockQuantity;
+            row++;
+        }
+
+        sheet.Columns().AdjustToContents();
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
         return File(
-            bytes,
+            stream.ToArray(),
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "biktal-product-import-template.xlsx");
+            "biktal-products.xlsx");
     }
 
     [HttpPost]

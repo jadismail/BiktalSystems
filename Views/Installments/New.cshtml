@@ -1,7 +1,7 @@
 @model NewInstallmentPageViewModel
 @using System.Globalization
 @{
-    ViewData["Title"] = "New installment plan";
+    ViewData["Title"] = "New debit";
     ViewData["Module"] = "CRM";
     var money = CultureInfo.GetCultureInfo("en-US");
 }
@@ -10,18 +10,17 @@
 
     <nav class="bk-crm-bc mb-2" aria-label="Breadcrumb">
         <ol class="breadcrumb small mb-0">
-            <li class="breadcrumb-item"><a asp-action="Index">Installments</a></li>
-            <li class="breadcrumb-item active" aria-current="page">New plan</li>
+            <li class="breadcrumb-item"><a asp-action="Index">Debits</a></li>
+            <li class="breadcrumb-item active" aria-current="page">New debit</li>
         </ol>
     </nav>
 
     <partial name="_ModuleHeader" />
 
     <div class="bk-crm-panel p-4 p-lg-5">
-        <div class="bk-crm-panel-title">Payment plan</div>
+        <div class="bk-crm-panel-title">Customer debit</div>
         <p class="small text-muted fw-semibold mb-4">
-            Total sale is posted to the ledger: down payment to Cash/Whish/Card, balance to Accounts Receivable (1200).
-            Monthly installments are generated from the first due date.
+            Posts the sale to the ledger: down payment to Cash/Whish/Card, remaining balance to Accounts Receivable (1200).
         </p>
 
         <form asp-action="Create" method="post" novalidate>
@@ -91,7 +90,7 @@
                 </div>
             </div>
             <div class="d-flex flex-wrap gap-2 mt-4">
-                <button type="submit" class="btn btn-primary fw-semibold px-4" @(Model.Customers.Count == 0 ? "disabled" : null)>Create plan</button>
+                <button type="submit" class="btn btn-primary fw-semibold px-4" @(Model.Customers.Count == 0 ? "disabled" : null)>Create debit</button>
                 <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>

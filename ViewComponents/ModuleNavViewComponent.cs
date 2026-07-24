@@ -20,7 +20,6 @@ public sealed class ModuleNavViewComponent : ViewComponent
         {
             ["Inventory"] =
             [
-                new("Overview", "Index"),
                 new("Products", "Products"),
                 new("Import Excel", "Import"),
                 new("Categories", "Categories"),
@@ -53,7 +52,7 @@ public sealed class ModuleNavViewComponent : ViewComponent
                 new("Overview", "Index"),
                 new("Customers", "Customers"),
                 new("New customer", "NewCustomer"),
-                new("Installments", "Index", "Installments"),
+                new("Debits", "Index", "Installments"),
                 new("Loyalty", "Loyalty"),
                 new("Campaigns", "Campaigns"),
                 new("Support tickets", "Tickets"),
@@ -63,8 +62,8 @@ public sealed class ModuleNavViewComponent : ViewComponent
             [
                 new("Overview", "Index", "Crm"),
                 new("Customers", "Customers", "Crm"),
-                new("Installments", "Index", "Installments"),
-                new("New plan", "New", "Installments"),
+                new("Debits", "Index", "Installments"),
+                new("New debit", "New", "Installments"),
                 new("Loyalty", "Loyalty", "Crm"),
                 new("Campaigns", "Campaigns", "Crm"),
                 new("Support tickets", "Tickets", "Crm")

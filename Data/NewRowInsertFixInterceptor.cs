@@ -6,10 +6,10 @@ namespace Biktal.WebMVC.Data;
 
 /// <summary>
 /// Works around an EF Core tracking quirk in the prebuilt domain services: when a brand-new child
-/// entity that already has a client-assigned (store-generated-by-convention) GUID key is attached to
-/// an already-tracked parent via a navigation collection (e.g. <c>plan.Payments.Add(payment)</c>),
-/// EF marks it as <see cref="EntityState.Modified"/> instead of <see cref="EntityState.Added"/> and
-/// emits an UPDATE that affects 0 rows, throwing <see cref="DbUpdateConcurrencyException"/>.
+/// entity that already has a client-assigned GUID key is attached to an already-tracked parent via a
+/// navigation collection (e.g. <c>plan.Payments.Add(payment)</c>), EF marks it as
+/// <see cref="EntityState.Modified"/> instead of <see cref="EntityState.Added"/> and emits an UPDATE
+/// that affects 0 rows, throwing <see cref="DbUpdateConcurrencyException"/>.
 ///
 /// Before each save we flip any <see cref="EntityState.Modified"/> entry whose row does not exist in
 /// the database back to <see cref="EntityState.Added"/> so it is inserted correctly.

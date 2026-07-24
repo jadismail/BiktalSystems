@@ -6,7 +6,6 @@ using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,9 +19,15 @@ builder.Host.UseSerilog((ctx, services, cfg) =>
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// EF Core auto-applies ISaveChangesInterceptor instances registered in DI to contexts created via
-// AddDbContext. This one repairs new child rows that EF mis-tracks as UPDATEs (see class remarks).
-builder.Services.AddSingleton<ISaveChangesInterceptor, NewRowInsertFixInterceptor>();
+// InstallmentPlanService attaches new payments via plan.Payments.Add(...) with client GUIDs,
+// so EF tracks them as Modified and SaveChanges issues a 0-row UPDATE (DbUpdateConcurrencyException).
+// NewRowInsertFixInterceptor flips those to Added — it must be wired with AddInterceptors
+// (DI registration alone is not enough).
+builder.Services.AddSingleton<NewRowInsertFixInterceptor>();
+builder.Services.ConfigureDbContext<ApplicationDbContext>((sp, options) =>
+{
+    options.AddInterceptors(sp.GetRequiredService<NewRowInsertFixInterceptor>());
+});
 
 builder.Services.AddScoped<CashboxSessionService>();
 builder.Services.AddScoped<InstallmentPlanService>();
@@ -83,20 +88,34 @@ using (var scope = app.Services.CreateScope())
     {
         var db = services.GetRequiredService<ApplicationDbContext>();
         await db.Database.MigrateAsync();
-        await CatalogProductSeeder.SeedIfEmptyAsync(db);
-        await CatalogCategorySeeder.SeedIfEmptyAsync(db);
-        await CatalogBrandSeeder.SeedIfEmptyAsync(db);
-        await CatalogWarehouseSeeder.SeedIfEmptyAsync(db);
-        await CatalogSupplierSeeder.SeedIfEmptyAsync(db);
-        await RepairTicketSeeder.SeedIfEmptyAsync(db);
-        await FinanceDataSeeder.SeedIfEmptyAsync(db);
-        await FinanceDataSeeder.EnsureSalesTaxPayableAccountAsync(db);
-        await FinanceDataSeeder.EnsureInventoryMovementAccountsAsync(db);
-        await FinanceDataSeeder.EnsureCashboxAccountDisplayNamesAsync(db);
-        await CrmDataSeeder.SeedIfEmptyAsync(db);
-        await StaffDataSeeder.SeedIfEmptyAsync(db);
-        await AdminDataSeeder.SeedIfEmptyAsync(db);
-        await IdentitySeeder.SeedAsync(services);
+
+        async Task RunSeedAsync(string name, Func<Task> seed)
+        {
+            try
+            {
+                await seed();
+            }
+            catch (Exception ex)
+            {
+                db.ChangeTracker.Clear();
+                logger.LogError(ex, "Seed step '{SeedName}' failed; continuing with remaining seeds.", name);
+            }
+        }
+
+        await RunSeedAsync("CatalogProduct", () => CatalogProductSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("CatalogCategory", () => CatalogCategorySeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("CatalogBrand", () => CatalogBrandSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("CatalogWarehouse", () => CatalogWarehouseSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("CatalogSupplier", () => CatalogSupplierSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("RepairTicket", () => RepairTicketSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("Finance", () => FinanceDataSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("FinanceSalesTax", () => FinanceDataSeeder.EnsureSalesTaxPayableAccountAsync(db));
+        await RunSeedAsync("FinanceInventoryAccounts", () => FinanceDataSeeder.EnsureInventoryMovementAccountsAsync(db));
+        await RunSeedAsync("FinanceCashboxNames", () => FinanceDataSeeder.EnsureCashboxAccountDisplayNamesAsync(db));
+        await RunSeedAsync("Crm", () => SafeCrmDataSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("Staff", () => StaffDataSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("Admin", () => AdminDataSeeder.SeedIfEmptyAsync(db));
+        await RunSeedAsync("Identity", () => IdentitySeeder.SeedAsync(services));
     }
     catch (Exception ex)
     {

@@ -6,11 +6,13 @@
     ViewData["Title"] = "Point of Sale";
     var jsonOpts = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
     var catalogJson = JsonSerializer.Serialize(Model.Catalog, jsonOpts);
+    var customersJson = JsonSerializer.Serialize(Model.Customers, jsonOpts);
     var taxPct = Model.TaxRate * 100m;
     var lbpFmt = Model.LbpPerUsd.ToString("N0", CultureInfo.InvariantCulture);
     var antiforgery = Antiforgery.GetAndStoreTokens(Context);
 }
 <script type="application/json" id="bk-pos-catalog-json">@Html.Raw(catalogJson)</script>
+<script type="application/json" id="bk-pos-customers-json">@Html.Raw(customersJson)</script>
 
 <div id="bk-pos-root"
      class="bk-pos-v2"

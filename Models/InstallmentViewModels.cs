@@ -7,8 +7,8 @@ public static class InstallmentPlanStatusLabels
 {
     public static string Title(InstallmentPlanStatus status) => status switch
     {
-        InstallmentPlanStatus.Active => "Active",
-        InstallmentPlanStatus.PaidOff => "Paid off",
+        InstallmentPlanStatus.Active => "Open",
+        InstallmentPlanStatus.PaidOff => "Settled",
         InstallmentPlanStatus.Defaulted => "Defaulted",
         InstallmentPlanStatus.Cancelled => "Cancelled",
         _ => status.ToString()
@@ -105,12 +105,12 @@ public sealed class CreateInstallmentPlanFormModel : IValidatableObject
     [Display(Name = "Down payment (USD)")]
     public decimal DownPayment { get; set; }
 
-    [Display(Name = "Number of installments")]
+    [Display(Name = "Number of payments")]
     [Range(1, 60)]
     public int InstallmentCount { get; set; } = 3;
 
     [Required]
-    [Display(Name = "First due date")]
+    [Display(Name = "First payment due")]
     public DateOnly FirstDueDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow).AddMonths(1);
 
     [Display(Name = "Down payment method")]
@@ -165,9 +165,6 @@ public sealed class InstallmentPlanDetailViewModel
 
     public string? OpeningJournalReference { get; init; }
 
-    public IReadOnlyList<InstallmentScheduleRowViewModel> Schedule { get; init; } =
-        Array.Empty<InstallmentScheduleRowViewModel>();
-
     public IReadOnlyList<InstallmentPaymentRowViewModel> Payments { get; init; } =
         Array.Empty<InstallmentPaymentRowViewModel>();
 
@@ -198,8 +195,6 @@ public sealed class InstallmentPaymentRowViewModel
     public string Method { get; init; } = string.Empty;
 
     public string? Notes { get; init; }
-
-    public int? ScheduleSequence { get; init; }
 }
 
 public sealed class RecordInstallmentPaymentFormModel : IValidatableObject

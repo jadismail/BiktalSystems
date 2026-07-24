@@ -48,6 +48,7 @@
                 <p class="small text-muted fw-semibold">
                     Import products from a <strong>.xlsx</strong> file. Existing SKUs are updated; new SKUs are added.
                     Categories and brands are created automatically when they do not exist yet.
+                    Use <strong>Download products</strong> to export your full catalog, edit in Excel, then re-upload.
                 </p>
 
                 <form asp-action="Import" method="post" enctype="multipart/form-data" class="mt-4">
@@ -65,7 +66,7 @@
                             <i class="bi bi-upload me-1" aria-hidden="true"></i>Import products
                         </button>
                         <a asp-action="DownloadImportTemplate" class="btn btn-outline-secondary fw-semibold">
-                            <i class="bi bi-download me-1" aria-hidden="true"></i>Download template
+                            <i class="bi bi-download me-1" aria-hidden="true"></i>Download products
                         </a>
                         <a asp-action="Products" class="btn btn-outline-secondary fw-semibold">Back to products</a>
                     </div>

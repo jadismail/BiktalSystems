@@ -4385,6 +4385,109 @@ body.bk-page-inventory .bk-main {
   color: color-mix(in srgb, var(--bk-crm-accent) 55%, var(--bk-text));
 }
 
+.bk-crm-debit-head {
+  padding: 1.35rem 1.45rem;
+  border-radius: var(--bk-radius);
+  border: 1px solid var(--bk-border);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--bk-crm-accent) 10%, var(--bk-surface)) 0%,
+      var(--bk-surface) 48%,
+      color-mix(in srgb, var(--bk-accent-2) 8%, var(--bk-surface)) 100%
+    );
+  box-shadow: var(--bk-shadow);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.bk-crm-debit-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bk-muted);
+}
+
+.bk-crm-debit-balance {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
+@media (min-width: 768px) {
+  .bk-crm-debit-balance {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .bk-crm-debit-progress {
+    grid-column: 1 / -1;
+  }
+}
+
+.bk-crm-debit-stat {
+  padding: 1rem 1.1rem;
+  border-radius: var(--bk-radius-sm);
+  border: 1px solid var(--bk-border);
+  background: var(--bk-surface);
+  box-shadow: var(--bk-shadow);
+}
+
+.bk-crm-debit-stat--accent {
+  border-color: color-mix(in srgb, var(--bk-crm-accent) 40%, var(--bk-border));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--bk-crm-accent) 12%, var(--bk-surface)),
+    var(--bk-surface)
+  );
+}
+
+.bk-crm-debit-stat-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--bk-muted);
+  margin-bottom: 0.35rem;
+}
+
+.bk-crm-debit-stat-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.bk-crm-debit-stat--accent .bk-crm-debit-stat-value {
+  color: color-mix(in srgb, var(--bk-crm-accent) 70%, var(--bk-text));
+}
+
+.bk-crm-debit-progress {
+  padding: 1rem 1.1rem;
+  border-radius: var(--bk-radius-sm);
+  border: 1px solid var(--bk-border);
+  background: var(--bk-surface);
+  box-shadow: var(--bk-shadow);
+}
+
+.bk-crm-debit-bar {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--bk-surface-2);
+}
+
+.bk-crm-debit-bar .progress-bar {
+  background: linear-gradient(90deg, var(--bk-crm-accent), var(--bk-accent-2));
+  border-radius: 999px;
+}
+
+.bk-crm-debit-pay {
+  border-left-color: color-mix(in srgb, var(--bk-crm-accent) 80%, var(--bk-accent-2));
+}
+
 /* ——— Staff module ——— */
 .bk-staff {
   --bk-staff-accent: color-mix(in srgb, var(--bk-accent) 55%, #0d9488);

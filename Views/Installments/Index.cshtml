@@ -1,7 +1,7 @@
 @model InstallmentsIndexViewModel
 @using System.Globalization
 @{
-    ViewData["Title"] = "Installments";
+    ViewData["Title"] = "Debits";
     ViewData["Module"] = "CRM";
     var money = CultureInfo.GetCultureInfo("en-US");
     var n = CultureInfo.InvariantCulture;
@@ -25,7 +25,7 @@
         </div>
     }
 
-    <section class="bk-crm-kpis mb-4" aria-label="Installments snapshot">
+    <section class="bk-crm-kpis mb-4" aria-label="Debits snapshot">
         <article class="bk-crm-kpi">
             <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-wallet2"></i></div>
             <div>
@@ -34,23 +34,23 @@
             </div>
         </article>
         <article class="bk-crm-kpi">
-            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-calendar-check"></i></div>
+            <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-receipt"></i></div>
             <div>
-                <div class="bk-crm-kpi-label">Active plans</div>
+                <div class="bk-crm-kpi-label">Open debits</div>
                 <div class="bk-crm-kpi-value">@Model.ActivePlanCount.ToString("N0", n)</div>
             </div>
         </article>
         <article class="bk-crm-kpi">
             <div class="bk-crm-kpi-icon" aria-hidden="true"><i class="bi bi-exclamation-circle"></i></div>
             <div>
-                <div class="bk-crm-kpi-label">Overdue installments</div>
+                <div class="bk-crm-kpi-label">Overdue debits</div>
                 <div class="bk-crm-kpi-value">@Model.OverdueInstallmentCount.ToString("N0", n)</div>
             </div>
         </article>
     </section>
 
     <div class="bk-crm-toolbar mb-3">
-        <a asp-action="New" class="btn btn-primary fw-semibold"><i class="bi bi-plus-lg me-1"></i>New plan</a>
+        <a asp-action="New" class="btn btn-primary fw-semibold"><i class="bi bi-plus-lg me-1"></i>New debit</a>
         <a asp-controller="Crm" asp-action="Customers" class="btn btn-outline-secondary btn-sm fw-semibold">Customers</a>
     </div>
 
@@ -59,12 +59,12 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col">Plan</th>
+                        <th scope="col">Debit</th>
                         <th scope="col">Customer</th>
                         <th scope="col">Description</th>
                         <th class="text-end" scope="col">Total</th>
                         <th class="text-end" scope="col">Balance</th>
-                        <th scope="col">Next due</th>
+                        <th scope="col">Opened</th>
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
@@ -73,7 +73,7 @@
                     {
                         <tr>
                             <td colspan="7">
-                                <div class="bk-empty">No installment plans yet — create one for a customer on terms.</div>
+                                <div class="bk-empty">No debits yet — create one for a customer on account.</div>
                             </td>
                         </tr>
                     }
@@ -89,7 +89,7 @@
                                 <td class="small text-muted">@row.Description</td>
                                 <td class="text-end font-monospace">@row.TotalAmount.ToString("C", money)</td>
                                 <td class="text-end font-monospace fw-semibold">@row.BalanceDue.ToString("C", money)</td>
-                                <td class="small">@(row.NextDueDate?.ToString("MMM d, yyyy", money) ?? "—")</td>
+                                <td class="small">@row.CreatedAtUtc.ToLocalTime().ToString("MMM d, yyyy", money)</td>
                                 <td>
                                     <span class="badge @InstallmentPlanStatusLabels.BadgeClass(row.Status)">
                                         @InstallmentPlanStatusLabels.Title(row.Status)

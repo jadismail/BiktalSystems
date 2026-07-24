@@ -118,11 +118,28 @@ public sealed class PosController : Controller
             }).ToList()
             : DemoCatalog;
 
+        var customerRows = await _db.CrmCustomers.AsNoTracking()
+            .Where(c => c.IsActive)
+            .OrderBy(c => c.FullName)
+            .Select(c => new { c.Id, c.FullName, c.Email, c.Phone })
+            .ToListAsync(cancellationToken);
+
+        var customers = customerRows
+            .Select(c => new PosCustomerDto
+            {
+                Id = c.Id.ToString("N"),
+                Name = c.FullName,
+                Email = c.Email ?? "",
+                Phone = c.Phone ?? ""
+            })
+            .ToList();
+
         var settings = await _db.TenantSettings.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
 
         var vm = new PosIndexViewModel
         {
             Catalog = catalog,
+            Customers = customers,
             TaxRate = settings?.DefaultTaxRate ?? 0.09m,
             StoreName = settings?.StoreDisplayName ?? "Biktal Systems",
             ReceiptFooter = settings?.ReceiptFooter,

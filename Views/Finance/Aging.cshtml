@@ -11,8 +11,8 @@
     <div class="bk-finance-callout" role="status">
         <i class="bi bi-info-circle" aria-hidden="true"></i>
         <div>
-            AR/AP aging will pull from open invoices and purchase orders. Manage customer installment plans under
-            <a asp-controller="Installments" asp-action="Index" class="fw-semibold">CRM → Installments</a>.
+            AR/AP aging will pull from open invoices and purchase orders. Manage customer debits under
+            <a asp-controller="Installments" asp-action="Index" class="fw-semibold">CRM → Debits</a>.
             For supplier open balances, see
             <a asp-controller="Inventory" asp-action="PurchaseOrders">purchase orders</a>.
         </div>
@@ -36,7 +36,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="5"><div class="bk-empty">Installment plans and POS credit sales roll up here.</div></td>
+                    <td colspan="5"><div class="bk-empty">Customer debits and POS credit sales roll up here.</div></td>
                 </tr>
             </tbody>
         </table>

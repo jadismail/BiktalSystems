@@ -23,9 +23,9 @@ public sealed class InstallmentsController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        ViewData["Title"] = "Installments";
+        ViewData["Title"] = "Debits";
         ViewData["Module"] = "CRM";
-        ViewData["ModuleSubtitle"] = "Customer payment plans, schedules, and balances owed.";
+        ViewData["ModuleSubtitle"] = "Customer balances owed and payments received.";
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var plans = await _db.CustomerInstallmentPlans.AsNoTracking()
@@ -75,9 +75,9 @@ public sealed class InstallmentsController : Controller
     [HttpGet]
     public async Task<IActionResult> New(Guid? customerId, CancellationToken cancellationToken)
     {
-        ViewData["Title"] = "New installment plan";
+        ViewData["Title"] = "New debit";
         ViewData["Module"] = "CRM";
-        ViewData["ModuleSubtitle"] = "Set total, down payment, and monthly schedule.";
+        ViewData["ModuleSubtitle"] = "Set total, down payment, and payment terms.";
 
         var form = new CreateInstallmentPlanFormModel();
         if (customerId is { } cid && cid != Guid.Empty)
@@ -92,9 +92,9 @@ public sealed class InstallmentsController : Controller
         [Bind(Prefix = nameof(NewInstallmentPageViewModel.Form))] CreateInstallmentPlanFormModel model,
         CancellationToken cancellationToken)
     {
-        ViewData["Title"] = "New installment plan";
+        ViewData["Title"] = "New debit";
         ViewData["Module"] = "CRM";
-        ViewData["ModuleSubtitle"] = "Set total, down payment, and monthly schedule.";
+        ViewData["ModuleSubtitle"] = "Set total, down payment, and payment terms.";
 
         if (!ModelState.IsValid)
             return View("New", await BuildNewInstallmentPageAsync(model, cancellationToken));
@@ -113,11 +113,11 @@ public sealed class InstallmentsController : Controller
 
         if (!result.Success)
         {
-            ModelState.AddModelError(string.Empty, result.Error ?? "Could not create plan.");
+            ModelState.AddModelError(string.Empty, result.Error ?? "Could not create debit.");
             return View("New", await BuildNewInstallmentPageAsync(model, cancellationToken));
         }
 
-        TempData["CrmMessage"] = $"Installment plan {result.PlanNumber} was created.";
+        TempData["CrmMessage"] = $"Debit {result.PlanNumber} was created.";
         return RedirectToAction(nameof(Detail), new { id = result.PlanId });
     }
 
@@ -141,8 +141,6 @@ public sealed class InstallmentsController : Controller
         ViewData["Module"] = "CRM";
         ViewData["ModuleSubtitle"] = plan.Description;
 
-        var scheduleSeq = plan.Schedule.ToDictionary(s => s.Id, s => s.Sequence);
-
         return View(new InstallmentPlanDetailViewModel
         {
             Id = plan.Id,
@@ -160,18 +158,6 @@ public sealed class InstallmentsController : Controller
             StartDate = plan.StartDate,
             Notes = plan.Notes,
             OpeningJournalReference = plan.OpeningJournalEntry?.Reference,
-            Schedule = plan.Schedule
-                .OrderBy(s => s.Sequence)
-                .Select(s => new InstallmentScheduleRowViewModel
-                {
-                    Sequence = s.Sequence,
-                    DueDate = s.DueDate,
-                    AmountDue = s.AmountDue,
-                    AmountPaid = s.AmountPaid,
-                    Remaining = InstallmentPlanService.RoundMoney(s.AmountDue - s.AmountPaid),
-                    Status = s.Status
-                })
-                .ToList(),
             Payments = plan.Payments
                 .OrderByDescending(p => p.ReceivedAtUtc)
                 .Select(p => new InstallmentPaymentRowViewModel
@@ -179,8 +165,7 @@ public sealed class InstallmentsController : Controller
                     ReceivedAtUtc = p.ReceivedAtUtc,
                     Amount = p.Amount,
                     Method = p.Method,
-                    Notes = p.Notes,
-                    ScheduleSequence = p.ScheduleItemId is { } sid && scheduleSeq.TryGetValue(sid, out var seq) ? seq : null
+                    Notes = p.Notes
                 })
                 .ToList(),
             PaymentForm = new RecordInstallmentPaymentFormModel { PlanId = plan.Id }
@@ -213,7 +198,7 @@ public sealed class InstallmentsController : Controller
             return RedirectToAction(nameof(Detail), new { id = model.PlanId });
         }
 
-        TempData["CrmMessage"] = $"Payment of {model.Amount:C} recorded on {result.PlanNumber}.";
+        TempData["CrmMessage"] = $"Payment of {model.Amount:C} recorded on debit {result.PlanNumber}.";
         return RedirectToAction(nameof(Detail), new { id = model.PlanId });
     }
 
