@@ -112,6 +112,45 @@ public sealed class InsightsRecordRowViewModel
     public string PaymentMethod { get; init; } = string.Empty;
 
     public decimal Amount { get; init; }
+
+    public bool IsPosSale => Type.StartsWith("POS", StringComparison.OrdinalIgnoreCase);
+}
+
+public sealed class InsightsSaleLineViewModel
+{
+    public string Sku { get; init; } = string.Empty;
+
+    public string ProductName { get; init; } = string.Empty;
+
+    public int Quantity { get; init; }
+
+    public decimal UnitPrice { get; init; }
+
+    public decimal LineTotal { get; init; }
+}
+
+public sealed class InsightsSaleDetailViewModel
+{
+    public string SaleNumber { get; init; } = string.Empty;
+
+    public DateTimeOffset CompletedAtUtc { get; init; }
+
+    public string CustomerName { get; init; } = string.Empty;
+
+    public string? CustomerPhone { get; init; }
+
+    public string PaymentMethod { get; init; } = string.Empty;
+
+    public decimal Subtotal { get; init; }
+
+    public decimal Discount { get; init; }
+
+    public decimal TaxAmount { get; init; }
+
+    public decimal TotalAmount { get; init; }
+
+    public IReadOnlyList<InsightsSaleLineViewModel> Lines { get; init; } =
+        Array.Empty<InsightsSaleLineViewModel>();
 }
 
 public sealed class InsightsDailyViewModel

@@ -96,9 +96,9 @@ public sealed class OperationsController : Controller
             .CountAsync(s => s.CompletedAtUtc >= dayStart && s.CompletedAtUtc < dayEnd, cancellationToken);
 
         var deliveredRepairs = _db.RepairTickets.AsNoTracking()
-            .Where(t => t.Status == RepairTicketStatus.Delivered
-                        && t.ModifiedAtUtc >= dayStart
-                        && t.ModifiedAtUtc < dayEnd);
+            .Where(t => t.Status == RepairTicketStatus.Delivered)
+            .Select(t => new { DeliveredAt = t.ModifiedAtUtc ?? t.CreatedAtUtc, t.EstimatedPrice })
+            .Where(t => t.DeliveredAt >= dayStart && t.DeliveredAt < dayEnd);
 
         var repairRevenue = await deliveredRepairs.SumAsync(t => (decimal?)t.EstimatedPrice, cancellationToken) ?? 0m;
         var repairCount = await deliveredRepairs.CountAsync(cancellationToken);
@@ -129,7 +129,9 @@ public sealed class OperationsController : Controller
             .CountAsync(s => s.CompletedAtUtc >= monthStart, cancellationToken);
 
         var deliveredRepairs = _db.RepairTickets.AsNoTracking()
-            .Where(t => t.Status == RepairTicketStatus.Delivered && t.ModifiedAtUtc >= monthStart);
+            .Where(t => t.Status == RepairTicketStatus.Delivered)
+            .Select(t => new { DeliveredAt = t.ModifiedAtUtc ?? t.CreatedAtUtc, t.EstimatedPrice })
+            .Where(t => t.DeliveredAt >= monthStart);
 
         var repairRevenue = await deliveredRepairs.SumAsync(t => (decimal?)t.EstimatedPrice, cancellationToken) ?? 0m;
         var repairCount = await deliveredRepairs.CountAsync(cancellationToken);
@@ -291,7 +293,9 @@ public sealed class OperationsController : Controller
         var pipelinePartsCost = await openQuery.SumAsync(t => (decimal?)t.PartsCost, cancellationToken) ?? 0m;
 
         var deliveredQuery = _db.RepairTickets.AsNoTracking()
-            .Where(t => t.Status == RepairTicketStatus.Delivered && t.ModifiedAtUtc >= monthStart);
+            .Where(t => t.Status == RepairTicketStatus.Delivered)
+            .Select(t => new { DeliveredAt = t.ModifiedAtUtc ?? t.CreatedAtUtc, t.EstimatedPrice, t.PartsCost })
+            .Where(t => t.DeliveredAt >= monthStart);
 
         var deliveredRevenueMtd = await deliveredQuery.SumAsync(t => (decimal?)t.EstimatedPrice, cancellationToken) ?? 0m;
         var deliveredPartsCostMtd = await deliveredQuery.SumAsync(t => (decimal?)t.PartsCost, cancellationToken) ?? 0m;
@@ -521,7 +525,9 @@ public sealed class OperationsController : Controller
             .CountAsync(s => s.CompletedAtUtc >= monthStart, cancellationToken);
 
         var deliveredRepairsQuery = _db.RepairTickets.AsNoTracking()
-            .Where(t => t.Status == RepairTicketStatus.Delivered && t.ModifiedAtUtc >= monthStart);
+            .Where(t => t.Status == RepairTicketStatus.Delivered)
+            .Select(t => new { DeliveredAt = t.ModifiedAtUtc ?? t.CreatedAtUtc, t.EstimatedPrice, t.PartsCost })
+            .Where(t => t.DeliveredAt >= monthStart);
 
         var repairRevenue = await deliveredRepairsQuery.SumAsync(t => (decimal?)t.EstimatedPrice, cancellationToken) ?? 0m;
         var repairPartsCost = await deliveredRepairsQuery.SumAsync(t => (decimal?)t.PartsCost, cancellationToken) ?? 0m;

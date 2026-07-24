@@ -1,8 +1,12 @@
+using System.Security.Claims;
+using Biktal.Application.Security;
 using Biktal.Infrastructure;
 using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
+using Biktal.WebMVC.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +19,11 @@ builder.Host.UseSerilog((ctx, services, cfg) =>
 });
 
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// EF Core auto-applies ISaveChangesInterceptor instances registered in DI to contexts created via
+// AddDbContext. This one repairs new child rows that EF mis-tracks as UPDATEs (see class remarks).
+builder.Services.AddSingleton<ISaveChangesInterceptor, NewRowInsertFixInterceptor>();
+
 builder.Services.AddScoped<CashboxSessionService>();
 builder.Services.AddScoped<InstallmentPlanService>();
 
@@ -40,13 +49,29 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
+// Open access: no login required — every request runs as a local admin principal.
+app.Use(async (context, next) =>
+{
+    var claims = new List<Claim>
+    {
+        new(ClaimTypes.Name, "Local user"),
+        new(ClaimTypes.NameIdentifier, "local-bypass"),
+        new(ClaimTypes.Email, "local@biktal")
+    };
+    foreach (var role in ApplicationRoles.All)
+        claims.Add(new Claim(ClaimTypes.Role, role));
+    claims.Add(new Claim(ClaimTypes.Role, ApplicationRoles.AdminModule));
+
+    context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, authenticationType: "LocalBypass"));
+    await next();
+});
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
+        pattern: "{controller=Pos}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 using (var scope = app.Services.CreateScope())

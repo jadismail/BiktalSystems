@@ -139,6 +139,7 @@ public sealed class RepairsController : Controller
             return NotFound();
 
         ticket.Status = status;
+        ticket.ModifiedAtUtc = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync(cancellationToken);
 
         TempData["RepairMessage"] = $"Status updated to {RepairTicketStatusLabels.Title(status)}.";

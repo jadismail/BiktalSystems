@@ -24,6 +24,16 @@ public sealed class InsightsController : Controller
         return (monthStart, today, $"{today:MMMM yyyy} (MTD)");
     }
 
+    /// <summary>UTC instant for local midnight on <paramref name="day"/> (store timezone).</summary>
+    private static DateTimeOffset LocalDayStartUtc(DateOnly day)
+    {
+        var localMidnight = new DateTime(day.Year, day.Month, day.Day, 0, 0, 0, DateTimeKind.Unspecified);
+        var utc = TimeZoneInfo.ConvertTimeToUtc(localMidnight, TimeZoneInfo.Local);
+        return new DateTimeOffset(utc, TimeSpan.Zero);
+    }
+
+    private static DateTimeOffset LocalDayEndUtc(DateOnly day) => LocalDayStartUtc(day.AddDays(1));
+
     private static DateTimeOffset DayStartUtc(DateOnly day) =>
         new(day.Year, day.Month, day.Day, 0, 0, 0, TimeSpan.Zero);
 
@@ -79,10 +89,10 @@ public sealed class InsightsController : Controller
             .ToListAsync(cancellationToken);
 
         var repairs = await _db.RepairTickets.AsNoTracking()
-            .Where(t => t.Status == RepairTicketStatus.Delivered
-                        && t.ModifiedAtUtc >= startUtc
-                        && t.ModifiedAtUtc < endUtc)
-            .Select(t => new RepairRow(t.ModifiedAtUtc!.Value, t.EstimatedPrice ?? 0m, t.PartsCost ?? 0m))
+            .Where(t => t.Status == RepairTicketStatus.Delivered)
+            .Select(t => new { DeliveredAt = t.ModifiedAtUtc ?? t.CreatedAtUtc, t.EstimatedPrice, t.PartsCost })
+            .Where(t => t.DeliveredAt >= startUtc && t.DeliveredAt < endUtc)
+            .Select(t => new RepairRow(t.DeliveredAt, t.EstimatedPrice ?? 0m, t.PartsCost ?? 0m))
             .ToListAsync(cancellationToken);
 
         var expenses = await _db.FinanceExpenses.AsNoTracking()
@@ -120,11 +130,11 @@ public sealed class InsightsController : Controller
     {
         ViewData["Title"] = "Daily insights";
         ViewData["Module"] = "Insights";
-        ViewData["ModuleSubtitle"] = "Pick a day to see revenue, profit, the busiest hours, and every transaction.";
+        ViewData["ModuleSubtitle"] = "Pick a day to see revenue, profit, the busiest times, and every transaction.";
 
-        var day = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
-        var dayStart = DayStartUtc(day);
-        var dayEnd = DayEndUtc(day);
+        var day = date ?? DateOnly.FromDateTime(DateTime.Now);
+        var dayStart = LocalDayStartUtc(day);
+        var dayEnd = LocalDayEndUtc(day);
 
         var data = await LoadPeriodAsync(dayStart, dayEnd, day, day, cancellationToken);
 
@@ -138,8 +148,8 @@ public sealed class InsightsController : Controller
         var hourly = new List<InsightsBarBucketViewModel>(24);
         for (var hour = 0; hour < 24; hour++)
         {
-            var posInHour = data.PosSales.Where(s => s.CompletedAtUtc.UtcDateTime.Hour == hour).ToList();
-            var repairsInHour = data.Repairs.Where(r => r.ModifiedAtUtc.UtcDateTime.Hour == hour).ToList();
+            var posInHour = data.PosSales.Where(s => s.CompletedAtUtc.ToLocalTime().Hour == hour).ToList();
+            var repairsInHour = data.Repairs.Where(r => r.ModifiedAtUtc.ToLocalTime().Hour == hour).ToList();
             var revenue = posInHour.Sum(s => s.TotalAmount) + repairsInHour.Sum(r => r.Revenue);
             hourly.Add(new InsightsBarBucketViewModel
             {
@@ -163,12 +173,19 @@ public sealed class InsightsController : Controller
             .ToListAsync(cancellationToken);
 
         var repairRecords = await _db.RepairTickets.AsNoTracking()
-            .Where(t => t.Status == RepairTicketStatus.Delivered
-                        && t.ModifiedAtUtc >= dayStart
-                        && t.ModifiedAtUtc < dayEnd)
+            .Where(t => t.Status == RepairTicketStatus.Delivered)
+            .Select(t => new
+            {
+                DeliveredAt = t.ModifiedAtUtc ?? t.CreatedAtUtc,
+                t.TicketNumber,
+                t.DeviceSummary,
+                t.CustomerName,
+                t.EstimatedPrice
+            })
+            .Where(t => t.DeliveredAt >= dayStart && t.DeliveredAt < dayEnd)
             .Select(t => new InsightsRecordRowViewModel
             {
-                TimeUtc = t.ModifiedAtUtc!.Value,
+                TimeUtc = t.DeliveredAt,
                 Type = "Repair delivered",
                 Reference = t.TicketNumber,
                 Description = string.IsNullOrWhiteSpace(t.DeviceSummary) ? t.CustomerName : t.DeviceSummary,
@@ -192,6 +209,50 @@ public sealed class InsightsController : Controller
             RepairCount = data.Repairs.Count,
             Hourly = hourly,
             Records = records
+        });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Sale(string saleNumber, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(saleNumber))
+            return NotFound();
+
+        var number = saleNumber.Trim();
+        var sale = await _db.PosSales.AsNoTracking()
+            .Include(s => s.Lines)
+            .FirstOrDefaultAsync(s => s.SaleNumber == number, cancellationToken);
+
+        if (sale is null)
+            return NotFound();
+
+        ViewData["Title"] = sale.SaleNumber;
+        ViewData["Module"] = "Insights";
+        ViewData["ModuleSubtitle"] = "Products and totals for this POS sale.";
+
+        var customer = string.IsNullOrWhiteSpace(sale.CustomerName) ? "Walk-in customer" : sale.CustomerName;
+        return View(new InsightsSaleDetailViewModel
+        {
+            SaleNumber = sale.SaleNumber,
+            CompletedAtUtc = sale.CompletedAtUtc,
+            CustomerName = customer,
+            CustomerPhone = sale.CustomerPhone,
+            PaymentMethod = sale.PaymentMethod,
+            Subtotal = sale.Subtotal,
+            Discount = sale.Discount,
+            TaxAmount = sale.TaxAmount,
+            TotalAmount = sale.TotalAmount,
+            Lines = sale.Lines
+                .OrderBy(l => l.ProductName)
+                .Select(l => new InsightsSaleLineViewModel
+                {
+                    Sku = l.Sku,
+                    ProductName = l.ProductName,
+                    Quantity = l.Quantity,
+                    UnitPrice = l.UnitPrice,
+                    LineTotal = l.LineTotal
+                })
+                .ToList()
         });
     }
 

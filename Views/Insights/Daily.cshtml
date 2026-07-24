@@ -56,7 +56,7 @@
 
     <div class="bk-reports-panel p-4 mb-4">
         <div class="bk-reports-panel-title">Sales by hour</div>
-        <p class="small text-muted fw-semibold mb-3">Revenue per hour (UTC) — spot the busiest times of the day.</p>
+        <p class="small text-muted fw-semibold mb-3">Revenue per hour (local time) — spot the busiest times of the day.</p>
         @if (maxHourRevenue <= 0m)
         {
             <p class="small text-muted mb-0">No sales recorded on this day.</p>
@@ -105,9 +105,9 @@
                         @foreach (var r in Model.Records)
                         {
                             <tr>
-                                <td class="font-monospace">@r.TimeUtc.ToString("HH:mm")</td>
+                                <td class="font-monospace">@r.TimeUtc.ToLocalTime().ToString("HH:mm")</td>
                                 <td>
-                                    @if (r.Type.StartsWith("POS"))
+                                    @if (r.IsPosSale)
                                     {
                                         <span class="badge text-bg-primary">@r.Type</span>
                                     }
@@ -116,7 +116,16 @@
                                         <span class="badge text-bg-info">@r.Type</span>
                                     }
                                 </td>
-                                <td class="font-monospace small">@r.Reference</td>
+                                <td class="font-monospace small">
+                                    @if (r.IsPosSale)
+                                    {
+                                        <a asp-action="Sale" asp-route-saleNumber="@r.Reference" class="fw-semibold">@r.Reference</a>
+                                    }
+                                    else
+                                    {
+                                        @r.Reference
+                                    }
+                                </td>
                                 <td class="fw-semibold">@r.Description</td>
                                 <td class="small text-muted">@(string.IsNullOrWhiteSpace(r.PaymentMethod) ? "—" : r.PaymentMethod)</td>
                                 <td class="text-end font-monospace">@r.Amount.ToString("C", money)</td>

@@ -15,13 +15,8 @@ public class HomeController : Controller
     }
 
     [AllowAnonymous]
-    public IActionResult Index()
-    {
-        if (User.Identity?.IsAuthenticated == true)
-            return RedirectToAction(nameof(DashboardController.Index), "Dashboard");
-
-        return View();
-    }
+    public IActionResult Index() =>
+        RedirectToAction(nameof(PosController.Index), "Pos");
 
     [AllowAnonymous]
     public IActionResult Privacy() => View();
