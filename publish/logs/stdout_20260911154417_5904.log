@@ -1,0 +1,45 @@
+[18:48:34 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[18:48:34 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[18:48:34 WRN] No XML encryptor configured. Key {2c04dba0-7af7-467e-bb8d-0e279fe96013} may be persisted to storage in unencrypted form.
+[18:48:34 INF] Application started. Press Ctrl+C to shut down.
+[18:48:34 INF] Hosting environment: Production
+[18:48:34 INF] Content root path: D:\Systems\BiktalSystems\publish
+[18:48:34 INF] HTTP POST /Pos/CompleteSale responded 400 in 96.9594 ms
+[18:48:43 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[18:48:43 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {dac8758d-7415-40e1-a497-017f12487cdc} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[18:48:43 INF] HTTP GET / responded 200 in 383.7052 ms
+[18:48:43 INF] HTTP GET /css/site.css responded 200 in 84.8872 ms
+[18:48:43 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 81.1837 ms
+[18:48:43 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 69.2237 ms
+[18:48:44 INF] HTTP GET /js/site.js responded 200 in 7.2104 ms
+[18:48:44 INF] HTTP GET /js/pos.js responded 200 in 30.1202 ms
+[18:48:44 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 32.9189 ms
+[18:48:44 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 54.1906 ms
+[18:48:44 INF] HTTP GET /favicon.ico responded 200 in 15.4387 ms
+[18:49:18 INF] HTTP GET /Inventory/Products responded 200 in 628.5040 ms
+[18:49:18 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.1468 ms
+[18:49:18 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.2516 ms
+[18:49:18 INF] HTTP GET /css/site.css responded 200 in 9.0513 ms
+[18:49:19 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 26.6880 ms
+[18:49:19 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.7934 ms
+[18:49:19 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 2.5994 ms
+[18:49:19 INF] HTTP GET /js/site.js responded 304 in 20.0995 ms
+[18:49:19 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 11.8804 ms
+[18:49:20 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 107.5385 ms
+[18:49:31 INF] HTTP GET /Inventory/Products responded 200 in 202.7423 ms
+[18:49:31 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 4.6824 ms
+[18:49:31 INF] HTTP GET /css/site.css responded 200 in 3.7608 ms
+[18:49:31 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.8183 ms
+[18:49:32 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2390 ms
+[18:49:32 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2591 ms
+[18:49:32 INF] HTTP GET /js/site.js responded 304 in 0.3026 ms
+[18:49:32 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.2227 ms
+[18:49:32 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.j

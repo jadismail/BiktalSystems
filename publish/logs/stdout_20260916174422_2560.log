@@ -1,0 +1,46 @@
+[21:00:06 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[21:00:06 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[21:00:06 WRN] No XML encryptor configured. Key {4f01b0fe-992c-45b9-a84f-a711ad972ba4} may be persisted to storage in unencrypted form.
+[21:00:06 INF] Application started. Press Ctrl+C to shut down.
+[21:00:06 INF] Hosting environment: Production
+[21:00:06 INF] Content root path: D:\Systems\BiktalSystems\publish
+[21:00:06 INF] HTTP POST /Pos/CompleteSale responded 400 in 134.4503 ms
+[21:00:08 INF] HTTP POST /Pos/CompleteSale responded 400 in 12.5693 ms
+[21:00:11 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[21:00:11 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {26e8cfe2-021c-4a9a-90f4-812e7428f84c} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[21:00:11 INF] HTTP GET / responded 200 in 339.2689 ms
+[21:00:11 INF] HTTP GET /css/site.css responded 200 in 23.6174 ms
+[21:00:11 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 20.1605 ms
+[21:00:11 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 51.7694 ms
+[21:00:12 INF] HTTP GET /js/site.js responded 200 in 5.5460 ms
+[21:00:12 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 8.5302 ms
+[21:00:12 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 7.0522 ms
+[21:00:12 INF] HTTP GET /js/pos.js responded 200 in 59.5389 ms
+[21:00:12 INF] HTTP GET /favicon.ico responded 200 in 1.4183 ms
+[21:00:38 INF] HTTP POST /Pos/CompleteSale responded 200 in 968.6151 ms
+[21:00:41 INF] HTTP GET /Inventory/Products responded 200 in 506.7454 ms
+[21:00:41 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 3.3845 ms
+[21:00:41 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.4236 ms
+[21:00:41 INF] HTTP GET /css/site.css responded 200 in 10.0590 ms
+[21:00:42 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 23.9859 ms
+[21:00:42 INF] HTTP GET /js/site.js responded 304 in 0.3495 ms
+[21:00:42 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.7985 ms
+[21:00:42 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 2.9249 ms
+[21:00:42 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 0.8152 ms
+[21:00:42 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 113.8179 ms
+[21:01:00 INF] HTTP GET / responded 200 in 29.0967 ms
+[21:01:00 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 14.7539 ms
+[21:01:00 INF] HTTP GET /css/site.css responded 200 in 1.6234 ms
+[21:01:00 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.6952 ms
+[21:01:00 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.4862 ms
+[21:01:00 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2672 ms
+[21:01:00 INF] HTTP GET /js/pos.js responded 304 in 0.2067 ms
+[21:01:00 INF] HTTP GET /js/site.js responded 304 in 0.206

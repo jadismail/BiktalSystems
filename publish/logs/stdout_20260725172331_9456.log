@@ -1,0 +1,46 @@
+[20:24:06 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[20:24:06 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[20:24:06 WRN] No XML encryptor configured. Key {2d66dc41-0cdc-4fd8-8b8b-ba04ca0844f9} may be persisted to storage in unencrypted form.
+[20:24:06 INF] Application started. Press Ctrl+C to shut down.
+[20:24:06 INF] Hosting environment: Production
+[20:24:06 INF] Content root path: D:\Systems\BiktalSystems\publish
+[20:24:06 INF] HTTP POST /Pos/CompleteSale responded 400 in 100.7780 ms
+[20:24:10 INF] HTTP POST /Pos/CompleteSale responded 400 in 11.8904 ms
+[20:24:17 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[20:24:17 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {bc9c2dee-0ee3-4cfb-a59f-c3cff0989f7d} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[20:24:17 INF] HTTP GET / responded 200 in 331.5241 ms
+[20:24:17 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 23.8954 ms
+[20:24:17 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 22.1995 ms
+[20:24:17 INF] HTTP GET /css/site.css responded 200 in 26.2094 ms
+[20:24:18 INF] HTTP GET /js/site.js responded 200 in 2.7193 ms
+[20:24:18 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 7.1700 ms
+[20:24:18 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 6.1002 ms
+[20:24:18 INF] HTTP GET /js/pos.js responded 200 in 33.5174 ms
+[20:24:18 INF] HTTP GET /favicon.ico responded 200 in 20.0468 ms
+[20:24:21 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 2.1098 ms
+[20:24:21 INF] HTTP GET /css/site.css responded 304 in 7.8003 ms
+[20:24:21 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.6072 ms
+[20:24:21 INF] HTTP GET /Inventory/Products responded 200 in 632.6206 ms
+[20:24:22 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 22.7082 ms
+[20:24:22 INF] HTTP GET /js/site.js responded 304 in 0.3548 ms
+[20:24:22 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.4119 ms
+[20:24:22 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 0.9764 ms
+[20:24:22 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 0.9304 ms
+[20:24:22 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 107.8004 ms
+[20:24:36 INF] HTTP GET / responded 200 in 26.0043 ms
+[20:24:36 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.3376 ms
+[20:24:36 INF] HTTP GET /css/site.css responded 304 in 0.4271 ms
+[20:24:36 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.9736 ms
+[20:24:36 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.4644 ms
+[20:24:36 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 1.4854 ms
+[20:24:36 INF] HTTP GET /js/site.js responded 304 in 0.2653 ms
+[20:24:36 INF] HTTP GET /js/pos.js responded 304 in 0.2671 ms
+[20:30:01 INF] HTTP POST /Pos/CompleteSale responded 200 in 798.6614
