@@ -1,0 +1,10 @@
+[19:22:16 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[19:22:16 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[19:22:16 WRN] No XML encryptor configured. Key {fd1961dd-4b7e-46db-898e-7c655b3693be} may be persisted to storage in unencrypted form.
+[19:22:16 INF] Application started. Press Ctrl+C to shut down.
+[19:22:16 INF] Hosting environment: Production
+[19:22:16 INF] Content root path: D:\Systems\BiktalSystems\publish
+[19:22:16 INF] HTTP POST /Repairs/CreateTicket responded 400 in 167.3040 ms
+[19:22:16 INF] HTTP POST /Repairs/CreateTicket responded 400 in 167.5377 ms
+[19:22:21 INF] HTTP POST /Repairs/CreateTicket responded 400 in 21.3156 ms
+[19:42:38 INF] Application is shutting down...

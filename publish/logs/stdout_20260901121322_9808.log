@@ -1,0 +1,144 @@
+[15:14:16 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[15:14:17 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[15:14:17 WRN] No XML encryptor configured. Key {b8d50e63-93b6-44cf-9f95-a17be0c288de} may be persisted to storage in unencrypted form.
+[15:14:17 INF] Application started. Press Ctrl+C to shut down.
+[15:14:17 INF] Hosting environment: Production
+[15:14:17 INF] Content root path: D:\Systems\BiktalSystems\publish
+[15:14:17 ERR] HTTP GET /Crm responded 500 in 157.2704 ms
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at System.Threading.CancellationToken.ThrowIfCancellationRequested()
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Biktal.WebMVC.Controllers.CrmController.Index(CancellationToken cancellationToken) in D:\Systems\BiktalSystems\Controllers\CrmController.cs:line 26
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_2>d.MoveNext() in D:\Systems\BiktalSystems\Program.cs:line 71
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[15:14:17 INF] HTTP GET /Crm responded 200 in 522.0725 ms
+[15:14:17 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 46.1737 ms
+[15:14:17 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 46.9147 ms
+[15:14:17 INF] HTTP GET /css/site.css responded 200 in 46.7404 ms
+[15:14:17 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 52.1578 ms
+[15:14:17 INF] HTTP GET /js/site.js responded 200 in 12.5432 ms
+[15:14:17 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 53.1665 ms
+[15:14:18 INF] HTTP GET /favicon.ico responded 200 in 22.1797 ms
+[15:14:20 INF] HTTP GET /Installments responded 200 in 286.7065 ms
+[15:14:20 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 12.8431 ms
+[15:14:20 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 2.7794 ms
+[15:14:20 INF] HTTP GET /css/site.css responded 304 in 2.7656 ms
+[15:14:20 INF] HTTP GET /js/site.js responded 304 in 19.0955 ms
+[15:14:20 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 25.2503 ms
+[15:14:20 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 149.6619 ms
+[15:14:23 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {84d427a2-0aac-49b8-9c30-6c9219d8409d} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[15:14:23 INF] HTTP GET /Installments/New responded 200 in 169.0724 ms
+[15:14:23 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.5108 ms
+[15:14:23 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3510 ms
+[15:14:23 INF] HTTP GET /css/site.css responded 304 in 2.0085 ms
+[15:14:23 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.8365 ms
+[15:14:23 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.5249 ms
+[15:14:23 INF] HTTP GET /js/site.js responded 304 in 0.4372 ms
+[15:14:23 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.1118 ms
+[15:14:23 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 2.7537 ms
+[15:15:28 INF] HTTP POST /Installments/Create responded 302 in 676.1897 ms
+[15:15:28 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+[15:15:28 INF] HTTP GET /Installments/Detail/8e42e2d5-39d2-4def-9b92-8bd3a2a2e98a responded 200 in 111.6793 ms
+[15:15:28 INF] HTTP GET /css/site.css responded 200 in 0.8330 ms
+[15:15:28 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.2909 ms
+[15:15:28 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.8363 ms
+[15:15:28 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 7.1303 ms
+[15:15:28 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 1.8773 ms
+[15:15:28 INF] HTTP GET /js/site.js responded 200 in 0.7678 ms
+[15:15:28 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 24.8067 ms
+[15:15:28 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 33.3535 ms
+[15:15:30 INF] HTTP GET /Installments responded 200 in 16.3746 ms
+[15:15:30 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 3.8630 ms
+[15:15:30 INF] HTTP GET /css/site.css responded 304 in 0.5157 ms
+[15:15:30 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 1.1972 ms
+[15:15:30 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2628 ms
+[15:15:30 INF] HTTP GET /js/site.js responded 304 in 0.1756 ms
+[15:15:30 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2552 ms
+[15:15:33 INF] HTTP GET /Installments/Detail/54e87103-86f1-433b-80b0-3d6bea5a72e3 responded 200 in 13.4081 ms
+[15:15:33 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.4581 ms
+[15:15:33 INF] HTTP GET /css/site.css responded 304 in 0.2417 ms
+[15:15:33 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1412 ms
+[15:15:33 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.4458 ms
+[15:15:33 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2262 ms
+[15:15:33 INF] HTTP GET /js/site.js responded 304 in 0.1625 ms
+[15:15:33 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.1443 ms
+[15:15:33 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.6053 ms
+[15:15:39 INF] HTTP POST /Installments/RecordPayment responded 302 in 256.5409 ms
+[15:15:39 INF] HTTP GET /Installments/Detail/54e87103-86f1-433b-80b0-3d6bea5a72e3 responded 200 in 8.7283 ms
+[15:15:39 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 4.4781 ms
+[15:15:39 INF] HTTP GET /css/site.css responded 304 in 0.2327 ms
+[15:15:39 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.9277 ms
+[15:15:39 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2660 ms
+[15:15:39 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3539 ms
+[15:15:39 INF] HTTP GET /js/site.js responded 304 in 0.1988 ms
+[15:15:39 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.8639 ms
+[15:15:39 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.2254 ms
+[15:15:41 INF] HTTP GET /Installments responded 200 in 12.8770 ms
+[15:15:41 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.2204 ms
+[15:15:41 INF] HTTP GET /css/site.css responded 304 in 0.1204 ms
+[15:15:41 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1641 ms
+[15:15:41 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1586 ms
+[15:15:41 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1784 ms
+[15:15:41 INF] HTTP GET /js/site.js responded 304 in 0.1776 ms
+[15:15:46 INF] HTTP GET /Installments/Detail/fc63813b-0845-44b9-8bbb-51151b560476 responded 200 in 11.9520 ms
+[15:15:46 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.9976 ms
+[15:15:46 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1852 ms
+[15:15:46 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1708 ms
+[15:15:46 INF] HTTP GET /css/site.css responded 304 in 0.1694 ms
+[15:15:46 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1363 ms
+[15:15:46 INF] HTTP GET /js/site.js responded 304 in 0.1036 ms
+[15:15:46 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.6054 ms
+[15:15:46 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.2190 ms
+[15:15:50 INF] HTTP POST /Installments/RecordPayment responded 302 in 24.4161 ms
+[15:15:50 INF] HTTP GET /Installments/Detail/fc63813b-0845-44b9-8bbb-51151b560476 responded 200 in 4.9516 ms
+[15:15:50 INF] HTTP GET /css/site.css responded 304 in 0.2605 ms
+[15:15:50 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1566 ms
+[15:15:50 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.2827 ms
+[15:15:50 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1405 ms
+[15:15:50 INF] HTTP GET /js/site.js responded 304 in 0.0834 ms
+[15:15:50 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.0597 ms
+[15:15:50 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.0621 ms
+[15:15:50 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2075 ms
+[15:15:53 INF] HTTP GET /Installments responded 200 in 10.4953 ms
+[15:15:53 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.1376 ms
+[15:15:53 INF] HTTP GET /css/site.css responded 304 in 0.1105 ms
+[15:15:53 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1102 ms
+[15:15:53 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1344 ms
+[15:15:53 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1092 ms
+[15:15:53 INF] HTTP GET /js/site.js responded 304 in 0.1099 ms
+[15:36:23 INF] Application is shutting down...

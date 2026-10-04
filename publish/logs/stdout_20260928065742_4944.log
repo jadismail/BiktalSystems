@@ -1,0 +1,42 @@
+[09:58:29 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[09:58:29 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[09:58:29 WRN] No XML encryptor configured. Key {63bc7db5-41ef-4496-99f7-41508b642bf8} may be persisted to storage in unencrypted form.
+[09:58:29 INF] Application started. Press Ctrl+C to shut down.
+[09:58:29 INF] Hosting environment: Production
+[09:58:29 INF] Content root path: D:\Systems\BiktalSystems\publish
+[09:58:30 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {0e411d80-db63-44e6-a91f-c3c55f574a03} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[09:58:30 INF] HTTP GET /Inventory/Products responded 200 in 1036.7918 ms
+[09:58:31 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 46.0524 ms
+[09:58:31 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 46.8023 ms
+[09:58:31 INF] HTTP GET /css/site.css responded 200 in 46.1519 ms
+[09:58:31 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 16.6897 ms
+[09:58:31 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 19.2223 ms
+[09:58:31 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 22.4594 ms
+[09:58:31 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 27.9515 ms
+[09:58:31 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 33.6727 ms
+[09:58:31 INF] HTTP GET /js/site.js responded 200 in 36.0716 ms
+[09:58:39 INF] HTTP GET /Finance responded 200 in 211.3047 ms
+[09:58:39 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 1.3572 ms
+[09:58:39 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 1.0937 ms
+[09:58:39 INF] HTTP GET /css/site.css responded 304 in 14.4181 ms
+[09:58:39 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 44.7273 ms
+[09:58:39 INF] HTTP GET /js/site.js responded 304 in 106.8706 ms
+[09:58:40 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 245.5760 ms
+[09:58:53 INF] HTTP GET /Finance/Cashbox responded 200 in 413.5500 ms
+[09:58:53 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2380 ms
+[09:58:53 INF] HTTP GET /css/site.css responded 304 in 0.2675 ms
+[09:58:53 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.2429 ms
+[09:58:53 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.0927 ms
+[09:58:53 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.5843 ms
+[09:58:53 INF] HTTP GET /js/site.js responded 304 in 1.7130 ms
+[09:58:53 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 13.0781 ms
+[09:58:53 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 22.7670 ms
+[10:19:44 INF] Application is shutting down...

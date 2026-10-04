@@ -1,0 +1,38 @@
+[15:29:20 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[15:29:20 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[15:29:20 WRN] No XML encryptor configured. Key {c32b64ae-06b9-4e9e-80a2-a5ec8f5342d3} may be persisted to storage in unencrypted form.
+[15:29:20 INF] Application started. Press Ctrl+C to shut down.
+[15:29:20 INF] Hosting environment: Production
+[15:29:20 INF] Content root path: D:\Systems\BiktalSystems\publish
+[15:29:20 INF] HTTP POST /Pos/CompleteSale responded 400 in 281.6550 ms
+[15:30:08 INF] HTTP POST /Pos/CompleteSale responded 400 in 26.3335 ms
+[15:30:16 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {888ce291-37ef-4f4a-98bd-a44f60ba13ee} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[15:30:16 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[15:30:17 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {888ce291-37ef-4f4a-98bd-a44f60ba13ee} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[15:30:17 INF] HTTP GET / responded 200 in 486.2899 ms
+[15:30:17 INF] HTTP GET /css/site.css responded 200 in 28.8360 ms
+[15:30:17 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.2525 ms
+[15:30:17 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 17.3872 ms
+[15:30:17 INF] HTTP GET /Inventory/Products responded 200 in 1545.3870 ms
+[15:30:17 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 7.9330 ms
+[15:30:17 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 7.2202 ms
+[15:30:17 INF] HTTP GET /js/pos.js responded 200 in 2.5451 ms
+[15:30:17 INF] HTTP GET /js/site.js responded 200 in 9.8571 ms
+[15:30:25 INF] HTTP POST /Pos/CompleteSale responded 200 in 1738.2437 ms
+[15:50:29 INF] Application is shutting down...

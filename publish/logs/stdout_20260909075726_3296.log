@@ -1,0 +1,32 @@
+[11:10:50 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[11:10:50 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[11:10:50 WRN] No XML encryptor configured. Key {e71af262-00ab-46b4-a648-bb08f4455246} may be persisted to storage in unencrypted form.
+[11:10:50 INF] Application started. Press Ctrl+C to shut down.
+[11:10:50 INF] Hosting environment: Production
+[11:10:50 INF] Content root path: D:\Systems\BiktalSystems\publish
+[11:10:50 INF] HTTP GET /Finance responded 200 in 408.5896 ms
+[11:10:50 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 59.7527 ms
+[11:10:50 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 54.3333 ms
+[11:10:50 INF] HTTP GET /css/site.css responded 200 in 66.8046 ms
+[11:10:50 INF] HTTP GET /js/site.js responded 200 in 57.1660 ms
+[11:10:50 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 80.4715 ms
+[11:10:50 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 25.9260 ms
+[11:10:54 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {0ec82d6a-d711-45bb-ae4b-32f06151ed96} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[11:10:54 INF] HTTP GET /Finance/Cashbox responded 200 in 407.1092 ms
+[11:10:54 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 15.8246 ms
+[11:10:54 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.5122 ms
+[11:10:54 INF] HTTP GET /css/site.css responded 304 in 3.8700 ms
+[11:10:54 INF] HTTP GET /js/site.js responded 304 in 18.9586 ms
+[11:10:54 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 30.5819 ms
+[11:10:54 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 20.4004 ms
+[11:10:54 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 24.9410 ms
+[11:10:54 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 163.7041 ms
+[11:31:27 INF] Application is shutting down...

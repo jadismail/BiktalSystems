@@ -1,0 +1,27 @@
+[18:49:13 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[18:49:13 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[18:49:13 WRN] No XML encryptor configured. Key {2f11fe91-3ee3-4021-b609-0d54fd9bbd13} may be persisted to storage in unencrypted form.
+[18:49:13 INF] Application started. Press Ctrl+C to shut down.
+[18:49:13 INF] Hosting environment: Production
+[18:49:13 INF] Content root path: D:\Systems\BiktalSystems\publish
+[18:49:14 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[18:49:14 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {d2c456ea-056f-470f-8a95-53f531f19a4e} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[18:49:14 INF] HTTP GET / responded 200 in 866.8222 ms
+[18:49:14 INF] HTTP GET /css/site.css responded 200 in 41.7287 ms
+[18:49:14 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 85.9848 ms
+[18:49:14 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 20.3925 ms
+[18:49:15 INF] HTTP GET /js/pos.js responded 200 in 22.8608 ms
+[18:49:15 INF] HTTP GET /js/site.js responded 200 in 24.6838 ms
+[18:49:15 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 36.5465 ms
+[18:49:15 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 35.7770 ms
+[18:49:56 INF] HTTP POST /Pos/CompleteSale responded 200 in 2252.0117 ms
+[18:52:44 INF] HTTP POST /Pos/CompleteSale responded 200 in 136.6046 ms
+[19:13:17 INF] Application is shutting down...

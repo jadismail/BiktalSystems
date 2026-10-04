@@ -1,0 +1,28 @@
+[12:16:10 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[12:16:10 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[12:16:11 WRN] No XML encryptor configured. Key {13446230-a748-4714-9b08-654d58e62048} may be persisted to storage in unencrypted form.
+[12:16:11 INF] Application started. Press Ctrl+C to shut down.
+[12:16:11 INF] Hosting environment: Production
+[12:16:11 INF] Content root path: D:\Systems\BiktalSystems\publish
+[12:16:12 INF] HTTP GET /Finance responded 200 in 672.3970 ms
+[12:16:12 INF] HTTP GET /css/site.css responded 200 in 33.2367 ms
+[12:16:12 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 9.8286 ms
+[12:16:12 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 50.7083 ms
+[12:16:12 INF] HTTP GET /js/site.js responded 200 in 12.0918 ms
+[12:16:12 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 12.2959 ms
+[12:16:12 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 29.3285 ms
+[12:16:16 INF] HTTP GET /Crm responded 200 in 407.8443 ms
+[12:16:16 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 4.4871 ms
+[12:16:16 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 1.0415 ms
+[12:16:16 INF] HTTP GET /css/site.css responded 304 in 8.2709 ms
+[12:16:16 INF] HTTP GET /js/site.js responded 304 in 20.5118 ms
+[12:16:16 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 34.9434 ms
+[12:16:16 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 174.5546 ms
+[12:16:18 INF] HTTP GET /Installments responded 200 in 408.4521 ms
+[12:16:18 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.3705 ms
+[12:16:18 INF] HTTP GET /css/site.css responded 304 in 0.3505 ms
+[12:16:18 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.5302 ms
+[12:16:18 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.5615 ms
+[12:16:18 INF] HTTP GET /js/site.js responded 304 in 1.4999 ms
+[12:16:18 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.4804 ms
+[12:36:51 INF] Application is shutting down...

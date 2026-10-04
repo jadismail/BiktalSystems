@@ -25,11 +25,14 @@
   }
 
   /** @type {{ id: string, name: string, email: string, phone: string }[]} */
-  let customers = [
-    { id: "c1", name: "Alex Rivera", email: "alex@example.com", phone: "" },
-    { id: "c2", name: "Jordan Lee", email: "jordan@example.com", phone: "" },
-    { id: "c3", name: "Sam Patel", email: "sam@example.com", phone: "" },
-  ];
+  let customers = [];
+  try {
+    const customersEl = document.getElementById("bk-pos-customers-json");
+    customers = JSON.parse(customersEl?.textContent || "[]");
+    if (!Array.isArray(customers)) customers = [];
+  } catch {
+    customers = [];
+  }
 
   /** @type {{ id: string, name: string, email: string, phone: string } | null} */
   let selectedCustomer = null;

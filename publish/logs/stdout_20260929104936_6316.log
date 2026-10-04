@@ -1,0 +1,49 @@
+[14:03:09 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[14:03:09 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[14:03:09 WRN] No XML encryptor configured. Key {aedc2acf-c066-4a8b-ac9c-f72ffaf7cd39} may be persisted to storage in unencrypted form.
+[14:03:09 INF] Application started. Press Ctrl+C to shut down.
+[14:03:09 INF] Hosting environment: Production
+[14:03:09 INF] Content root path: D:\Systems\BiktalSystems\publish
+[14:03:10 INF] HTTP GET /Repairs responded 200 in 381.6825 ms
+[14:03:10 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 21.9894 ms
+[14:03:10 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 23.0297 ms
+[14:03:10 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 82.9264 ms
+[14:03:10 INF] HTTP GET /css/site.css responded 200 in 8.8048 ms
+[14:03:10 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 32.7697 ms
+[14:03:10 INF] HTTP GET /js/site.js responded 200 in 19.9807 ms
+[14:03:13 INF] HTTP GET /favicon.ico responded 200 in 17.6391 ms
+[14:03:20 INF] HTTP GET /Finance responded 200 in 186.5852 ms
+[14:03:20 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 6.0031 ms
+[14:03:20 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.0165 ms
+[14:03:20 INF] HTTP GET /css/site.css responded 200 in 5.1013 ms
+[14:03:20 INF] HTTP GET /js/site.js responded 304 in 20.2784 ms
+[14:03:20 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 43.6349 ms
+[14:03:21 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 162.4042 ms
+[14:03:23 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {4a426ac4-e7e2-46ca-829c-88bcedf2f082} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[14:03:23 INF] HTTP GET /Finance/Cashbox responded 200 in 511.9835 ms
+[14:03:23 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 14.8532 ms
+[14:03:23 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 4.5865 ms
+[14:03:23 INF] HTTP GET /css/site.css responded 200 in 1.2314 ms
+[14:03:23 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.8079 ms
+[14:03:23 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3708 ms
+[14:03:23 INF] HTTP GET /js/site.js responded 304 in 0.4918 ms
+[14:03:23 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 2.0621 ms
+[14:03:23 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 3.0634 ms
+[14:19:26 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[14:19:26 INF] HTTP GET / responded 200 in 203.1756 ms
+[14:19:27 INF] HTTP GET /css/site.css responded 200 in 1.2600 ms
+[14:19:27 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.9962 ms
+[14:19:27 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.3690 ms
+[14:19:27 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 18.4688 ms
+[14:19:27 INF] HTTP GET /js/site.js responded 200 in 5.6241 ms
+[14:19:27 INF] HTTP GET /js/pos.js responded 200 in 5.6292 ms
+[14:19:27 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 15.5852 ms
+[14:39:37 INF] Application is shutting down...

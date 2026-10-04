@@ -1,0 +1,136 @@
+[13:23:13 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[13:23:13 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[13:23:14 WRN] No XML encryptor configured. Key {816ff51c-09c3-440b-9852-28dff98fbfba} may be persisted to storage in unencrypted form.
+[13:23:14 INF] Application started. Press Ctrl+C to shut down.
+[13:23:14 INF] Hosting environment: Production
+[13:23:14 INF] Content root path: D:\Systems\BiktalSystems\publish
+[13:23:14 INF] HTTP POST /Inventory/AddProduct responded 400 in 237.1103 ms
+[13:23:14 INF] HTTP POST /Inventory/AddProduct responded 400 in 243.7592 ms
+[13:23:14 INF] HTTP POST /Inventory/AddProduct responded 400 in 237.1127 ms
+[13:23:31 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {a826801c-d823-40b4-a7b3-e09321edf40e} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[13:23:31 INF] HTTP GET /Inventory/Products responded 200 in 910.6453 ms
+[13:23:31 INF] HTTP GET /css/site.css responded 200 in 48.8063 ms
+[13:23:31 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 48.7834 ms
+[13:23:31 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 28.9879 ms
+[13:23:33 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 17.9712 ms
+[13:23:33 INF] HTTP GET /js/site.js responded 200 in 27.8372 ms
+[13:23:33 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 30.4292 ms
+[13:23:33 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 31.4053 ms
+[13:23:33 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 48.1856 ms
+[13:23:33 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 31.5095 ms
+[13:23:48 INF] HTTP POST /Inventory/AddProduct responded 302 in 601.0106 ms
+[13:23:48 INF] HTTP GET /Inventory/Products responded 200 in 279.8796 ms
+[13:23:48 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.9128 ms
+[13:23:48 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.9163 ms
+[13:23:48 INF] HTTP GET /css/site.css responded 200 in 6.6342 ms
+[13:23:49 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 28.7197 ms
+[13:23:49 INF] HTTP GET /js/site.js responded 304 in 17.0887 ms
+[13:23:49 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.2202 ms
+[13:23:49 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 14.6060 ms
+[13:23:49 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 31.3728 ms
+[13:23:49 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 107.1745 ms
+[13:24:33 INF] HTTP POST /Inventory/AddProduct responded 302 in 20.1947 ms
+[13:24:34 INF] HTTP GET /Inventory/Products responded 200 in 167.6337 ms
+[13:24:34 INF] HTTP POST /Inventory/AddProduct responded 200 in 142.3795 ms
+[13:24:34 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.1720 ms
+[13:24:34 INF] HTTP GET /css/site.css responded 200 in 1.8551 ms
+[13:24:34 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 5.6264 ms
+[13:24:35 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2915 ms
+[13:24:35 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2525 ms
+[13:24:35 INF] HTTP GET /js/site.js responded 304 in 0.2826 ms
+[13:24:35 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.2961 ms
+[13:24:35 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.8663 ms
+[13:24:35 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.4097 ms
+[13:24:58 INF] HTTP GET /Inventory/Products responded 200 in 220.4461 ms
+[13:24:58 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 14.7059 ms
+[13:24:58 INF] HTTP GET /css/site.css responded 200 in 1.2820 ms
+[13:24:58 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 5.5422 ms
+[13:24:59 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3350 ms
+[13:24:59 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2610 ms
+[13:24:59 INF] HTTP GET /js/site.js responded 304 in 0.2845 ms
+[13:24:59 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.1729 ms
+[13:24:59 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.6756 ms
+[13:24:59 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.9517 ms
+[13:25:49 INF] HTTP POST /Inventory/EditProduct responded 302 in 165.3217 ms
+[13:25:49 INF] HTTP GET /Inventory/Products responded 200 in 107.9758 ms
+[13:25:49 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 10.4149 ms
+[13:25:49 INF] HTTP GET /css/site.css responded 200 in 1.1537 ms
+[13:25:49 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.4396 ms
+[13:25:50 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2419 ms
+[13:25:50 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3757 ms
+[13:25:50 INF] HTTP GET /js/site.js responded 304 in 0.1816 ms
+[13:25:50 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.1981 ms
+[13:25:50 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 2.3502 ms
+[13:25:50 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.5544 ms
+[13:26:15 INF] HTTP GET /Inventory/Products responded 200 in 82.7022 ms
+[13:26:15 INF] HTTP GET /css/site.css responded 200 in 1.2761 ms
+[13:26:15 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.4109 ms
+[13:26:15 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.3112 ms
+[13:26:16 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1259 ms
+[13:26:16 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2853 ms
+[13:26:16 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.2208 ms
+[13:26:16 INF] HTTP GET /js/site.js responded 304 in 1.0145 ms
+[13:26:16 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 1.3915 ms
+[13:26:16 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.2241 ms
+[13:26:29 INF] HTTP POST /Inventory/EditProduct responded 302 in 20.2775 ms
+[13:26:29 INF] HTTP GET /Inventory/Products responded 200 in 84.4940 ms
+[13:26:29 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.4707 ms
+[13:26:29 INF] HTTP GET /css/site.css responded 200 in 0.7401 ms
+[13:26:29 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.8667 ms
+[13:26:30 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1581 ms
+[13:26:30 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3872 ms
+[13:26:30 INF] HTTP GET /js/site.js responded 304 in 0.1411 ms
+[13:26:30 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.1359 ms
+[13:26:30 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.1328 ms
+[13:26:30 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.1277 ms
+[13:26:44 ERR] HTTP POST /Inventory/DeleteProduct responded 500 in 230.8559 ms
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Biktal.WebMVC.Controllers.InventoryController.DeleteProduct(Guid id, CancellationToken cancellationToken) in D:\Systems\BiktalSystems\Controllers\InventoryController.cs:line 294
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_2>d.MoveNext() in D:\Systems\BiktalSystems\Program.cs:line 71
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[13:26:44 INF] HTTP POST /Inventory/DeleteProduct responded 302 in 174.9274 ms
+[13:26:44 INF] HTTP GET /Inventory/Products responded 200 in 86.7911 ms
+[13:26:44 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 10.0988 ms
+[13:26:44 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.7309 ms
+[13:26:44 INF] HTTP GET /css/site.css responded 200 in 0.8019 ms
+[13:26:45 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1180 ms
+[13:26:45 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1538 ms
+[13:26:45 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.1150 ms
+[13:26:45 INF] HTTP GET /js/site.js responded 304 in 0.0866 ms
+[13:26:45 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.1408 ms
+[13:26:45 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.1104 ms
+[13:47:11 INF] Application is shutting down...

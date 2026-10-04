@@ -1,0 +1,14 @@
+[10:21:44 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[10:21:44 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[10:21:45 WRN] No XML encryptor configured. Key {730463e3-9979-4f79-8d6d-2ab1280f76f5} may be persisted to storage in unencrypted form.
+[10:21:45 INF] Application started. Press Ctrl+C to shut down.
+[10:21:45 INF] Hosting environment: Production
+[10:21:45 INF] Content root path: D:\Systems\BiktalSystems\publish
+[10:21:46 INF] HTTP GET /Insights/Monthly responded 200 in 1199.9511 ms
+[10:21:46 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 66.1722 ms
+[10:21:46 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 66.2634 ms
+[10:21:46 INF] HTTP GET /css/site.css responded 200 in 66.1722 ms
+[10:21:47 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 33.7844 ms
+[10:21:47 INF] HTTP GET /js/site.js responded 200 in 78.0966 ms
+[10:21:47 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 92.4801 ms
+[10:42:17 INF] Application is shutting down...

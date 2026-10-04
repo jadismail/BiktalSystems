@@ -1,0 +1,8 @@
+[10:08:40 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[10:08:40 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[10:08:40 WRN] No XML encryptor configured. Key {0b3b493a-2ca5-432c-bb60-fb76d48d9ce0} may be persisted to storage in unencrypted form.
+[10:08:40 INF] Application started. Press Ctrl+C to shut down.
+[10:08:40 INF] Hosting environment: Production
+[10:08:40 INF] Content root path: D:\Systems\BiktalSystems\publish
+[10:08:41 INF] HTTP POST /Finance/CloseCashboxSession responded 400 in 156.3783 ms
+[10:29:12 INF] Application is shutting down...

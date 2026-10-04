@@ -1,0 +1,26 @@
+[13:22:46 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[13:22:46 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[13:22:46 WRN] No XML encryptor configured. Key {a50153dd-03b6-43c6-8ea7-0ffb0310f67a} may be persisted to storage in unencrypted form.
+[13:22:46 INF] Application started. Press Ctrl+C to shut down.
+[13:22:46 INF] Hosting environment: Production
+[13:22:46 INF] Content root path: D:\Systems\BiktalSystems\publish
+[13:22:46 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {e87259d2-43b5-419f-b9d5-e0be040327ff} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[13:22:47 INF] HTTP GET /Inventory/Products responded 200 in 835.2377 ms
+[13:22:47 INF] HTTP GET /css/site.css responded 200 in 45.2822 ms
+[13:22:47 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 44.1465 ms
+[13:22:47 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 57.8826 ms
+[13:22:48 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 5.8867 ms
+[13:22:48 INF] HTTP GET /js/site.js responded 200 in 1.1907 ms
+[13:22:48 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 6.1599 ms
+[13:22:48 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 4.4692 ms
+[13:22:48 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 1.1832 ms
+[13:22:48 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 28.5197 ms
+[13:43:21 INF] Application is shutting down...

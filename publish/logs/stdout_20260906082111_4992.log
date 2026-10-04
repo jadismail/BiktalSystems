@@ -1,0 +1,16 @@
+[11:38:29 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[11:38:29 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[11:38:29 WRN] No XML encryptor configured. Key {b6fa8e28-0d1f-444d-bc8d-d861a1f9983a} may be persisted to storage in unencrypted form.
+[11:38:29 INF] Application started. Press Ctrl+C to shut down.
+[11:38:29 INF] Hosting environment: Production
+[11:38:29 INF] Content root path: D:\Systems\BiktalSystems\publish
+[11:38:29 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 153.4821 ms
+[11:38:29 INF] HTTP GET /css/site.css responded 200 in 155.6308 ms
+[11:38:29 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 150.4313 ms
+[11:38:29 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 181.7518 ms
+[11:38:29 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 179.1798 ms
+[11:38:29 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 193.7609 ms
+[11:38:29 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 193.7272 ms
+[11:38:29 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 196.6624 ms
+[11:38:29 INF] HTTP GET /js/site.js responded 200 in 220.8630 ms
+[11:59:12 INF] Application is shutting down...

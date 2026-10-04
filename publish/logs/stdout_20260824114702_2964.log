@@ -1,0 +1,36 @@
+[14:59:57 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[14:59:57 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[14:59:57 WRN] No XML encryptor configured. Key {92e862fe-798f-438f-a02c-d976b8fa9911} may be persisted to storage in unencrypted form.
+[14:59:57 INF] Application started. Press Ctrl+C to shut down.
+[14:59:57 INF] Hosting environment: Production
+[14:59:57 INF] Content root path: D:\Systems\BiktalSystems\publish
+[14:59:57 INF] HTTP GET /css/site.css responded 200 in 157.1331 ms
+[14:59:57 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 156.8207 ms
+[14:59:57 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 183.7467 ms
+[14:59:57 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 184.4462 ms
+[14:59:57 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 187.3755 ms
+[14:59:57 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 209.1347 ms
+[14:59:57 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 213.1417 ms
+[14:59:57 INF] HTTP GET /js/site.js responded 200 in 217.6747 ms
+[14:59:57 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 218.8836 ms
+[15:06:46 INF] HTTP GET /css/site.css responded 200 in 5.1710 ms
+[15:06:46 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 23.6220 ms
+[15:06:46 INF] HTTP GET /js/site.js responded 200 in 4.6526 ms
+[15:06:46 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.8931 ms
+[15:06:46 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 37.1991 ms
+[15:06:46 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.9260 ms
+[15:06:46 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 30.9418 ms
+[15:06:46 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 30.7969 ms
+[15:06:46 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 128.0447 ms
+[15:10:06 INF] HTTP GET /Account/Login responded 302 in 53.2639 ms
+[15:10:07 INF] HTTP GET /Inventory/Products responded 200 in 943.9929 ms
+[15:10:07 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 3.0104 ms
+[15:10:07 INF] HTTP GET /css/site.css responded 200 in 1.1360 ms
+[15:10:07 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.2852 ms
+[15:10:08 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.8026 ms
+[15:10:08 INF] HTTP GET /js/site.js responded 200 in 0.7869 ms
+[15:10:08 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 0.7560 ms
+[15:10:08 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 0.7234 ms
+[15:10:08 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 1.8410 ms
+[15:10:08 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 1.5243 ms
+[15:31:03 INF] Application is shutting down...

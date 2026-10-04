@@ -1,0 +1,34 @@
+[09:40:37 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[09:40:37 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[09:40:38 WRN] No XML encryptor configured. Key {bc1ec1c2-ef70-440b-8ea6-9d7c1948134f} may be persisted to storage in unencrypted form.
+[09:40:38 INF] Application started. Press Ctrl+C to shut down.
+[09:40:38 INF] Hosting environment: Production
+[09:40:38 INF] Content root path: D:\Systems\BiktalSystems\publish
+[09:40:38 INF] HTTP GET /Account/Login responded 302 in 103.0554 ms
+[09:40:39 INF] HTTP GET /Inventory/Products responded 200 in 777.8785 ms
+[09:40:39 INF] HTTP GET /css/site.css responded 200 in 52.2162 ms
+[09:40:39 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 51.5398 ms
+[09:40:39 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 49.9624 ms
+[09:40:40 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 20.1569 ms
+[09:40:40 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 23.1195 ms
+[09:40:40 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 29.0906 ms
+[09:40:40 INF] HTTP GET /js/site.js responded 200 in 57.0897 ms
+[09:40:40 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 30.8287 ms
+[09:40:40 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 31.8895 ms
+[09:40:47 INF] HTTP GET /Finance responded 200 in 376.1441 ms
+[09:40:47 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 3.5260 ms
+[09:40:47 INF] HTTP GET /css/site.css responded 304 in 4.2754 ms
+[09:40:47 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.4163 ms
+[09:40:47 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 32.4580 ms
+[09:40:47 INF] HTTP GET /js/site.js responded 304 in 33.7708 ms
+[09:40:47 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 156.8648 ms
+[09:40:50 INF] HTTP GET /Finance/Cashbox responded 200 in 828.9551 ms
+[09:40:51 INF] HTTP GET /css/site.css responded 304 in 0.2958 ms
+[09:40:51 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.4871 ms
+[09:40:51 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2247 ms
+[09:40:51 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2253 ms
+[09:40:51 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2955 ms
+[09:40:51 INF] HTTP GET /js/site.js responded 304 in 0.2215 ms
+[09:40:51 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 19.8705 ms
+[09:40:51 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 27.9336 ms
+[10:01:29 INF] Application is shutting down...

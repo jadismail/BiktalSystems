@@ -1,0 +1,57 @@
+[21:08:45 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[21:08:45 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[21:08:45 WRN] No XML encryptor configured. Key {2537832b-8d13-4634-92c4-29612395755c} may be persisted to storage in unencrypted form.
+[21:08:45 INF] Application started. Press Ctrl+C to shut down.
+[21:08:45 INF] Hosting environment: Production
+[21:08:45 INF] Content root path: D:\Systems\BiktalSystems\publish
+[21:08:45 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {06e858c2-7157-4691-b29c-b7b718b79fd6} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[21:08:46 INF] HTTP GET /Inventory/Products responded 200 in 781.0375 ms
+[21:08:46 INF] HTTP GET /css/site.css responded 200 in 53.2331 ms
+[21:08:46 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 82.8334 ms
+[21:08:46 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 28.6256 ms
+[21:08:47 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 6.8755 ms
+[21:08:47 INF] HTTP GET /js/site.js responded 200 in 2.3716 ms
+[21:08:47 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 1.4724 ms
+[21:08:47 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 5.0635 ms
+[21:08:47 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 5.6283 ms
+[21:08:47 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 23.4165 ms
+[21:09:00 INF] HTTP GET /Inventory/Products responded 200 in 405.7104 ms
+[21:09:00 INF] HTTP GET /css/site.css responded 304 in 4.2535 ms
+[21:09:00 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.7372 ms
+[21:09:00 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.6462 ms
+[21:09:00 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 16.0230 ms
+[21:09:00 INF] HTTP GET /js/site.js responded 304 in 0.2946 ms
+[21:09:00 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 12.5814 ms
+[21:09:00 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.2736 ms
+[21:09:00 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 21.8663 ms
+[21:09:00 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 113.0290 ms
+[21:09:11 INF] HTTP POST /Inventory/EditProduct responded 302 in 265.3797 ms
+[21:09:12 INF] HTTP GET /Inventory/Products responded 200 in 129.1631 ms
+[21:09:12 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 1.2222 ms
+[21:09:12 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3196 ms
+[21:09:12 INF] HTTP GET /css/site.css responded 304 in 0.9802 ms
+[21:09:12 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3627 ms
+[21:09:12 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2684 ms
+[21:09:12 INF] HTTP GET /js/site.js responded 304 in 0.2256 ms
+[21:09:12 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.2791 ms
+[21:09:12 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 1.0065 ms
+[21:09:12 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.3470 ms
+[21:09:14 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[21:09:14 INF] HTTP GET / responded 200 in 79.4976 ms
+[21:09:14 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.2844 ms
+[21:09:14 INF] HTTP GET /css/site.css responded 304 in 0.8304 ms
+[21:09:14 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2523 ms
+[21:09:14 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.0991 ms
+[21:09:14 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 1.2684 ms
+[21:09:14 INF] HTTP GET /js/pos.js responded 200 in 1.0082 ms
+[21:09:14 INF] HTTP GET /js/site.js responded 304 in 0.2811 ms
+[21:09:39 INF] HTTP POST /Pos/CompleteSale responded 200 in 557.5327 ms
+[21:30:33 INF] Application is shutting down...

@@ -1,0 +1,38 @@
+[17:32:30 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[17:32:30 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[17:32:30 WRN] No XML encryptor configured. Key {99ab4213-39d7-4dc8-90e7-530e77be4410} may be persisted to storage in unencrypted form.
+[17:32:30 INF] Application started. Press Ctrl+C to shut down.
+[17:32:30 INF] Hosting environment: Production
+[17:32:30 INF] Content root path: D:\Systems\BiktalSystems\publish
+[17:32:30 INF] HTTP POST /Pos/CompleteSale responded 400 in 90.6896 ms
+[17:32:31 INF] HTTP POST /Pos/CompleteSale responded 400 in 12.0470 ms
+[17:32:40 INF] HTTP POST /Pos/CompleteSale responded 400 in 4.6865 ms
+[17:32:51 INF] HTTP POST /Pos/CompleteSale responded 400 in 2.1504 ms
+[17:33:03 INF] HTTP GET /Insights responded 302 in 23.8324 ms
+[17:33:03 INF] HTTP GET /Insights/Daily responded 200 in 448.4436 ms
+[17:33:03 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 51.5696 ms
+[17:33:03 INF] HTTP GET /css/site.css responded 200 in 53.3272 ms
+[17:33:03 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 57.7448 ms
+[17:33:04 INF] HTTP GET /js/site.js responded 200 in 1.6755 ms
+[17:33:04 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 3.2269 ms
+[17:33:04 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 10.4499 ms
+[17:33:10 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[17:33:10 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {68aeceb8-62fb-4a6f-9a38-563603096d2a} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[17:33:10 INF] HTTP GET / responded 200 in 211.0854 ms
+[17:33:10 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 4.6501 ms
+[17:33:10 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.8980 ms
+[17:33:10 INF] HTTP GET /css/site.css responded 200 in 8.8601 ms
+[17:33:10 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 40.1399 ms
+[17:33:10 INF] HTTP GET /js/site.js responded 304 in 33.3777 ms
+[17:33:10 INF] HTTP GET /js/pos.js responded 200 in 1.2507 ms
+[17:33:11 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 203.3854 ms
+[17:33:27 INF] HTTP POST /Pos/CompleteSale responded 200 in 741.5974 ms
+[17:53:46 INF] Application is shutting down...

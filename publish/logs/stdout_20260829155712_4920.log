@@ -1,0 +1,26 @@
+[18:57:41 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[18:57:41 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[18:57:41 WRN] No XML encryptor configured. Key {01d7266e-45ae-443e-a416-3a73ec2db500} may be persisted to storage in unencrypted form.
+[18:57:41 INF] Application started. Press Ctrl+C to shut down.
+[18:57:41 INF] Hosting environment: Production
+[18:57:41 INF] Content root path: D:\Systems\BiktalSystems\publish
+[18:57:41 INF] HTTP GET /css/site.css responded 200 in 216.3899 ms
+[18:57:41 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 216.5110 ms
+[18:57:41 INF] HTTP GET /js/site.js responded 200 in 207.2504 ms
+[18:57:42 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 248.9519 ms
+[18:57:42 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 258.2064 ms
+[18:57:42 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 258.6824 ms
+[18:57:42 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 249.9130 ms
+[18:57:42 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 251.1281 ms
+[18:57:42 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 268.5829 ms
+[18:57:48 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[18:57:48 INF] HTTP GET /Pos responded 200 in 631.4598 ms
+[18:57:48 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 17.5513 ms
+[18:57:48 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 19.3508 ms
+[18:57:48 INF] HTTP GET /css/site.css responded 200 in 24.6357 ms
+[18:57:49 INF] HTTP GET /js/pos.js responded 200 in 21.4137 ms
+[18:57:49 INF] HTTP GET /js/site.js responded 200 in 21.2637 ms
+[18:57:49 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 71.4864 ms
+[18:57:49 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 185.1140 ms
+[19:12:19 INF] HTTP POST /Pos/CompleteSale responded 200 in 1252.2299 ms
+[19:33:13 INF] Application is shutting down...

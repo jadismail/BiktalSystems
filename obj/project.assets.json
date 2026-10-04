@@ -3819,11 +3819,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SYSTEMS\\BiktalSystems\\Biktal.WebMVC.csproj",
+      "projectUniqueName": "D:\\Systems\\BiktalSystems\\Biktal.WebMVC.csproj",
       "projectName": "Biktal.WebMVC",
-      "projectPath": "D:\\SYSTEMS\\BiktalSystems\\Biktal.WebMVC.csproj",
+      "projectPath": "D:\\Systems\\BiktalSystems\\Biktal.WebMVC.csproj",
       "packagesPath": "C:\\Users\\POS\\.nuget\\packages\\",
-      "outputPath": "D:\\SYSTEMS\\BiktalSystems\\obj\\",
+      "outputPath": "D:\\Systems\\BiktalSystems\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\POS\\AppData\\Roaming\\NuGet\\NuGet.Config"

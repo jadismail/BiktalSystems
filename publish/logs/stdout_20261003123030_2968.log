@@ -1,0 +1,28 @@
+[15:45:12 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[15:45:12 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[15:45:12 WRN] No XML encryptor configured. Key {72cdfe6c-b6d2-4c8c-a8d4-72da0c2dab4c} may be persisted to storage in unencrypted form.
+[15:45:12 INF] Application started. Press Ctrl+C to shut down.
+[15:45:12 INF] Hosting environment: Production
+[15:45:12 INF] Content root path: D:\Systems\BiktalSystems\publish
+[15:45:12 INF] HTTP POST /Pos/CompleteSale responded 400 in 141.1044 ms
+[15:45:26 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[15:45:26 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {a159da29-9f8f-4a5a-b9c5-a862b5a3b4e4} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[15:45:26 INF] HTTP GET / responded 200 in 345.8962 ms
+[15:45:26 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 40.3490 ms
+[15:45:26 INF] HTTP GET /css/site.css responded 200 in 42.9920 ms
+[15:45:26 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 44.6766 ms
+[15:45:27 INF] HTTP GET /js/site.js responded 200 in 1.5277 ms
+[15:45:27 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 14.6588 ms
+[15:45:27 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 15.4237 ms
+[15:45:27 INF] HTTP GET /js/pos.js responded 200 in 70.7662 ms
+[15:45:27 INF] HTTP GET /favicon.ico responded 200 in 21.6363 ms
+[15:45:35 INF] HTTP POST /Pos/CompleteSale responded 200 in 912.3074 ms
+[16:06:31 INF] Application is shutting down...

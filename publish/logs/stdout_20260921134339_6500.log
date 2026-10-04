@@ -1,0 +1,35 @@
+[16:43:45 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[16:43:45 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[16:43:45 WRN] No XML encryptor configured. Key {a453cd44-e5ed-428b-a70e-a312016d285d} may be persisted to storage in unencrypted form.
+[16:43:45 INF] Application started. Press Ctrl+C to shut down.
+[16:43:45 INF] Hosting environment: Production
+[16:43:45 INF] Content root path: D:\Systems\BiktalSystems\publish
+[16:43:45 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {516b0673-45d5-43f1-8998-42e4aeccd858} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[16:43:46 INF] HTTP GET /Inventory/Products responded 200 in 861.2166 ms
+[16:43:46 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 46.5097 ms
+[16:43:46 INF] HTTP GET /css/site.css responded 200 in 29.5700 ms
+[16:43:46 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 25.5505 ms
+[16:43:47 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 5.4463 ms
+[16:43:47 INF] HTTP GET /js/site.js responded 200 in 2.0577 ms
+[16:43:47 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 1.8882 ms
+[16:43:47 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 3.2798 ms
+[16:43:47 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 4.6627 ms
+[16:43:47 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 12.9829 ms
+[17:02:59 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[17:02:59 INF] HTTP GET / responded 200 in 299.5201 ms
+[17:02:59 INF] HTTP GET /css/site.css responded 200 in 13.4191 ms
+[17:02:59 INF] HTTP GET /js/site.js responded 200 in 4.4575 ms
+[17:02:59 INF] HTTP GET /js/pos.js responded 200 in 3.9585 ms
+[17:02:59 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 3.6885 ms
+[17:02:59 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 16.1357 ms
+[17:02:59 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 32.3388 ms
+[17:02:59 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 177.5359 ms
+[17:23:40 INF] Application is shutting down...

@@ -1,0 +1,146 @@
+[11:04:16 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[11:04:16 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[11:04:16 WRN] No XML encryptor configured. Key {11f914a9-2776-4371-bdf5-318aa26c9b46} may be persisted to storage in unencrypted form.
+[11:04:16 INF] Application started. Press Ctrl+C to shut down.
+[11:04:16 INF] Hosting environment: Production
+[11:04:16 INF] Content root path: D:\Systems\BiktalSystems\publish
+[11:04:16 ERR] HTTP GET /Crm responded 500 in 187.8253 ms
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at System.Threading.CancellationToken.ThrowIfCancellationRequested()
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Biktal.WebMVC.Controllers.CrmController.Index(CancellationToken cancellationToken) in D:\Systems\BiktalSystems\Controllers\CrmController.cs:line 26
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_2>d.MoveNext() in D:\Systems\BiktalSystems\Program.cs:line 71
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[11:04:16 ERR] HTTP GET / responded 500 in 176.3041 ms
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at System.Threading.CancellationToken.ThrowIfCancellationRequested()
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Biktal.WebMVC.Controllers.PosController.Index(CancellationToken cancellationToken) in D:\Systems\BiktalSystems\Controllers\PosController.cs:line 103
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_2>d.MoveNext() in D:\Systems\BiktalSystems\Program.cs:line 71
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware.<Invoke>g__AwaitMatcher|10_0(EndpointRoutingMiddleware middleware, HttpContext httpContext, Task`1 matcherTask)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[11:04:17 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {9e4c4e72-2989-42f7-bdc7-4939140ba7f9} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[11:04:17 INF] HTTP GET /Inventory/Products responded 200 in 874.7504 ms
+[11:04:17 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 47.6866 ms
+[11:04:17 INF] HTTP GET /css/site.css responded 200 in 51.3214 ms
+[11:04:17 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 61.2932 ms
+[11:04:19 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 3.3856 ms
+[11:04:19 INF] HTTP GET /js/site.js responded 200 in 2.3585 ms
+[11:04:19 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.0814 ms
+[11:04:19 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 5.8344 ms
+[11:04:19 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 1.0349 ms
+[11:04:19 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 33.7721 ms
+[11:06:20 INF] HTTP GET /Crm responded 200 in 221.6255 ms
+[11:06:20 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.3061 ms
+[11:06:20 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 5.7725 ms
+[11:06:20 INF] HTTP GET /css/site.css responded 200 in 5.3505 ms
+[11:06:20 INF] HTTP GET /js/site.js responded 200 in 1.5903 ms
+[11:06:20 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 36.0941 ms
+[11:06:20 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 201.5615 ms
+[11:06:22 INF] HTTP GET /Installments responded 200 in 166.8009 ms
+[11:06:22 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 1.7388 ms
+[11:06:22 INF] HTTP GET /css/site.css responded 304 in 1.0866 ms
+[11:06:22 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2598 ms
+[11:06:22 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2168 ms
+[11:06:22 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.6576 ms
+[11:06:22 INF] HTTP GET /js/site.js responded 304 in 0.2085 ms
+[11:06:45 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+[11:06:46 INF] HTTP GET /Installments/Detail/dcae7ba5-008b-4793-8fba-ace23a5d9fae responded 200 in 173.4737 ms
+[11:06:46 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.4748 ms
+[11:06:46 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.4700 ms
+[11:06:46 INF] HTTP GET /css/site.css responded 304 in 0.2877 ms
+[11:06:46 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2064 ms
+[11:06:46 INF] HTTP GET /js/site.js responded 304 in 0.2001 ms
+[11:06:46 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2880 ms
+[11:06:46 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 16.6732 ms
+[11:06:46 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 23.9647 ms
+[11:06:55 INF] HTTP GET /Installments responded 200 in 26.9999 ms
+[11:06:55 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.3284 ms
+[11:06:55 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.4718 ms
+[11:06:55 INF] HTTP GET /css/site.css responded 304 in 0.3339 ms
+[11:06:55 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3132 ms
+[11:06:55 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 1.3588 ms
+[11:06:55 INF] HTTP GET /js/site.js responded 304 in 0.2953 ms
+[11:08:49 INF] HTTP GET /Inventory/Products responded 200 in 226.7833 ms
+[11:08:49 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.7048 ms
+[11:08:49 INF] HTTP GET /css/site.css responded 200 in 8.1446 ms
+[11:08:49 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 8.1089 ms
+[11:08:50 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.9233 ms
+[11:08:50 INF] HTTP GET /js/site.js responded 200 in 1.9124 ms
+[11:08:50 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 0.7339 ms
+[11:08:50 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 0.6379 ms
+[11:08:50 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 1.0121 ms
+[11:08:50 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 0.5711 ms
+[11:25:41 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[11:25:41 INF] HTTP GET / responded 200 in 271.5526 ms
+[11:25:41 INF] HTTP GET /css/site.css responded 200 in 0.7881 ms
+[11:25:41 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.7770 ms
+[11:25:41 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 2.7829 ms
+[11:25:41 INF] HTTP GET /js/site.js responded 200 in 0.7293 ms
+[11:25:41 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 1.0820 ms
+[11:25:41 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.8796 ms
+[11:25:41 INF] HTTP GET /js/pos.js responded 200 in 2.2383 ms
+[11:28:44 INF] HTTP POST /Pos/CompleteSale responded 200 in 807.6682 ms
+[11:49:41 INF] Application is shutting down...

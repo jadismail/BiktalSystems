@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ahwvOLLwX9M=",
+  "dgSpecHash": "6po5T/RwAos=",
   "success": true,
-  "projectFilePath": "D:\\SYSTEMS\\BiktalSystems\\Biktal.WebMVC.csproj",
+  "projectFilePath": "D:\\Systems\\BiktalSystems\\Biktal.WebMVC.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\POS\\.nuget\\packages\\closedxml\\0.104.2\\closedxml.0.104.2.nupkg.sha512",
     "C:\\Users\\POS\\.nuget\\packages\\closedxml.parser\\1.2.0\\closedxml.parser.1.2.0.nupkg.sha512",

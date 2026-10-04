@@ -1,0 +1,217 @@
+[16:49:10 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[16:49:10 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[16:49:10 WRN] No XML encryptor configured. Key {70047516-a701-45a2-b03a-0537d3cebc7c} may be persisted to storage in unencrypted form.
+[16:49:11 INF] Application started. Press Ctrl+C to shut down.
+[16:49:11 INF] Hosting environment: Production
+[16:49:11 INF] Content root path: D:\Systems\BiktalSystems\publish
+[16:49:11 ERR] An error occurred using the connection to database 'biktal' on server 'tcp://localhost:5432'.
+[16:49:11 ERR] HTTP GET / responded 500 in 329.4521 ms
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at System.Threading.CancellationToken.ThrowIfCancellationRequested()
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Biktal.WebMVC.Controllers.PosController.Index(CancellationToken cancellationToken) in D:\Systems\BiktalSystems\Controllers\PosController.cs:line 103
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_2>d.MoveNext() in D:\Systems\BiktalSystems\Program.cs:line 71
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware.<Invoke>g__AwaitMatcher|10_0(EndpointRoutingMiddleware middleware, HttpContext httpContext, Task`1 matcherTask)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[16:49:11 ERR] HTTP GET / responded 500 in 332.6057 ms
+System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at Npgsql.TaskTimeoutAndCancellation.ExecuteAsync(Func`2 getTaskFunc, NpgsqlTimeout timeout, CancellationToken cancellationToken)
+   at Npgsql.TaskTimeoutAndCancellation.ExecuteAsync[TResult](Func`2 getTaskFunc, NpgsqlTimeout timeout, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.ConnectAsync(NpgsqlTimeout timeout, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.RawOpen(SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.<Open>g__OpenCore|214_1(NpgsqlConnector conn, SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.PoolingDataSource.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.PoolingDataSource.<Get>g__RentAsync|33_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Biktal.WebMVC.Controllers.PosController.Index(CancellationToken cancellationToken) in D:\Systems\BiktalSystems\Controllers\PosController.cs:line 103
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_2>d.MoveNext() in D:\Systems\BiktalSystems\Program.cs:line 71
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[16:49:11 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[16:49:11 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {e5afa8ea-c552-4497-964f-e23c0cc1466e} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[16:49:12 INF] HTTP GET / responded 200 in 963.8287 ms
+[16:49:12 INF] HTTP GET /css/site.css responded 200 in 45.9130 ms
+[16:49:12 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 47.2109 ms
+[16:49:12 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 73.9333 ms
+[16:49:12 INF] HTTP GET /js/pos.js responded 200 in 20.8155 ms
+[16:49:12 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 23.9774 ms
+[16:49:12 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 30.5187 ms
+[16:49:12 INF] HTTP GET /js/site.js responded 200 in 48.5382 ms
+[16:56:19 INF] HTTP POST /Pos/CompleteSale responded 200 in 2134.1041 ms
+[16:56:23 INF] HTTP GET /Repairs responded 200 in 213.5439 ms
+[16:56:23 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 2.6786 ms
+[16:56:23 INF] HTTP GET /js/site.js responded 200 in 0.8770 ms
+[16:56:23 INF] HTTP GET /css/site.css responded 200 in 4.3189 ms
+[16:56:23 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.8103 ms
+[16:56:23 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 26.8999 ms
+[16:56:23 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 184.4690 ms
+[16:56:26 INF] HTTP GET /Repairs/New responded 200 in 165.5554 ms
+[16:56:26 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 3.4917 ms
+[16:56:26 INF] HTTP GET /css/site.css responded 200 in 0.7987 ms
+[16:56:26 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.3886 ms
+[16:56:26 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.9975 ms
+[16:56:26 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3345 ms
+[16:56:26 INF] HTTP GET /js/site.js responded 304 in 0.2935 ms
+[16:56:26 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.5979 ms
+[16:56:26 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 2.2422 ms
+[16:59:16 INF] HTTP GET /Finance responded 200 in 134.3959 ms
+[16:59:16 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 2.5751 ms
+[16:59:16 INF] HTTP GET /css/site.css responded 200 in 1.2640 ms
+[16:59:16 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 7.3573 ms
+[16:59:16 INF] HTTP GET /js/site.js responded 200 in 0.6650 ms
+[16:59:16 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 1.7316 ms
+[16:59:16 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 1.5809 ms
+[16:59:19 INF] HTTP GET /Crm responded 200 in 137.4161 ms
+[16:59:19 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.4698 ms
+[16:59:19 INF] HTTP GET /css/site.css responded 304 in 0.2667 ms
+[16:59:19 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2402 ms
+[16:59:19 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2450 ms
+[16:59:19 INF] HTTP GET /js/site.js responded 304 in 0.1211 ms
+[16:59:19 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3024 ms
+[16:59:21 INF] HTTP GET /Installments responded 200 in 234.9793 ms
+[16:59:21 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.8590 ms
+[16:59:21 INF] HTTP GET /css/site.css responded 304 in 0.3226 ms
+[16:59:21 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3070 ms
+[16:59:21 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.4397 ms
+[16:59:21 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2095 ms
+[16:59:21 INF] HTTP GET /js/site.js responded 304 in 0.3440 ms
+[17:03:03 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+[17:03:03 INF] HTTP GET /Installments/Detail/9aee6ff4-8136-47c7-8195-1e35db55b7d2 responded 200 in 357.6778 ms
+[17:03:03 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.0493 ms
+[17:03:03 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.2310 ms
+[17:03:03 INF] HTTP GET /css/site.css responded 200 in 1.5296 ms
+[17:03:03 INF] HTTP GET /js/site.js responded 200 in 3.5882 ms
+[17:03:03 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 30.0324 ms
+[17:03:03 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 32.3148 ms
+[17:03:03 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 13.6383 ms
+[17:03:03 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 29.3651 ms
+[17:03:23 INF] HTTP POST /Installments/RecordPayment responded 302 in 615.5004 ms
+[17:03:23 INF] HTTP GET /Installments/Detail/9aee6ff4-8136-47c7-8195-1e35db55b7d2 responded 200 in 16.3841 ms
+[17:03:23 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 2.9717 ms
+[17:03:23 INF] HTTP GET /css/site.css responded 200 in 0.8477 ms
+[17:03:23 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2145 ms
+[17:03:23 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.2004 ms
+[17:03:23 INF] HTTP GET /js/site.js responded 304 in 8.8579 ms
+[17:03:23 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2422 ms
+[17:03:23 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.4008 ms
+[17:03:23 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.2004 ms
+[17:03:25 INF] HTTP GET /Installments/Detail/9aee6ff4-8136-47c7-8195-1e35db55b7d2 responded 200 in 16.5166 ms
+[17:03:25 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.9981 ms
+[17:03:25 INF] HTTP GET /css/site.css responded 200 in 1.3598 ms
+[17:03:25 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.7418 ms
+[17:03:35 INF] HTTP GET /Installments/Detail/9aee6ff4-8136-47c7-8195-1e35db55b7d2 responded 200 in 14.4240 ms
+[17:03:35 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 2.6429 ms
+[17:03:35 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3757 ms
+[17:03:35 INF] HTTP GET /css/site.css responded 200 in 1.2152 ms
+[17:03:35 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.5706 ms
+[17:03:35 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2068 ms
+[17:03:35 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.3459 ms
+[17:03:35 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.1960 ms
+[17:03:35 INF] HTTP GET /js/site.js responded 304 in 0.2661 ms
+[17:03:38 INF] HTTP GET /Installments responded 200 in 16.6858 ms
+[17:03:38 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 7.9121 ms
+[17:03:38 INF] HTTP GET /css/site.css responded 200 in 1.2158 ms
+[17:03:38 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.7977 ms
+[17:03:38 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1559 ms
+[17:03:38 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1387 ms
+[17:03:38 INF] HTTP GET /js/site.js responded 304 in 0.1230 ms
+[17:03:40 INF] HTTP GET /Installments responded 200 in 17.4799 ms
+[17:03:41 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.9231 ms
+[17:03:41 INF] HTTP GET /css/site.css responded 200 in 0.5942 ms
+[17:03:41 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.5991 ms
+[17:03:41 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1529 ms
+[17:03:41 INF] HTTP GET /js/site.js responded 304 in 0.0921 ms
+[17:03:41 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.6208 ms
+[17:03:41 INF] HTTP GET /favicon.ico responded 200 in 55.1390 ms
+[17:22:34 INF] HTTP GET /Inventory/Products responded 200 in 593.2516 ms
+[17:22:34 INF] HTTP GET /css/site.css responded 200 in 0.6694 ms
+[17:22:34 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.6270 ms
+[17:22:34 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.7133 ms
+[17:22:36 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.7377 ms
+[17:22:36 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 0.8513 ms
+[17:22:36 INF] HTTP GET /js/site.js responded 200 in 1.5982 ms
+[17:22:36 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 0.6436 ms
+[17:22:36 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 0.7286 ms
+[17:22:36 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 0.7397 ms
+[17:24:15 INF] HTTP POST /Inventory/AddProduct responded 302 in 94.6546 ms
+[17:24:15 INF] HTTP GET /Inventory/Products responded 200 in 135.6469 ms
+[17:24:15 INF] HTTP GET /css/site.css responded 200 in 0.7696 ms
+[17:24:15 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.2873 ms
+[17:24:15 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.6483 ms
+[17:24:16 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.5804 ms
+[17:24:16 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 0.8147 ms
+[17:24:16 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 2.1678 ms
+[17:24:16 INF] HTTP GET /js/site.js responded 200 in 0.5647 ms
+[17:24:16 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 0.5790 ms
+[17:24:16 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 2.6521 ms
+[17:24:17 INF] HTTP GET / responded 200 in 39.1390 ms
+[17:24:17 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.1521 ms
+[17:24:17 INF] HTTP GET /css/site.css responded 304 in 0.1483 ms
+[17:24:17 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1668 ms
+[17:24:17 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1793 ms
+[17:24:17 INF] HTTP GET /js/site.js responded 200 in 0.5178 ms
+[17:24:17 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 0.6462 ms
+[17:24:17 INF] HTTP GET /js/pos.js responded 200 in 8.5769 ms
+[17:27:38 INF] HTTP POST /Pos/CompleteSale responded 200 in 351.8638 ms
+[17:47:59 INF] Application is shutting down...

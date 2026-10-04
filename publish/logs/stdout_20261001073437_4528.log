@@ -1,0 +1,155 @@
+[10:35:26 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[10:35:26 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[10:35:26 WRN] No XML encryptor configured. Key {9e4c4e72-2989-42f7-bdc7-4939140ba7f9} may be persisted to storage in unencrypted form.
+[10:35:26 INF] Application started. Press Ctrl+C to shut down.
+[10:35:26 INF] Hosting environment: Production
+[10:35:26 INF] Content root path: D:\Systems\BiktalSystems\publish
+[10:35:27 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {9cf76c28-a27b-49fd-be49-9f1557fd9948} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[10:35:27 INF] HTTP GET /Finance/Cashbox responded 200 in 1016.3717 ms
+[10:35:27 INF] HTTP GET /css/site.css responded 200 in 62.7923 ms
+[10:35:27 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 65.4728 ms
+[10:35:27 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 77.8876 ms
+[10:35:28 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 20.7160 ms
+[10:35:28 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 32.6016 ms
+[10:35:28 INF] HTTP GET /js/site.js responded 200 in 21.7845 ms
+[10:35:28 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 18.1735 ms
+[10:35:28 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 39.7279 ms
+[10:38:41 INF] HTTP POST /Finance/CloseCashboxSession responded 302 in 604.8721 ms
+[10:38:41 INF] HTTP GET /Finance/Cashbox responded 200 in 74.6333 ms
+[10:38:41 INF] HTTP GET /css/site.css responded 200 in 46.0417 ms
+[10:38:41 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 44.4448 ms
+[10:38:41 INF] HTTP GET /js/site.js responded 200 in 43.0107 ms
+[10:38:41 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 65.8525 ms
+[10:38:41 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 5.8294 ms
+[10:38:41 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 59.4228 ms
+[10:38:41 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 151.0072 ms
+[10:38:41 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 281.7805 ms
+[10:38:59 INF] HTTP POST /Finance/OpenCashboxSession responded 302 in 115.6077 ms
+[10:38:59 INF] HTTP GET /Finance/Cashbox responded 200 in 27.6342 ms
+[10:38:59 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 10.7167 ms
+[10:38:59 INF] HTTP GET /css/site.css responded 200 in 1.1652 ms
+[10:38:59 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.5198 ms
+[10:38:59 INF] HTTP GET /js/site.js responded 304 in 2.0146 ms
+[10:38:59 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 2.8090 ms
+[10:38:59 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3489 ms
+[10:38:59 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 0.4184 ms
+[10:38:59 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 1.1356 ms
+[10:39:04 INF] HTTP GET /Finance/Expenses responded 200 in 69.8154 ms
+[10:39:04 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.1804 ms
+[10:39:04 INF] HTTP GET /css/site.css responded 200 in 1.7183 ms
+[10:39:04 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 1.5400 ms
+[10:39:04 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.3747 ms
+[10:39:04 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.6420 ms
+[10:39:04 INF] HTTP GET /js/site.js responded 304 in 1.2144 ms
+[10:39:04 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 1.2704 ms
+[10:39:04 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 0.2867 ms
+[10:39:07 INF] HTTP GET /Finance responded 200 in 64.5238 ms
+[10:39:07 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.2012 ms
+[10:39:07 INF] HTTP GET /css/site.css responded 200 in 0.8351 ms
+[10:39:07 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3218 ms
+[10:39:07 INF] HTTP GET /js/site.js responded 304 in 0.1445 ms
+[10:39:07 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2237 ms
+[10:39:07 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.5619 ms
+[10:39:12 INF] HTTP GET /Insights responded 302 in 3.7998 ms
+[10:39:12 INF] HTTP GET /Insights/Daily responded 200 in 165.3344 ms
+[10:39:12 INF] HTTP GET /css/site.css responded 304 in 0.3066 ms
+[10:39:12 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 3.8315 ms
+[10:39:12 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2282 ms
+[10:39:12 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2107 ms
+[10:39:12 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3393 ms
+[10:39:12 INF] HTTP GET /js/site.js responded 304 in 0.2310 ms
+[10:39:14 INF] HTTP GET /Insights/Monthly responded 200 in 42.5851 ms
+[10:39:14 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.4104 ms
+[10:39:14 INF] HTTP GET /css/site.css responded 304 in 0.2701 ms
+[10:39:14 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1933 ms
+[10:39:14 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2490 ms
+[10:39:14 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2356 ms
+[10:39:14 INF] HTTP GET /js/site.js responded 304 in 0.1405 ms
+[10:39:21 INF] HTTP GET /Insights/Monthly responded 200 in 41.8147 ms
+[10:39:21 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.2109 ms
+[10:39:21 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2061 ms
+[10:39:21 INF] HTTP GET /css/site.css responded 304 in 0.2033 ms
+[10:39:21 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2882 ms
+[10:39:21 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1953 ms
+[10:39:21 INF] HTTP GET /js/site.js responded 304 in 0.1847 ms
+[10:39:36 INF] HTTP GET /Insights/Monthly responded 200 in 29.4330 ms
+[10:39:37 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.8582 ms
+[10:39:37 INF] HTTP GET /css/site.css responded 304 in 0.1914 ms
+[10:39:37 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2137 ms
+[10:39:37 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1966 ms
+[10:39:37 INF] HTTP GET /js/site.js responded 304 in 1.0057 ms
+[10:39:37 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1919 ms
+[10:39:48 INF] HTTP GET /Insights/Monthly responded 200 in 30.8625 ms
+[10:39:48 INF] HTTP GET /css/site.css responded 304 in 0.1563 ms
+[10:39:48 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.0615 ms
+[10:39:48 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1247 ms
+[10:39:48 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.0749 ms
+[10:39:48 INF] HTTP GET /js/site.js responded 304 in 0.0533 ms
+[10:39:48 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.7693 ms
+[10:39:53 INF] HTTP GET /Insights/Monthly responded 200 in 12.0580 ms
+[10:39:53 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.1382 ms
+[10:39:53 INF] HTTP GET /css/site.css responded 304 in 0.4240 ms
+[10:39:53 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1421 ms
+[10:39:53 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.1318 ms
+[10:39:53 INF] HTTP GET /js/site.js responded 304 in 0.0970 ms
+[10:39:53 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1011 ms
+[10:39:57 INF] HTTP GET /Insights/Monthly responded 200 in 13.5112 ms
+[10:39:57 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.1425 ms
+[10:39:57 INF] HTTP GET /css/site.css responded 304 in 0.1231 ms
+[10:39:57 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.0972 ms
+[10:39:57 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.0906 ms
+[10:39:57 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.0725 ms
+[10:39:57 INF] HTTP GET /js/site.js responded 304 in 0.1827 ms
+[10:40:03 INF] HTTP GET /Insights/Monthly responded 200 in 45.0225 ms
+[10:40:03 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 6.4252 ms
+[10:40:03 INF] HTTP GET /css/site.css responded 304 in 0.1274 ms
+[10:40:03 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1133 ms
+[10:40:03 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2037 ms
+[10:40:03 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1459 ms
+[10:40:03 INF] HTTP GET /js/site.js responded 304 in 0.1338 ms
+[10:40:07 INF] HTTP GET /Insights/Monthly responded 200 in 13.4049 ms
+[10:40:07 INF] HTTP GET /css/site.css responded 304 in 0.1191 ms
+[10:40:07 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1076 ms
+[10:40:07 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.8387 ms
+[10:40:07 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.0936 ms
+[10:40:07 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.0943 ms
+[10:40:07 INF] HTTP GET /js/site.js responded 304 in 0.0650 ms
+[10:40:13 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[10:40:13 INF] HTTP GET / responded 200 in 139.8215 ms
+[10:40:13 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.6938 ms
+[10:40:13 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1321 ms
+[10:40:13 INF] HTTP GET /css/site.css responded 304 in 0.0983 ms
+[10:40:13 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2794 ms
+[10:40:13 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1219 ms
+[10:40:13 INF] HTTP GET /js/site.js responded 304 in 0.2267 ms
+[10:40:13 INF] HTTP GET /js/pos.js responded 200 in 18.2759 ms
+[10:42:58 INF] HTTP GET /Crm responded 200 in 200.4042 ms
+[10:42:58 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.7309 ms
+[10:42:58 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.8651 ms
+[10:42:58 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.7654 ms
+[10:42:58 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 0.6633 ms
+[10:42:58 INF] HTTP GET /js/site.js responded 200 in 0.5195 ms
+[10:42:58 INF] HTTP GET /css/site.css responded 200 in 8.4587 ms
+[10:43:00 INF] HTTP GET /Crm/Customers responded 200 in 36.7367 ms
+[10:43:00 INF] HTTP GET /css/site.css responded 200 in 0.8399 ms
+[10:43:00 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.9177 ms
+[10:43:00 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.5613 ms
+[10:43:00 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.8489 ms
+[10:43:00 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 0.8627 ms
+[10:43:00 INF] HTTP GET /js/site.js responded 200 in 0.5505 ms
+[10:43:13 INF] HTTP GET /Installments responded 200 in 124.8548 ms
+[10:43:13 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.1357 ms
+[10:43:13 INF] HTTP GET /css/site.css responded 304 in 0.1683 ms
+[10:43:13 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.1154 ms
+[10:43:13 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.0716 ms
+[10:43:13 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1315 ms
+[10:43:13 INF] HTTP GET /js/site.js responded 304 in 1.2253 ms
+[11:03:39 INF] Application is shutting down...

@@ -1,0 +1,53 @@
+[15:21:48 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[15:21:48 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[15:21:48 WRN] No XML encryptor configured. Key {74cba046-bc92-422a-9531-f0e8e6a0f617} may be persisted to storage in unencrypted form.
+[15:21:49 INF] Application started. Press Ctrl+C to shut down.
+[15:21:49 INF] Hosting environment: Production
+[15:21:49 INF] Content root path: D:\Systems\BiktalSystems\publish
+[15:21:50 INF] HTTP GET /Crm responded 200 in 1013.6022 ms
+[15:21:50 INF] HTTP GET /css/site.css responded 200 in 67.5487 ms
+[15:21:50 INF] HTTP GET /js/site.js responded 200 in 18.1127 ms
+[15:21:50 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 71.1008 ms
+[15:21:50 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 68.8748 ms
+[15:21:50 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 70.3070 ms
+[15:21:50 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 70.2973 ms
+[15:21:55 INF] HTTP GET /Insights responded 302 in 25.4072 ms
+[15:21:56 INF] HTTP GET /Insights/Daily responded 200 in 656.2260 ms
+[15:21:56 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 6.4682 ms
+[15:21:56 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 2.6438 ms
+[15:21:56 INF] HTTP GET /css/site.css responded 200 in 5.9101 ms
+[15:21:56 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 34.6970 ms
+[15:21:56 INF] HTTP GET /js/site.js responded 304 in 20.8166 ms
+[15:21:56 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 169.8841 ms
+[15:21:59 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[15:21:59 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[15:21:59 INF] HTTP GET /Operations responded 200 in 276.8811 ms
+[15:21:59 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 1.8243 ms
+[15:21:59 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 1.9725 ms
+[15:21:59 INF] HTTP GET /css/site.css responded 304 in 1.2696 ms
+[15:21:59 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3935 ms
+[15:21:59 INF] HTTP GET /js/site.js responded 304 in 0.6082 ms
+[15:21:59 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 3.5282 ms
+[15:22:09 INF] HTTP GET /Insights responded 302 in 1.8182 ms
+[15:22:09 INF] HTTP GET /Insights/Daily responded 200 in 37.8260 ms
+[15:22:09 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 43.9255 ms
+[15:22:09 INF] HTTP GET /css/site.css responded 304 in 0.3156 ms
+[15:22:09 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2364 ms
+[15:22:09 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2152 ms
+[15:22:09 INF] HTTP GET /js/site.js responded 304 in 0.2128 ms
+[15:22:09 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3175 ms
+[15:22:11 INF] HTTP GET /Crm responded 200 in 18.0699 ms
+[15:22:11 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.3170 ms
+[15:22:11 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3222 ms
+[15:22:11 INF] HTTP GET /css/site.css responded 304 in 0.3884 ms
+[15:22:11 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.1963 ms
+[15:22:11 INF] HTTP GET /js/site.js responded 304 in 0.3222 ms
+[15:22:11 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3563 ms
+[15:22:14 INF] HTTP GET /Finance responded 200 in 112.0805 ms
+[15:22:14 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.9349 ms
+[15:22:14 INF] HTTP GET /css/site.css responded 304 in 1.7342 ms
+[15:22:14 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3565 ms
+[15:22:14 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2135 ms
+[15:22:14 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.2514 ms
+[15:22:14 INF] HTTP GET /js/site.js responded 304 in 0.2915 ms
+[15:42:39 INF] Application is shutting down...

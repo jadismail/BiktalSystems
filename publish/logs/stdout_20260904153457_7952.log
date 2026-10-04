@@ -1,0 +1,8 @@
+[18:38:29 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[18:38:29 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[18:38:29 WRN] No XML encryptor configured. Key {84387175-2935-47c1-82fd-a7cfb498d24e} may be persisted to storage in unencrypted form.
+[18:38:29 INF] Application started. Press Ctrl+C to shut down.
+[18:38:29 INF] Hosting environment: Production
+[18:38:29 INF] Content root path: D:\Systems\BiktalSystems\publish
+[18:38:30 INF] HTTP POST /Pos/CompleteSale responded 400 in 103.6519 ms
+[18:58:58 INF] Application is shutting down...

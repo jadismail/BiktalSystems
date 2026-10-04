@@ -1,0 +1,46 @@
+[13:18:03 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[13:18:03 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[13:18:03 WRN] No XML encryptor configured. Key {bd062bae-27fe-4c6c-981d-df9f6668786e} may be persisted to storage in unencrypted form.
+[13:18:03 INF] Application started. Press Ctrl+C to shut down.
+[13:18:03 INF] Hosting environment: Production
+[13:18:03 INF] Content root path: D:\Systems\BiktalSystems\publish
+[13:18:03 INF] HTTP GET /Account/Login responded 302 in 125.2873 ms
+[13:18:04 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {aa462bb9-0564-4bbf-9285-d19ce6cbf07f} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[13:18:04 INF] HTTP GET /Inventory/Products responded 200 in 1071.1040 ms
+[13:18:05 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 59.3600 ms
+[13:18:05 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 64.2716 ms
+[13:18:05 INF] HTTP GET /css/site.css responded 200 in 72.0444 ms
+[13:18:06 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 47.2715 ms
+[13:18:06 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 25.2861 ms
+[13:18:06 INF] HTTP GET /js/site.js responded 200 in 47.6981 ms
+[13:18:06 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 43.5139 ms
+[13:18:06 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 42.0096 ms
+[13:18:06 INF] HTTP GET /js/products-catalog-filter.js responded 200 in 49.9426 ms
+[13:18:11 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[13:18:11 INF] HTTP GET / responded 200 in 407.5457 ms
+[13:18:11 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 6.4244 ms
+[13:18:11 INF] HTTP GET /css/site.css responded 304 in 3.3055 ms
+[13:18:11 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3817 ms
+[13:18:11 INF] HTTP GET /js/site.js responded 304 in 0.3754 ms
+[13:18:11 INF] HTTP GET /js/pos.js responded 200 in 30.2904 ms
+[13:18:11 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 33.8766 ms
+[13:18:11 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 206.3620 ms
+[13:18:21 INF] HTTP GET /Inventory/Products responded 200 in 370.1638 ms
+[13:18:21 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.7969 ms
+[13:18:21 INF] HTTP GET /css/site.css responded 304 in 1.2205 ms
+[13:18:21 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2544 ms
+[13:18:22 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2235 ms
+[13:18:22 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.4455 ms
+[13:18:22 INF] HTTP GET /js/site.js responded 304 in 0.3399 ms
+[13:18:22 INF] HTTP GET /js/products-catalog-filter.js responded 304 in 0.2533 ms
+[13:18:22 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 304 in 14.3605 ms
+[13:18:22 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 304 in 21.8200 ms
+[13:38:58 INF] Application is shutting down...

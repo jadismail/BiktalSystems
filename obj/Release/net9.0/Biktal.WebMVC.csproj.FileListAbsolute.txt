@@ -145,10 +145,8 @@ d:\Systems\BiktalSystems\obj\Release\net9.0\rjsmcshtml.dswa.cache.json
 d:\Systems\BiktalSystems\obj\Release\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 d:\Systems\BiktalSystems\obj\Release\net9.0\scopedcss\bundle\Biktal.WebMVC.styles.css
 d:\Systems\BiktalSystems\obj\Release\net9.0\scopedcss\projectbundle\Biktal.WebMVC.bundle.scp.css
-d:\Systems\BiktalSystems\obj\Release\net9.0\compressed\1ep4u99mwr-{0}-xayz1htmph-xayz1htmph.gz
 d:\Systems\BiktalSystems\obj\Release\net9.0\compressed\0ll5k584nt-{0}-61n19gt1b8-61n19gt1b8.gz
 d:\Systems\BiktalSystems\obj\Release\net9.0\compressed\gljuxlq0dy-{0}-tksp0b9mhb-tksp0b9mhb.gz
-d:\Systems\BiktalSystems\obj\Release\net9.0\compressed\jq6puhglcl-{0}-ilmsjgy2oe-ilmsjgy2oe.gz
 d:\Systems\BiktalSystems\obj\Release\net9.0\compressed\320xey8edp-{0}-45eqtrkasm-45eqtrkasm.gz
 d:\Systems\BiktalSystems\obj\Release\net9.0\compressed\b1867dms7l-{0}-6b15ajv06l-6b15ajv06l.gz
 d:\Systems\BiktalSystems\obj\Release\net9.0\compressed\t8b7f0ot1i-{0}-s54hwiv52v-s54hwiv52v.gz
@@ -226,3 +224,5 @@ d:\Systems\BiktalSystems\obj\Release\net9.0\Biktal.WebMVC.genruntimeconfig.cache
 d:\Systems\BiktalSystems\obj\Release\net9.0\ref\Biktal.WebMVC.dll
 D:\Systems\BiktalSystems\bin\Release\net9.0\appsettings.Production.json
 D:\Systems\BiktalSystems\bin\Release\net9.0\web.config
+D:\Systems\BiktalSystems\obj\Release\net9.0\compressed\1ep4u99mwr-{0}-2qco64cof5-2qco64cof5.gz
+D:\Systems\BiktalSystems\obj\Release\net9.0\compressed\jq6puhglcl-{0}-d7uwkbbaya-d7uwkbbaya.gz

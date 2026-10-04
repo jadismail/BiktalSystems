@@ -1,0 +1,52 @@
+[12:57:42 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[12:57:42 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[12:57:42 WRN] No XML encryptor configured. Key {cd967308-f3b1-453c-b384-9fcc5543cfae} may be persisted to storage in unencrypted form.
+[12:57:42 INF] Application started. Press Ctrl+C to shut down.
+[12:57:42 INF] Hosting environment: Production
+[12:57:42 INF] Content root path: D:\Systems\BiktalSystems\publish
+[12:57:43 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[12:57:43 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {258b9270-9661-4478-b28b-291453f7f6a4} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[12:57:43 INF] HTTP GET / responded 200 in 369.2673 ms
+[12:57:43 INF] HTTP GET /css/site.css responded 200 in 41.7433 ms
+[12:57:43 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 42.2630 ms
+[12:57:43 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 44.3567 ms
+[12:57:43 INF] HTTP GET /js/pos.js responded 200 in 24.6037 ms
+[12:57:43 INF] HTTP GET /js/site.js responded 200 in 30.6288 ms
+[12:57:43 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 32.8435 ms
+[12:57:43 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 35.3192 ms
+[13:01:30 INF] HTTP GET / responded 200 in 118.6853 ms
+[13:01:30 INF] HTTP GET /css/site.css responded 200 in 4.5823 ms
+[13:01:30 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.9054 ms
+[13:01:30 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 3.0732 ms
+[13:01:30 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 43.8000 ms
+[13:01:30 INF] HTTP GET /js/site.js responded 200 in 33.1660 ms
+[13:01:30 INF] HTTP GET /js/pos.js responded 200 in 1.3739 ms
+[13:01:30 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 200.2519 ms
+[13:01:30 INF] HTTP GET /favicon.ico responded 200 in 20.6183 ms
+[13:01:52 INF] HTTP GET / responded 200 in 39.7903 ms
+[13:01:52 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 1.7676 ms
+[13:01:52 INF] HTTP GET /css/site.css responded 200 in 1.3880 ms
+[13:01:52 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 4.3316 ms
+[13:01:52 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 2.2033 ms
+[13:01:52 INF] HTTP GET /js/pos.js responded 304 in 1.2386 ms
+[13:01:52 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.3816 ms
+[13:01:52 INF] HTTP GET /js/site.js responded 304 in 0.3224 ms
+[13:01:52 INF] HTTP GET /favicon.ico responded 200 in 1.3229 ms
+[13:04:12 INF] HTTP GET / responded 200 in 118.1724 ms
+[13:04:12 INF] HTTP GET /css/site.css responded 200 in 0.8637 ms
+[13:04:12 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 0.6760 ms
+[13:04:12 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 0.8297 ms
+[13:04:12 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 4.0292 ms
+[13:04:12 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 0.8384 ms
+[13:04:12 INF] HTTP GET /js/site.js responded 200 in 3.7337 ms
+[13:04:12 INF] HTTP GET /js/pos.js responded 200 in 1.0392 ms
+[13:04:12 INF] HTTP GET /favicon.ico responded 200 in 0.9660 ms
+[13:24:16 INF] Application is shutting down...

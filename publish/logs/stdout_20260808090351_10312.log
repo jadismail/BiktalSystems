@@ -1,0 +1,56 @@
+[12:16:37 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[12:16:37 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[12:16:37 WRN] No XML encryptor configured. Key {1f670035-35ad-4e9b-9004-8ca6064106f5} may be persisted to storage in unencrypted form.
+[12:16:37 INF] Application started. Press Ctrl+C to shut down.
+[12:16:37 INF] Hosting environment: Production
+[12:16:37 INF] Content root path: D:\Systems\BiktalSystems\publish
+[12:16:37 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[12:16:37 WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[12:16:38 INF] HTTP GET /Operations responded 200 in 869.0678 ms
+[12:16:38 INF] HTTP GET /Biktal.WebMVC.styles.css responded 200 in 45.1761 ms
+[12:16:38 INF] HTTP GET /css/site.css responded 200 in 49.8008 ms
+[12:16:38 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 200 in 51.9008 ms
+[12:16:38 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 200 in 8.5469 ms
+[12:16:38 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 200 in 9.3494 ms
+[12:16:38 INF] HTTP GET /js/site.js responded 200 in 10.3921 ms
+[12:16:45 INF] HTTP GET /Insights responded 302 in 17.8997 ms
+[12:16:46 INF] HTTP GET /Insights/Daily responded 200 in 616.6720 ms
+[12:16:46 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 4.0986 ms
+[12:16:46 INF] HTTP GET /css/site.css responded 304 in 2.7884 ms
+[12:16:46 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.5507 ms
+[12:16:46 INF] HTTP GET /js/site.js responded 304 in 24.5228 ms
+[12:16:46 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 33.5056 ms
+[12:16:46 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 172.0198 ms
+[12:16:48 INF] HTTP GET /Operations responded 200 in 31.8688 ms
+[12:16:48 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.6112 ms
+[12:16:48 INF] HTTP GET /css/site.css responded 304 in 0.3724 ms
+[12:16:48 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.3173 ms
+[12:16:48 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 1.4576 ms
+[12:16:48 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3635 ms
+[12:16:48 INF] HTTP GET /js/site.js responded 304 in 6.9085 ms
+[12:16:49 INF] HTTP GET /Finance responded 200 in 79.3566 ms
+[12:16:49 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.3656 ms
+[12:16:50 INF] HTTP GET /css/site.css responded 304 in 0.3649 ms
+[12:16:50 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 2.8415 ms
+[12:16:50 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.2857 ms
+[12:16:50 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.3674 ms
+[12:16:50 INF] HTTP GET /js/site.js responded 304 in 2.9286 ms
+[12:16:51 ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {955fd98b-25b6-4c3d-8741-88a638d7e959} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+[12:16:51 INF] HTTP GET /Finance/Expenses responded 200 in 208.3842 ms
+[12:16:52 INF] HTTP GET /lib/bootstrap/dist/css/bootstrap.min.css responded 304 in 0.3284 ms
+[12:16:52 INF] HTTP GET /Biktal.WebMVC.styles.css responded 304 in 0.2854 ms
+[12:16:52 INF] HTTP GET /css/site.css responded 304 in 1.2560 ms
+[12:16:52 INF] HTTP GET /lib/jquery/dist/jquery.min.js responded 304 in 0.5585 ms
+[12:16:52 INF] HTTP GET /lib/bootstrap/dist/js/bootstrap.bundle.min.js responded 304 in 0.4526 ms
+[12:16:52 INF] HTTP GET /js/site.js responded 304 in 0.6107 ms
+[12:16:52 INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 1.6447 ms
+[12:16:52 INF] HTTP GET /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js responded 200 in 1.6722 ms
+[12:37:52 INF] Application is shutting down...
