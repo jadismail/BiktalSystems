@@ -2,13 +2,14 @@ using Biktal.Domain.Inventory;
 using Biktal.Domain.Repairs;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Management)]
 public sealed class OperationsController : Controller
 {
     private const int LowStockThreshold = 5;

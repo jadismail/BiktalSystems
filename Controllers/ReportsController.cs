@@ -1,10 +1,11 @@
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Biktal.WebMVC.Controllers;
 
 /// <summary>Legacy routes — operational reports moved to Operations; business insights to Insights.</summary>
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Management)]
 public sealed class ReportsController : Controller
 {
     public IActionResult Index() => RedirectToActionPermanent("Index", "Operations");

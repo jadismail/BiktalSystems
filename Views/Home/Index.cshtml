@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Retail platform for tech stores";
+    ViewData["Title"] = "Retail workspace";
     ViewData["BodyClass"] = "bk-page-landing";
 }
 
@@ -12,78 +12,27 @@
             <span class="bk-landing-orb bk-landing-orb--c"></span>
         </div>
         <div class="container bk-landing-hero-inner">
-            <div class="row align-items-center g-5 g-lg-5">
-                <div class="col-lg-6">
-                    <p class="bk-landing-eyebrow">
-                        <span class="bk-landing-eyebrow-dot" aria-hidden="true"></span>
-                        Biktal Systems
-                    </p>
-                    <h1 id="bk-landing-title" class="bk-landing-title">
-                        Run your <span class="bk-landing-title-accent">mobile store</span> from one calm workspace.
-                    </h1>
-                    <p class="bk-landing-lead">
-                        Point of sale, inventory, repairs, CRM, finance, staff, and reports — composed as modules so your team moves fast without juggling spreadsheets.
-                    </p>
-                    <div class="bk-landing-cta d-flex flex-wrap gap-2">
-                        <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Login">
-                            <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Sign in
-                        </a>
-                        <a class="btn btn-outline-secondary btn-lg" asp-controller="Account" asp-action="Register">
-                            Create account
-                        </a>
-                    </div>
-                    <ul class="bk-landing-trust list-unstyled mb-0">
-                        <li><i class="bi bi-shield-check" aria-hidden="true"></i> Role-based access</li>
-                        <li><i class="bi bi-database" aria-hidden="true"></i> PostgreSQL-backed</li>
-                        <li><i class="bi bi-moon-stars" aria-hidden="true"></i> Light &amp; dark theme</li>
-                    </ul>
+            <div class="col-lg-8 col-xl-7 px-0">
+                <img class="bk-landing-hero-logo" src="~/img/khulasa-retail-dark.jpg" alt="Khulasa Retail" width="1024" height="727" />
+                <h1 id="bk-landing-title" class="bk-landing-title">
+                    One calm workspace for your <span class="bk-landing-title-accent">retail floor</span>.
+                </h1>
+                <p class="bk-landing-lead">
+                    Point of sale, inventory, repairs, CRM, and finance — built for phone and accessory stores by Khulasa Systems.
+                </p>
+                <div class="bk-landing-cta d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Login">
+                        <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Sign in
+                    </a>
+                    <a class="btn btn-outline-secondary btn-lg" asp-controller="Account" asp-action="Register">
+                        Create account
+                    </a>
                 </div>
-                <div class="col-lg-6">
-                    <div class="bk-landing-preview" aria-hidden="true">
-                        <div class="bk-landing-preview-chrome">
-                            <span class="bk-landing-preview-dot"></span>
-                            <span class="bk-landing-preview-dot"></span>
-                            <span class="bk-landing-preview-dot"></span>
-                            <span class="bk-landing-preview-label">POS · Live preview</span>
-                        </div>
-                        <div class="bk-landing-preview-body">
-                            <div class="bk-landing-preview-row bk-landing-preview-row--head">
-                                <span>Cart</span>
-                                <span class="bk-landing-preview-pill">3 items</span>
-                            </div>
-                            <div class="bk-landing-preview-line">
-                                <div>
-                                    <strong>iPhone 15 Pro 256GB</strong>
-                                    <small>PHONE-15P-256</small>
-                                </div>
-                                <span>$1,099.00</span>
-                            </div>
-                            <div class="bk-landing-preview-line">
-                                <div>
-                                    <strong>USB-C Fast Charger</strong>
-                                    <small>ACC-UC35</small>
-                                </div>
-                                <span>$29.99</span>
-                            </div>
-                            <div class="bk-landing-preview-line">
-                                <div>
-                                    <strong>Tempered Glass</strong>
-                                    <small>ACC-TG-UNI</small>
-                                </div>
-                                <span>$12.50</span>
-                            </div>
-                            <div class="bk-landing-preview-totals">
-                                <div><span>Subtotal</span><span>$1,141.49</span></div>
-                                <div><span>Tax</span><span>$102.73</span></div>
-                                <div class="bk-landing-preview-total"><span>Total</span><span>$1,244.22</span></div>
-                            </div>
-                            <div class="bk-landing-preview-lbp">
-                                <span>LBP change helper</span>
-                                <strong>358,000 LBP</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ul class="bk-landing-trust list-unstyled mb-0">
+                    <li><i class="bi bi-shield-check" aria-hidden="true"></i> Role-based access</li>
+                    <li><i class="bi bi-shop" aria-hidden="true"></i> Built for retail teams</li>
+                    <li><i class="bi bi-moon-stars" aria-hidden="true"></i> Light &amp; dark theme</li>
+                </ul>
             </div>
         </div>
     </section>
@@ -113,7 +62,7 @@
                 <article class="bk-landing-module">
                     <div class="bk-landing-module-icon bk-landing-module-icon--fin"><i class="bi bi-bank" aria-hidden="true"></i></div>
                     <h3 class="bk-landing-module-name">Finance</h3>
-                    <p class="bk-landing-module-desc">Chart of accounts, journals, expenses, and cashbox.</p>
+                    <p class="bk-landing-module-desc">Chart of accounts, journals, and expenses.</p>
                 </article>
                 <article class="bk-landing-module">
                     <div class="bk-landing-module-icon bk-landing-module-icon--crm"><i class="bi bi-people" aria-hidden="true"></i></div>

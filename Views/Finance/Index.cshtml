@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Finance";
     ViewData["Module"] = "Finance";
-    ViewData["ModuleSubtitle"] = "General ledger, cashbox, and financial statements.";
+    ViewData["ModuleSubtitle"] = "General ledger, journals, and financial statements.";
     var money = CultureInfo.GetCultureInfo("en-US");
 }
 <div class="container pb-5 pt-3 bk-finance">
@@ -52,11 +52,6 @@
             <div class="bk-tile-icon"><i class="bi bi-pencil-square"></i></div>
             <h2 class="h6 fw-bold bk-hero-title text-reset">Journal entries</h2>
             <p class="small text-muted mb-0 fw-semibold">Balanced double-entry journals.</p>
-        </a>
-        <a asp-action="Cashbox" class="bk-tile text-decoration-none">
-            <div class="bk-tile-icon"><i class="bi bi-safe"></i></div>
-            <h2 class="h6 fw-bold bk-hero-title text-reset">Cashbox</h2>
-            <p class="small text-muted mb-0 fw-semibold">Open the drawer, reconcile Current Cash &amp; Whish daily.</p>
         </a>
         <a asp-action="Expenses" class="bk-tile text-decoration-none">
             <div class="bk-tile-icon"><i class="bi bi-receipt"></i></div>

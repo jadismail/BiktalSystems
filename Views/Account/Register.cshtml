@@ -1,12 +1,15 @@
 @model Biktal.WebMVC.Models.RegisterViewModel
 @{
     ViewData["Title"] = "Create account";
+    ViewData["BodyClass"] = "bk-page-auth";
+    ViewData["HideFooter"] = true;
 }
 
 <div class="bk-auth-shell">
     <div class="bk-auth-card" style="max-width: 480px;">
         <div class="text-center mb-4">
-            <div class="bk-brand-mark mx-auto mb-3" style="width: 48px; height: 48px; font-size: 1.1rem;">B</div>
+            <img class="bk-auth-logo bk-auth-logo--light mb-3" src="~/img/khulasa-retail-light.jpg" alt="Khulasa Retail" width="1024" height="727" />
+            <img class="bk-auth-logo bk-auth-logo--dark mb-3" src="~/img/khulasa-retail-dark.jpg" alt="" width="1024" height="727" />
             <h1 class="h3 fw-bold bk-hero-title">Create your account</h1>
             @if (ViewData["IsFirstAccount"] as bool? == true)
             {
@@ -18,7 +21,7 @@
             }
         </div>
 
-        <div class="bk-card p-4 p-lg-5">
+        <div class="bk-card bk-auth-panel p-4 p-lg-5">
             <form asp-action="Register" method="post" novalidate>
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3 py-2" role="alert"></div>
 

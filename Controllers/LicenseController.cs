@@ -1,16 +1,16 @@
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Management)]
 public sealed class LicenseController : Controller
 {
     public IActionResult Index()
     {
-        ViewData["Title"] = "Subscription & license";
+        ViewData["Title"] = "License";
         ViewData["Module"] = "License";
-        ViewData["ModuleSubtitle"] = "On-prem activation, weekly validation, and feature flags from Biktal Cloud.";
         return View();
     }
 }

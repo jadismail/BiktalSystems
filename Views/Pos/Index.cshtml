@@ -88,7 +88,8 @@
                                    class="form-control bk-pos-v2-input"
                                    id="bk-pos-product-search"
                                    placeholder="Search by name, SKU, or barcode…"
-                                   autocomplete="off" />
+                                   autocomplete="off"
+                                   autofocus />
                             <div class="bk-pos-v2-dropdown d-none" id="bk-pos-product-dd" role="listbox"></div>
                         </div>
                         <button type="button"
@@ -142,9 +143,9 @@
                     <div class="bk-pos-v2-payments-head">
                         <label class="bk-pos-v2-label mb-0">Payment</label>
                         <div class="bk-pos-v2-pay-quick" role="group" aria-label="Quick payment">
-                            <button type="button" class="bk-pos-v2-pay-quick-btn" data-pay-all="Cash" title="Pay full amount in cash">Cash</button>
-                            <button type="button" class="bk-pos-v2-pay-quick-btn" data-pay-all="Whish" title="Pay full amount with Whish">Whish</button>
-                            <button type="button" class="bk-pos-v2-pay-quick-btn" data-pay-all="Card" title="Pay full amount by card">Card</button>
+                            <button type="button" class="bk-pos-v2-pay-quick-btn bk-pos-v2-pay-quick-btn--cash" data-pay-all="Cash" title="Pay full amount in cash">Cash</button>
+                            <button type="button" class="bk-pos-v2-pay-quick-btn bk-pos-v2-pay-quick-btn--whish" data-pay-all="Whish" title="Pay full amount with Whish">Whish</button>
+                            <button type="button" class="bk-pos-v2-pay-quick-btn bk-pos-v2-pay-quick-btn--debit" data-pay-all="Debit" title="Charge to customer debit (requires customer)">Debit</button>
                         </div>
                     </div>
 
@@ -160,9 +161,9 @@
                             <button type="button" class="bk-pos-v2-payment-fill" data-pay-fill="Whish">Rest</button>
                         </div>
                         <div class="bk-pos-v2-payment-row">
-                            <span class="bk-pos-v2-payment-label"><i class="bi bi-credit-card" aria-hidden="true"></i> Card</span>
-                            <input type="number" class="form-control bk-pos-v2-input bk-pos-v2-payment-input" id="bk-pos-pay-card" data-pay-method="Card" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
-                            <button type="button" class="bk-pos-v2-payment-fill" data-pay-fill="Card">Rest</button>
+                            <span class="bk-pos-v2-payment-label"><i class="bi bi-journal-text" aria-hidden="true"></i> Debit</span>
+                            <input type="number" class="form-control bk-pos-v2-input bk-pos-v2-payment-input" id="bk-pos-pay-debit" data-pay-method="Debit" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+                            <button type="button" class="bk-pos-v2-payment-fill" data-pay-fill="Debit">Rest</button>
                         </div>
                     </div>
 

@@ -1,9 +1,11 @@
 @model RepairTicketsPageViewModel
+@using System.Net
 @using Biktal.Domain.Repairs
 @{
     ViewData["Title"] = "Repair tickets";
     ViewData["Module"] = "Repairs";
     ViewData["ModuleSubtitle"] = "Statuses from inspection through delivery.";
+    var totalTickets = Model.Columns.Sum(c => c.Tickets.Count) + Model.ClosedTickets.Count;
 }
 <div class="container pb-5 pt-3">
     @await Component.InvokeAsync("ModuleNav")
@@ -30,26 +32,55 @@
         <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Overview</a>
     </div>
 
+    @if (totalTickets > 0)
+    {
+        <div class="bk-products-search bk-card p-3 mb-3">
+            <div class="bk-products-search-form d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-center" role="search" aria-label="Filter repair tickets">
+                <label for="bk-repair-tickets-search-q" class="visually-hidden">Filter tickets</label>
+                <div class="input-group flex-grow-1">
+                    <span class="input-group-text bg-transparent border-end-0" aria-hidden="true"><i class="bi bi-upc-scan"></i></span>
+                    <input type="search"
+                           id="bk-repair-tickets-search-q"
+                           class="form-control border-start-0 ps-0 font-monospace"
+                           autocomplete="off"
+                           placeholder="Scan barcode, or search phone / customer…"
+                           maxlength="200" />
+                    <button type="button" class="btn btn-outline-secondary fw-semibold px-3 d-none" id="bk-repair-tickets-search-clear" aria-label="Clear filter">Clear</button>
+                </div>
+            </div>
+            <p class="small text-muted mb-0 mt-2 fw-semibold" id="bk-repair-tickets-count-meta" data-total="@totalTickets">
+                <strong>@totalTickets</strong> ticket@(totalTickets == 1 ? "" : "s")
+            </p>
+            <p class="small text-muted mb-0 mt-1 fw-semibold">Scan with a barcode reader, or type device name / customer name. Press Enter after a scan.</p>
+        </div>
+        <div id="bk-repair-tickets-filter-empty" class="alert alert-light border d-none mb-3" role="status">
+            No tickets match that barcode, phone, or customer.
+        </div>
+    }
+
     <div class="bk-ticket-board">
         @foreach (var col in Model.Columns)
         {
-            <div class="bk-ticket-col">
+            <div class="bk-ticket-col" data-bk-repair-col>
                 <h3>@col.Title</h3>
-                @if (col.Tickets.Count == 0)
+                <div class="bk-mini-card text-muted fw-semibold @(col.Tickets.Count == 0 ? "" : "d-none")" data-bk-repair-col-empty>No tickets</div>
+                @foreach (var t in col.Tickets)
                 {
-                    <div class="bk-mini-card text-muted fw-semibold">No tickets</div>
-                }
-                else
-                {
-                    foreach (var t in col.Tickets)
-                    {
-                        <a asp-action="Ticket" asp-route-id="@t.Id" class="bk-mini-card">
-                            <span class="font-monospace text-primary">@t.TicketNumber</span>
-                            <span class="text-muted">·</span>
-                            @t.DeviceSummary
-                            <span class="d-block small text-muted fw-semibold mt-1">@t.CustomerName</span>
-                        </a>
-                    }
+                    var searchHaystack = $"{t.Barcode} {t.TicketNumber} {t.DeviceSummary} {t.CustomerName}".ToLowerInvariant();
+                    <a asp-action="Ticket"
+                       asp-route-id="@t.Id"
+                       class="bk-mini-card"
+                       data-bk-repair-card
+                       data-bk-search="@WebUtility.HtmlEncode(searchHaystack)">
+                        <span class="font-monospace text-primary">@t.TicketNumber</span>
+                        <span class="text-muted">·</span>
+                        @t.DeviceSummary
+                        <span class="d-block small text-muted fw-semibold mt-1">@t.CustomerName</span>
+                        @if (!string.IsNullOrWhiteSpace(t.Barcode))
+                        {
+                            <span class="d-block small font-monospace text-secondary mt-1">@t.Barcode</span>
+                        }
+                    </a>
                 }
             </div>
         }
@@ -62,13 +93,18 @@
             <div class="row g-2">
                 @foreach (var t in Model.ClosedTickets)
                 {
-                    <div class="col-md-6 col-lg-4">
+                    var searchHaystack = $"{t.Barcode} {t.TicketNumber} {t.DeviceSummary} {t.CustomerName}".ToLowerInvariant();
+                    <div class="col-md-6 col-lg-4" data-bk-repair-card data-bk-search="@WebUtility.HtmlEncode(searchHaystack)">
                         <a asp-action="Ticket" asp-route-id="@t.Id" class="bk-mini-card mb-0 h-100">
                             <span class="font-monospace text-primary">@t.TicketNumber</span>
                             <span class="text-muted">·</span>
                             @t.DeviceSummary
                             <span class="badge @(t.Status == RepairTicketStatus.Delivered ? "text-bg-success" : "text-bg-dark") ms-2 align-middle">@RepairTicketStatusLabels.Title(t.Status)</span>
                             <span class="d-block small text-muted fw-semibold mt-1">@t.CustomerName</span>
+                            @if (!string.IsNullOrWhiteSpace(t.Barcode))
+                            {
+                                <span class="d-block small font-monospace text-secondary mt-1">@t.Barcode</span>
+                            }
                         </a>
                     </div>
                 }
@@ -78,3 +114,7 @@
 
     <p class="small text-muted fw-semibold mt-4 mb-0">Click a card to view details and change status. Drag-and-drop can be added later.</p>
 </div>
+
+@section Scripts {
+    <script src="~/js/repair-tickets-filter.js" asp-append-version="true"></script>
+}

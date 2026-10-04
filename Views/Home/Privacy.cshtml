@@ -4,10 +4,112 @@
 
 <div class="container py-5" style="max-width: 720px;">
     <p class="bk-landing-badge mb-3">Legal</p>
-    <h1 class="h2 fw-bold bk-hero-title mb-3">Privacy</h1>
+    <h1 class="h2 fw-bold bk-hero-title mb-3">Privacy Policy</h1>
+    <p class="text-muted fw-semibold mb-4">
+        How Khulasa Retail handles information for phone and accessory stores operated with software from Khulasa Systems.
+        Last updated: 5 October 2026.
+    </p>
+
     <div class="bk-card p-4 p-lg-5">
-        <p class="text-muted fw-semibold mb-0">
-            Replace this placeholder with your privacy policy before production. On-prem installs should describe what data leaves the store (for example license validation) versus what stays local.
-        </p>
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">1. Who this applies to</h2>
+            <p class="text-muted fw-semibold mb-2">
+                Khulasa Retail is a store workspace for point of sale, inventory, repairs, CRM, staff, and finance.
+                This policy covers two roles:
+            </p>
+            <ul class="text-muted fw-semibold mb-0">
+                <li class="mb-2"><strong class="text-body">Your store (the operator)</strong> — decides what business and customer data is entered, who may sign in, and how long records are kept on the store’s systems.</li>
+                <li class="mb-0"><strong class="text-body">Khulasa Systems (the vendor)</strong> — provides the Khulasa Retail application. On a typical on-premises install, day-to-day sales, CRM, and finance data stay on the store’s server and database unless the store chooses otherwise.</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">2. What stays local vs. what may leave the store</h2>
+            <p class="text-muted fw-semibold mb-2">
+                On standard on-premises deployments:
+            </p>
+            <ul class="text-muted fw-semibold mb-0">
+                <li class="mb-2"><strong class="text-body">Stays on the store’s systems:</strong> staff accounts, customer CRM profiles, sales and receipts, inventory, repair tickets (including device serial/IMEI when recorded), installments, cashbox and finance ledgers, and application logs written by the store’s server.</li>
+                <li class="mb-0"><strong class="text-body">May leave the store:</strong> limited technical information used for product licensing or support when configured (for example license status checks, install identifiers, or diagnostics the store explicitly shares with Khulasa Systems). Operational customer and sales databases are not uploaded to Khulasa Systems by default.</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">3. Information the software can store</h2>
+            <p class="text-muted fw-semibold mb-2">
+                Depending on which modules the store uses, Khulasa Retail may process:
+            </p>
+            <ul class="text-muted fw-semibold mb-0">
+                <li class="mb-2"><strong class="text-body">Staff accounts</strong> — name or username, email, password (stored hashed), assigned roles (for example sales, floor, finance, management), and sign-in session data.</li>
+                <li class="mb-2"><strong class="text-body">Customers (CRM / POS)</strong> — full name, phone, email, loyalty points, sale history, and installment plan details when used.</li>
+                <li class="mb-2"><strong class="text-body">Repairs</strong> — customer contact details, device description, serial number or IMEI, ticket status, quotes, and parts costs.</li>
+                <li class="mb-2"><strong class="text-body">Inventory &amp; suppliers</strong> — product catalog, stock levels, supplier names and contact fields the store enters.</li>
+                <li class="mb-2"><strong class="text-body">Finance &amp; cashbox</strong> — ledger entries, tax settings, cash sessions, and related store configuration (for example store display name).</li>
+                <li class="mb-0"><strong class="text-body">Technical logs</strong> — request and application logs (for example HTTP method, path, timing, and error details) to operate and troubleshoot the server. These are written under the store’s hosting environment.</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">4. Why data is used</h2>
+            <ul class="text-muted fw-semibold mb-0">
+                <li class="mb-2">Authenticate staff and enforce role-based access to POS, inventory, repairs, CRM, finance, and admin tools.</li>
+                <li class="mb-2">Complete sales, print or show receipts, track inventory, manage repair tickets, and run loyalty or installment workflows.</li>
+                <li class="mb-2">Maintain store finance, cashbox, and reporting inside the workspace.</li>
+                <li class="mb-0">Keep the installation secure, licensed, and recoverable (backups and logs under the store’s control).</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">5. Cookies and browser storage</h2>
+            <ul class="text-muted fw-semibold mb-0">
+                <li class="mb-2"><strong class="text-body">Authentication cookies</strong> — used after sign-in so the browser can stay signed into Khulasa Retail. These are essential for the app to work and are not used for third-party advertising.</li>
+                <li class="mb-0"><strong class="text-body">Theme preference</strong> — light or dark mode is stored in the browser’s local storage (<code>biktal-theme</code>) on the device you use. It is not sent to Khulasa Systems as a tracking profile.</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">6. Who can see the data</h2>
+            <p class="text-muted fw-semibold mb-0">
+                Access inside Khulasa Retail is limited by staff roles configured by the store. Cashiers, floor staff, finance users, and managers only see the modules their roles allow.
+                The store operator is responsible for granting accounts, removing leavers, and protecting database backups.
+                Khulasa Systems does not access store databases unless the store invites support access or shares exports for troubleshooting.
+            </p>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">7. Retention</h2>
+            <p class="text-muted fw-semibold mb-0">
+                Records remain until the store deletes them, archives them, or decommissions the installation, subject to the store’s own legal and accounting requirements
+                (for example retention of sales and tax records). Theme preference remains in the browser until cleared. Sign-in sessions end when staff sign out or the session expires.
+            </p>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">8. Security</h2>
+            <p class="text-muted fw-semibold mb-0">
+                Passwords are stored using ASP.NET Identity hashing. Transport should use HTTPS in production.
+                The store should keep the server, PostgreSQL database, and backups restricted to authorized administrators, use strong admin passwords in production, and limit public registration when it is not needed.
+            </p>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="h5 fw-bold mb-2">9. Your choices and rights</h2>
+            <ul class="text-muted fw-semibold mb-0">
+                <li class="mb-2"><strong class="text-body">Store customers</strong> — contact the store that served you to correct or remove CRM, repair, or sales-related personal details, subject to the store’s legal obligations.</li>
+                <li class="mb-2"><strong class="text-body">Staff users</strong> — ask a store administrator to update your account email, reset your password, or deactivate your access when you leave.</li>
+                <li class="mb-0"><strong class="text-body">Browser data</strong> — clear site data or local storage to remove the saved theme preference; sign out to end the session cookie.</li>
+            </ul>
+        </section>
+
+        <section class="mb-0">
+            <h2 class="h5 fw-bold mb-2">10. Contact</h2>
+            <p class="text-muted fw-semibold mb-2">
+                For questions about data held in a specific store’s Khulasa Retail system, contact that store’s management or system administrator.
+            </p>
+            <p class="text-muted fw-semibold mb-0">
+                For questions about the Khulasa Retail product itself, contact <strong class="text-body">Khulasa Systems</strong> through the channel provided with your license or purchase agreement.
+                This page may be updated when product capabilities or deployment practices change.
+            </p>
+        </section>
     </div>
 </div>

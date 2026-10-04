@@ -219,9 +219,12 @@ public sealed class CashboxPaymentAccountViewModel
 
     public string Name { get; init; } = string.Empty;
 
+    /// <summary>Today's closed (counted) amount, or today's expected while a session is open.</summary>
     public decimal PostedBalance { get; init; }
 
     public decimal SessionSales { get; init; }
+
+    public string Hint { get; init; } = string.Empty;
 }
 
 public sealed class CashboxActiveSessionViewModel
@@ -231,6 +234,8 @@ public sealed class CashboxActiveSessionViewModel
     public DateOnly SessionDate { get; init; }
 
     public DateTimeOffset OpenedAtUtc { get; init; }
+
+    public string OpenedBy { get; init; } = "—";
 
     public decimal OpeningCashFloat { get; init; }
 
@@ -259,6 +264,10 @@ public sealed class CashboxClosedSessionRowViewModel
 
     public DateTimeOffset ClosedAtUtc { get; init; }
 
+    public string OpenedBy { get; init; } = "—";
+
+    public string ClosedBy { get; init; } = "—";
+
     public decimal OpeningCashFloat { get; init; }
 
     public decimal OpeningWhishBalance { get; init; }
@@ -276,6 +285,8 @@ public sealed class CashboxClosedSessionRowViewModel
     public decimal WhishVariance { get; init; }
 
     public int SaleCount { get; init; }
+
+    public int RepairCount { get; init; }
 }
 
 public sealed class OpenCashboxSessionFormModel : IValidatableObject
@@ -283,10 +294,10 @@ public sealed class OpenCashboxSessionFormModel : IValidatableObject
     private const decimal MaxMoney = 999_999.99m;
 
     [Display(Name = "Opening cash in drawer (USD)")]
-    public decimal OpeningCashFloat { get; set; }
+    public decimal? OpeningCashFloat { get; set; }
 
     [Display(Name = "Opening Whish balance (USD)")]
-    public decimal OpeningWhishBalance { get; set; }
+    public decimal? OpeningWhishBalance { get; set; }
 
     [StringLength(2000)]
     [Display(Name = "Notes")]
@@ -294,10 +305,13 @@ public sealed class OpenCashboxSessionFormModel : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (OpeningCashFloat < 0m || OpeningCashFloat > MaxMoney)
+        var cash = OpeningCashFloat ?? 0m;
+        var whish = OpeningWhishBalance ?? 0m;
+
+        if (cash < 0m || cash > MaxMoney)
             yield return new ValidationResult($"Opening cash must be between 0 and {MaxMoney:N2}.", new[] { nameof(OpeningCashFloat) });
 
-        if (OpeningWhishBalance < 0m || OpeningWhishBalance > MaxMoney)
+        if (whish < 0m || whish > MaxMoney)
             yield return new ValidationResult($"Opening Whish balance must be between 0 and {MaxMoney:N2}.", new[] { nameof(OpeningWhishBalance) });
     }
 }
@@ -309,10 +323,10 @@ public sealed class CloseCashboxSessionFormModel : IValidatableObject
     public Guid SessionId { get; set; }
 
     [Display(Name = "Counted cash in drawer (USD)")]
-    public decimal CountedCash { get; set; }
+    public decimal? CountedCash { get; set; }
 
     [Display(Name = "Counted Whish balance (USD)")]
-    public decimal CountedWhish { get; set; }
+    public decimal? CountedWhish { get; set; }
 
     [StringLength(2000)]
     [Display(Name = "Close notes")]
@@ -320,22 +334,35 @@ public sealed class CloseCashboxSessionFormModel : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (CountedCash < 0m || CountedCash > MaxMoney)
+        var cash = CountedCash ?? 0m;
+        var whish = CountedWhish ?? 0m;
+
+        if (cash < 0m || cash > MaxMoney)
             yield return new ValidationResult($"Counted cash must be between 0 and {MaxMoney:N2}.", new[] { nameof(CountedCash) });
 
-        if (CountedWhish < 0m || CountedWhish > MaxMoney)
+        if (whish < 0m || whish > MaxMoney)
             yield return new ValidationResult($"Counted Whish balance must be between 0 and {MaxMoney:N2}.", new[] { nameof(CountedWhish) });
     }
 }
 
 public sealed class CashboxPageViewModel
 {
+    public DateOnly SelectedDate { get; init; }
+
+    public string DateInputValue => SelectedDate.ToString("yyyy-MM-dd");
+
+    public string PeriodLabel { get; init; } = string.Empty;
+
+    public bool IsToday { get; init; }
+
+    public bool CanOpenSession { get; init; }
+
     public CashboxActiveSessionViewModel? ActiveSession { get; init; }
 
     public IReadOnlyList<CashboxPaymentAccountViewModel> PaymentAccounts { get; init; } =
         Array.Empty<CashboxPaymentAccountViewModel>();
 
-    public IReadOnlyList<CashboxClosedSessionRowViewModel> RecentCloses { get; init; } =
+    public IReadOnlyList<CashboxClosedSessionRowViewModel> DayCloses { get; init; } =
         Array.Empty<CashboxClosedSessionRowViewModel>();
 
     public OpenCashboxSessionFormModel OpenForm { get; init; } = new();

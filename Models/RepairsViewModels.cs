@@ -24,6 +24,8 @@ public sealed class RepairTicketCardViewModel
 
     public string TicketNumber { get; init; } = string.Empty;
 
+    public string Barcode { get; init; } = string.Empty;
+
     public string CustomerName { get; init; } = string.Empty;
 
     public string DeviceSummary { get; init; } = string.Empty;
@@ -78,6 +80,11 @@ public sealed class NewRepairTicketFormModel : IValidatableObject
     [Display(Name = "Device / model")]
     public string DeviceSummary { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Generate a device barcode before creating the ticket.")]
+    [StringLength(64, MinimumLength = 4)]
+    [Display(Name = "Device barcode")]
+    public string Barcode { get; set; } = string.Empty;
+
     [StringLength(128)]
     [Display(Name = "IMEI / serial")]
     public string? SerialOrImei { get; set; }
@@ -116,6 +123,8 @@ public sealed class RepairTicketDetailViewModel
 
     public string TicketNumber { get; init; } = string.Empty;
 
+    public string Barcode { get; init; } = string.Empty;
+
     public RepairTicketStatus Status { get; init; }
 
     public string CustomerName { get; init; } = string.Empty;
@@ -135,6 +144,12 @@ public sealed class RepairTicketDetailViewModel
     public decimal? EstimatedPrice { get; init; }
 
     public decimal? PartsCost { get; init; }
+
+    public decimal AmountPaidCash { get; init; }
+
+    public decimal AmountPaidWhish { get; init; }
+
+    public bool IsPostedToAccounts { get; init; }
 
     public decimal? MarginAmount =>
         EstimatedPrice is { } rev && PartsCost is { } cost ? rev - cost : null;

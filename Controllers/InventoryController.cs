@@ -3,6 +3,7 @@ using Biktal.Infrastructure.Inventory;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
 using ClosedXML.Excel;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Globalization;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Floor)]
 public sealed class InventoryController : Controller
 {
     private readonly ApplicationDbContext _db;

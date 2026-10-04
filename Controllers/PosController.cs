@@ -1,13 +1,14 @@
 using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Sales)]
 public sealed class PosController : Controller
 {
     private static readonly IReadOnlyList<PosProductDto> DemoCatalog =
@@ -141,7 +142,7 @@ public sealed class PosController : Controller
             Catalog = catalog,
             Customers = customers,
             TaxRate = settings?.DefaultTaxRate ?? 0.09m,
-            StoreName = settings?.StoreDisplayName ?? "Biktal Systems",
+            StoreName = settings?.StoreDisplayName ?? "Khulasa Retail",
             ReceiptFooter = settings?.ReceiptFooter,
             PricesTaxInclusive = settings?.PricesTaxInclusive ?? true,
             CurrencyCode = settings?.BaseCurrencyCode ?? "USD",
@@ -182,6 +183,7 @@ public sealed class PosController : Controller
                 ? null
                 : new PosSaleCustomerRequest
                 {
+                    Id = TryParseCustomerId(request.Customer.Id),
                     Name = request.Customer.Name,
                     Email = request.Customer.Email,
                     Phone = request.Customer.Phone
@@ -224,5 +226,20 @@ public sealed class PosController : Controller
             Quantity = line.Quantity,
             UnitPrice = line.UnitPrice
         };
+    }
+
+    private static Guid? TryParseCustomerId(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        if (Guid.TryParse(value, out var g))
+            return g;
+        if (Guid.TryParseExact(value, "N", out g))
+            return g;
+        if (Guid.TryParseExact(value, "D", out g))
+            return g;
+
+        return null;
     }
 }

@@ -10,7 +10,7 @@
     <partial name="_ModuleHeader" />
 
     <div class="bk-card p-4 p-lg-5">
-        <form asp-action="CreateTicket" method="post" novalidate>
+        <form asp-action="CreateTicket" method="post" novalidate id="bk-repair-new-form">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
             <div class="row g-3">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-6">
                     <label asp-for="DeviceSummary" class="form-label small fw-bold"></label>
-                    <input asp-for="DeviceSummary" class="form-control" placeholder="e.g. iPhone 15 Pro 256GB" />
+                    <input asp-for="DeviceSummary" class="form-control" placeholder="e.g. iPhone 15 Pro 256GB" id="bk-repair-device" />
                     <span asp-validation-for="DeviceSummary" class="text-danger small"></span>
                 </div>
                 <div class="col-md-6">
@@ -38,6 +38,35 @@
                     <label asp-for="SerialOrImei" class="form-label small fw-bold"></label>
                     <input asp-for="SerialOrImei" class="form-control" placeholder="Scan or type" />
                     <span asp-validation-for="SerialOrImei" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <div class="bk-repair-barcode-panel" id="bk-repair-barcode-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                            <div>
+                                <h2 class="h6 fw-bold mb-1">Device barcode label</h2>
+                                <p class="small text-muted mb-0 fw-semibold">Generate a barcode, print the sticker, and place it on the phone for intake tracking.</p>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" id="bk-repair-barcode-regen">
+                                    <i class="bi bi-arrow-clockwise me-1" aria-hidden="true"></i>Generate
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold" id="bk-repair-barcode-print">
+                                    <i class="bi bi-printer me-1" aria-hidden="true"></i>Print label
+                                </button>
+                            </div>
+                        </div>
+                        <label asp-for="Barcode" class="form-label small fw-bold"></label>
+                        <input asp-for="Barcode" class="form-control font-monospace" id="bk-repair-barcode" autocomplete="off" spellcheck="false" />
+                        <span asp-validation-for="Barcode" class="text-danger small"></span>
+                        <div class="bk-repair-barcode-preview mt-3" aria-hidden="true">
+                            <svg id="bk-repair-barcode-svg"></svg>
+                            <div class="bk-repair-barcode-meta">
+                                <div class="font-monospace fw-bold" id="bk-repair-barcode-text">@Model.Barcode</div>
+                                <span class="bk-repair-barcode-line d-none" id="bk-repair-barcode-device-label"></span>
+                                <span class="bk-repair-barcode-line d-none" id="bk-repair-barcode-customer-label"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12">
                     <label asp-for="IssueDescription" class="form-label small fw-bold"></label>
@@ -76,4 +105,13 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="~/js/repair-barcode.js" asp-append-version="true"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        window.BiktalRepairBarcode.initCreate({
+          nextBarcodeUrl: '@Url.Action("NextBarcode", "Repairs")'
+        });
+      });
+    </script>
 }

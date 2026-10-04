@@ -2,13 +2,14 @@ using System.Globalization;
 using Biktal.Domain.Crm;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Sales)]
 public sealed class CrmController : Controller
 {
     private const int MaxLoyaltyPoints = 9_999_999;

@@ -1,6 +1,5 @@
 /* /Views/Shared/_Layout.cshtml.rz.scp.css */
-/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+/* Scoped layout leftovers — brand colors live in wwwroot/css/site.css */
 
 a.navbar-brand[b-zc484wnmyw] {
   white-space: nowrap;
@@ -9,30 +8,32 @@ a.navbar-brand[b-zc484wnmyw] {
 }
 
 a[b-zc484wnmyw] {
-  color: #0077cc;
+  color: #1b3421;
 }
 
 .btn-primary[b-zc484wnmyw] {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #1b3421;
+  border-color: #183018;
 }
 
-.nav-pills .nav-link.active[b-zc484wnmyw], .nav-pills .show > .nav-link[b-zc484wnmyw] {
+.nav-pills .nav-link.active[b-zc484wnmyw],
+.nav-pills .show > .nav-link[b-zc484wnmyw] {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #1b3421;
+  border-color: #183018;
 }
 
 .border-top[b-zc484wnmyw] {
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid rgba(27, 52, 33, 0.12);
 }
+
 .border-bottom[b-zc484wnmyw] {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid rgba(27, 52, 33, 0.12);
 }
 
 .box-shadow[b-zc484wnmyw] {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 0.25rem 0.75rem rgba(27, 52, 33, 0.08);
 }
 
 button.accept-policy[b-zc484wnmyw] {

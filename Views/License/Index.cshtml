@@ -1,42 +1,16 @@
 @{
-    ViewData["Title"] = "Subscription & license";
+    ViewData["Title"] = "License";
     ViewData["Module"] = "License";
-    ViewData["ModuleSubtitle"] = "On-prem activation, weekly validation, and feature flags from Biktal Cloud.";
 }
 
-<div class="container pb-5" style="max-width: 900px;">
-    <partial name="_ModuleHeader" />
-
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="bk-card bk-card-glow p-4 h-100 text-center">
-                <div class="small text-muted fw-bold text-uppercase mb-1">Status</div>
-                <div class="h4 fw-bold bk-hero-title mb-0">Development</div>
-                <p class="small text-muted mb-0 mt-2 fw-semibold">Cloud validation not wired in this build.</p>
-            </div>
+<div class="container pb-5">
+    <div class="bk-license-page">
+        <div class="bk-license-status" role="status" aria-live="polite">
+            <span class="bk-license-status-icon" aria-hidden="true">
+                <i class="bi bi-shield-check"></i>
+            </span>
+            <p class="bk-license-eyebrow">License</p>
+            <h1 class="bk-license-title">Active</h1>
         </div>
-        <div class="col-md-4">
-            <div class="bk-card p-4 h-100 text-center">
-                <div class="small text-muted fw-bold text-uppercase mb-1">Next check-in</div>
-                <div class="h4 fw-bold bk-hero-title mb-0">—</div>
-                <p class="small text-muted mb-0 mt-2 fw-semibold">Weekly online heartbeat per roadmap.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="bk-card p-4 h-100 text-center">
-                <div class="small text-muted fw-bold text-uppercase mb-1">Features</div>
-                <div class="h4 fw-bold bk-hero-title mb-0">Core</div>
-                <p class="small text-muted mb-0 mt-2 fw-semibold">Entitlements JSON from Biktal API.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="bk-card-muted p-4 p-lg-5">
-        <h2 class="h6 fw-bold mb-3">What ships in Phase 8</h2>
-        <ul class="small text-muted fw-semibold mb-0 ps-3">
-            <li class="mb-2">Machine binding hash (CPU, board, MAC) stored encrypted with Data Protection API.</li>
-            <li class="mb-2">Forced online validation if last success &gt; 7 days.</li>
-            <li class="mb-0">Remote suspension and feature toggles from Biktal central API.</li>
-        </ul>
     </div>
 </div>

@@ -8,7 +8,7 @@
 
   const taxRateDec = parseFloat(root.dataset.taxRate || "0") || 0;
   const taxPctLabel = root.dataset.taxPercent || String(taxRateDec * 100);
-  const storeName = root.dataset.storeName || "Biktal Systems";
+  const storeName = root.dataset.storeName || "Khulasa Retail";
   const receiptFooter =
     root.dataset.receiptFooter?.trim() ||
     "Keep this receipt for returns and warranty.";
@@ -39,10 +39,10 @@
   /** @type {Map<string, { product: (typeof catalog)[0], qty: number }>} */
   let cart = new Map();
 
-  const PAYMENT_METHODS = ["Cash", "Whish", "Card"];
+  const PAYMENT_METHODS = ["Cash", "Whish", "Debit"];
 
-  /** @type {{ Cash: number, Whish: number, Card: number }} */
-  let paymentSplits = { Cash: 0, Whish: 0, Card: 0 };
+  /** @type {{ Cash: number, Whish: number, Debit: number }} */
+  let paymentSplits = { Cash: 0, Whish: 0, Debit: 0 };
   let cashTendered = 0;
   /** User-entered discount in dollars; capped to subtotal when calculating totals. */
   let discountAmount = 0;
@@ -72,7 +72,7 @@
     cartClear: document.getElementById("bk-pos-cart-clear"),
     payCash: document.getElementById("bk-pos-pay-cash"),
     payWhish: document.getElementById("bk-pos-pay-whish"),
-    payCard: document.getElementById("bk-pos-pay-card"),
+    payDebit: document.getElementById("bk-pos-pay-debit"),
     payPaid: document.getElementById("bk-pos-pay-paid"),
     payRemaining: document.getElementById("bk-pos-pay-remaining"),
     payRemainingWrap: document.getElementById("bk-pos-pay-remaining-wrap"),
@@ -155,7 +155,7 @@
       lbpUsd: els.lbpUsd?.value || "",
       payCash: els.payCash?.value || "",
       payWhish: els.payWhish?.value || "",
-      payCard: els.payCard?.value || "",
+      payDebit: els.payDebit?.value || "",
       cashTendered: els.cashTenderedInput?.value || "",
     };
   }
@@ -172,7 +172,12 @@
   function loadSessionState(session) {
     selectedCustomer = session.selectedCustomer || null;
     cart = deserializeCart(session.cartEntries);
-    paymentSplits = { Cash: 0, Whish: 0, Card: 0, ...(session.paymentSplits || {}) };
+    const savedSplits = session.paymentSplits || {};
+    paymentSplits = {
+      Cash: Number(savedSplits.Cash || 0) || 0,
+      Whish: Number(savedSplits.Whish || 0) || 0,
+      Debit: Number(savedSplits.Debit || savedSplits.Card || 0) || 0,
+    };
     cashTendered = session.cashTendered || 0;
     discountAmount = session.discountAmount || 0;
     issueInvoice = !!session.issueInvoice;
@@ -187,7 +192,8 @@
     writePaymentSplitsToInputs();
     if (ui.payCash !== undefined && els.payCash) els.payCash.value = ui.payCash;
     if (ui.payWhish !== undefined && els.payWhish) els.payWhish.value = ui.payWhish;
-    if (ui.payCard !== undefined && els.payCard) els.payCard.value = ui.payCard;
+    if (ui.payDebit !== undefined && els.payDebit) els.payDebit.value = ui.payDebit;
+    else if (ui.payCard !== undefined && els.payDebit) els.payDebit.value = ui.payCard;
     if (ui.cashTendered !== undefined && els.cashTenderedInput) els.cashTenderedInput.value = ui.cashTendered;
 
     if (selectedCustomer && els.customerChipName && els.customerChip) {
@@ -260,6 +266,7 @@
     loadSessionState(session);
     renderSessionTabs();
     showToast(session.label + " started");
+    focusProductSearch();
   }
 
   function normalizeSingleSession() {
@@ -275,7 +282,7 @@
       label: "Session " + sessionCounter,
       selectedCustomer: null,
       cartEntries: [],
-      paymentSplits: { Cash: 0, Whish: 0, Card: 0 },
+      paymentSplits: { Cash: 0, Whish: 0, Debit: 0 },
       cashTendered: 0,
       discountAmount: 0,
       issueInvoice: false,
@@ -383,7 +390,7 @@
   const payInputs = {
     Cash: () => els.payCash,
     Whish: () => els.payWhish,
-    Card: () => els.payCard,
+    Debit: () => els.payDebit,
   };
 
   function readPaymentSplitsFromInputs() {
@@ -399,7 +406,7 @@
   function writePaymentSplitsToInputs() {
     if (els.payCash) els.payCash.value = paymentSplits.Cash > 0 ? moneyPlain(paymentSplits.Cash) : "";
     if (els.payWhish) els.payWhish.value = paymentSplits.Whish > 0 ? moneyPlain(paymentSplits.Whish) : "";
-    if (els.payCard) els.payCard.value = paymentSplits.Card > 0 ? moneyPlain(paymentSplits.Card) : "";
+    if (els.payDebit) els.payDebit.value = paymentSplits.Debit > 0 ? moneyPlain(paymentSplits.Debit) : "";
     if (els.cashTenderedInput) {
       els.cashTenderedInput.value = cashTendered > 0 ? moneyPlain(cashTendered) : "";
     }
@@ -433,7 +440,7 @@
   }
 
   function resetPaymentSplits() {
-    paymentSplits = { Cash: 0, Whish: 0, Card: 0 };
+    paymentSplits = { Cash: 0, Whish: 0, Debit: 0 };
     cashTendered = 0;
     writePaymentSplitsToInputs();
     resetLbpHelper();
@@ -442,7 +449,7 @@
   function payFullAmount(method) {
     const tot = total();
     if (tot <= 0) return;
-    paymentSplits = { Cash: 0, Whish: 0, Card: 0 };
+    paymentSplits = { Cash: 0, Whish: 0, Debit: 0 };
     paymentSplits[method] = tot;
     cashTendered = 0;
     writePaymentSplitsToInputs();
@@ -531,9 +538,11 @@
 
     renderLbpHelper(ch);
 
+    const debitOk = (paymentSplits.Debit || 0) <= 0.009 || !!selectedCustomer;
     const paymentOk =
       due <= 0.009 &&
-      (paymentSplits.Cash <= 0.009 || cashTendered <= 0.009 || cashChangeAmt() >= -0.009);
+      (paymentSplits.Cash <= 0.009 || cashTendered <= 0.009 || cashChangeAmt() >= -0.009) &&
+      debitOk;
     const completeOk = cart.size > 0 && paymentOk;
     els.complete.disabled = !completeOk;
     els.print.disabled = cart.size === 0 && !lastReceiptSnapshot;
@@ -573,21 +582,61 @@
     els.customerDd.classList.remove("d-none");
   }
 
+  function productSearchHaystack(p) {
+    return [
+      p.name || "",
+      p.sku || "",
+      p.barcode != null ? String(p.barcode) : "",
+      p.category || "",
+      String(p.id || ""),
+    ]
+      .join(" ")
+      .toLowerCase();
+  }
+
+  /** All query words must appear somewhere in the product fields (any order). */
+  function productMatchesTokens(p, tokens) {
+    const hay = productSearchHaystack(p);
+    return tokens.every((t) => hay.includes(t));
+  }
+
+  /** Lower score = better match (name hits preferred over sku/category). */
+  function productMatchScore(p, tokens, raw) {
+    const name = (p.name || "").toLowerCase();
+    const sku = (p.sku || "").toLowerCase();
+    const barcode = p.barcode != null ? String(p.barcode).toLowerCase() : "";
+    if (name === raw) return 0;
+    if (sku === raw || barcode === raw) return 1;
+    if (name.startsWith(raw)) return 2;
+    if (name.includes(raw)) return 3;
+    const nameHits = tokens.filter((t) => name.includes(t)).length;
+    if (nameHits === tokens.length) return 4;
+    if (sku.startsWith(raw) || barcode.startsWith(raw)) return 5;
+    return 6 + (tokens.length - nameHits);
+  }
+
   function filterProducts() {
-    const q = (els.productSearch.value || "").trim().toLowerCase();
-    if (!q) return catalog.slice(0, 10);
+    const raw = (els.productSearch.value || "").trim().toLowerCase();
+    if (!raw) return [];
+    const tokens = raw.split(/\s+/).filter(Boolean);
     return catalog
-      .filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          (p.sku && p.sku.toLowerCase().includes(q)) ||
-          (p.barcode && String(p.barcode).toLowerCase().includes(q)) ||
-          String(p.id).toLowerCase().includes(q)
-      )
+      .filter((p) => productMatchesTokens(p, tokens))
+      .sort((a, b) => {
+        const sa = productMatchScore(a, tokens, raw);
+        const sb = productMatchScore(b, tokens, raw);
+        if (sa !== sb) return sa - sb;
+        return (a.name || "").localeCompare(b.name || "");
+      })
       .slice(0, 10);
   }
 
   function renderProductDd() {
+    const raw = (els.productSearch.value || "").trim();
+    if (!raw) {
+      hideProductDd();
+      els.productDd.innerHTML = "";
+      return;
+    }
     const list = filterProducts();
     if (!list.length) {
       els.productDd.innerHTML = `<div class="bk-pos-v2-dd-empty">No products match</div>`;
@@ -632,6 +681,7 @@
       session.selectedCustomer = c;
       renderSessionTabs();
     }
+    renderSummary();
   }
 
   function clearCustomer() {
@@ -643,6 +693,7 @@
       session.selectedCustomer = null;
       renderSessionTabs();
     }
+    renderSummary();
   }
 
   function addProductToCart(id) {
@@ -666,6 +717,12 @@
     hideProductDd();
     renderCart();
     showToast("Product added to cart");
+    focusProductSearch();
+  }
+
+  function focusProductSearch() {
+    if (!els.productSearch) return;
+    els.productSearch.focus({ preventScroll: true });
   }
 
   function removeLine(id) {
@@ -797,7 +854,12 @@
       completedAt: completedAt.toISOString(),
       storeName,
       customer: selectedCustomer
-        ? { name: selectedCustomer.name, email: selectedCustomer.email, phone: selectedCustomer.phone }
+        ? {
+            id: selectedCustomer.id,
+            name: selectedCustomer.name,
+            email: selectedCustomer.email,
+            phone: selectedCustomer.phone,
+          }
         : null,
       lines: [...cart.values()].map(({ product: p, qty }) => ({
         id: p.id,
@@ -1151,6 +1213,7 @@
       promoCode: snapshot.promo || null,
       customer: snapshot.customer
         ? {
+            id: snapshot.customer.id || null,
             name: snapshot.customer.name,
             email: snapshot.customer.email || null,
             phone: snapshot.customer.phone || null,
@@ -1214,6 +1277,11 @@
       showToast("Select a customer to issue an invoice", true);
       return;
     }
+    if ((paymentSplits.Debit || 0) > 0.009 && !selectedCustomer) {
+      showToast("Add a customer before completing a debit sale", true);
+      els.customerSearch?.focus();
+      return;
+    }
 
     const snapshot = buildSaleSnapshot();
     els.complete.disabled = true;
@@ -1251,6 +1319,7 @@
     if (!selectedCustomer || els.customerSearch.value !== selectedCustomer.name) {
       selectedCustomer = null;
       els.customerChip.classList.add("d-none");
+      renderSummary();
     }
     renderCustomerDd();
   });
@@ -1417,4 +1486,8 @@
 
   initSessions();
   renderCart();
+  focusProductSearch();
+  // Win over any later focus moves (session tabs, layout) so barcode readers work immediately.
+  requestAnimationFrame(focusProductSearch);
+  setTimeout(focusProductSearch, 0);
 })();

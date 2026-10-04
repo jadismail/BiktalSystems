@@ -1,10 +1,9 @@
-using System.Security.Claims;
-using Biktal.Application.Security;
 using Biktal.Infrastructure;
 using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -18,6 +17,17 @@ builder.Host.UseSerilog((ctx, services, cfg) =>
 });
 
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Keep passwords simple for store staff accounts.
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequiredLength = 1;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredUniqueChars = 0;
+});
 
 // InstallmentPlanService attaches new payments via plan.Payments.Add(...) with client GUIDs,
 // so EF tracks them as Modified and SaveChanges issues a 0-row UPDATE (DbUpdateConcurrencyException).
@@ -54,29 +64,13 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
-// Open access: no login required — every request runs as a local admin principal.
-app.Use(async (context, next) =>
-{
-    var claims = new List<Claim>
-    {
-        new(ClaimTypes.Name, "Local user"),
-        new(ClaimTypes.NameIdentifier, "local-bypass"),
-        new(ClaimTypes.Email, "local@biktal")
-    };
-    foreach (var role in ApplicationRoles.All)
-        claims.Add(new Claim(ClaimTypes.Role, role));
-    claims.Add(new Claim(ClaimTypes.Role, ApplicationRoles.AdminModule));
-
-    context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, authenticationType: "LocalBypass"));
-    await next();
-});
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Pos}/{action=Index}/{id?}")
+        pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 using (var scope = app.Services.CreateScope())

@@ -1,0 +1,471 @@
+@model CashboxPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Accounts";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var active = Model.ActiveSession;
+}
+
+<div class="container pb-5 pt-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+        <div>
+            <h1 class="h2 fw-bold bk-hero-title mb-1">Accounts</h1>
+            <p class="text-muted mb-0 fw-semibold small">Open, track, and close cash and Whish for one day at a time.</p>
+        </div>
+        @if (active is not null)
+        {
+            <span class="badge bg-success-subtle text-success border border-success-subtle">Session open</span>
+        }
+        else if (Model.DayCloses.Count > 0)
+        {
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Day closed</span>
+        }
+        else
+        {
+            <span class="badge text-bg-light border">No session this day</span>
+        }
+    </div>
+
+    <form method="get" class="bk-reports-toolbar mb-4" asp-action="Index">
+        <label for="date" class="fw-semibold small text-muted mb-0">Choose day</label>
+        <input type="date" id="date" name="date" value="@Model.DateInputValue" class="form-control form-control-sm" style="max-width: 12rem;" />
+        <button type="submit" class="btn btn-primary btn-sm fw-semibold">View</button>
+        <span class="badge text-bg-light border fw-semibold ms-auto">@Model.PeriodLabel</span>
+    </form>
+
+    @if (TempData["AccountsMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm mb-4" role="status">@okMsg</div>
+    }
+    @if (TempData["AccountsError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">@errMsg</div>
+    }
+
+    <div class="row g-3 mb-4">
+        @foreach (var acct in Model.PaymentAccounts)
+        {
+            <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100 bg-body">
+                    <div class="text-muted small fw-semibold">@acct.Name</div>
+                    <div class="fs-4 fw-bold font-monospace">@acct.PostedBalance.ToString("C", money)</div>
+                    @if (!string.IsNullOrWhiteSpace(acct.Hint))
+                    {
+                        <div class="small text-muted mt-1">@acct.Hint</div>
+                    }
+                    @if (acct.SessionSales > 0m)
+                    {
+                        <div class="small text-muted mt-1">Day sales: @acct.SessionSales.ToString("C", money)</div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (active is not null)
+    {
+        <div class="row g-4 mb-4">
+            <div class="col-lg-7">
+                <div class="border rounded-3 p-4 bg-body h-100">
+                    <h2 class="h6 fw-bold mb-1">@(Model.IsToday ? "Today's session" : "Open session")</h2>
+                    <p class="small text-muted mb-1">
+                        Opened @active.OpenedAtUtc.ToLocalTime().ToString("f", money)
+                        · @active.SaleCount sale@(active.SaleCount == 1 ? "" : "s")
+                    </p>
+                    <p class="small mb-3">
+                        <span class="text-muted fw-semibold">Opened by</span>
+                        <span class="fw-bold">@active.OpenedBy</span>
+                    </p>
+                    @if (!string.IsNullOrWhiteSpace(active.OpenNotes))
+                    {
+                        <p class="small text-muted mb-3">Note: @active.OpenNotes</p>
+                    }
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th class="text-end" scope="col">Cash</th>
+                                    <th class="text-end" scope="col">Whish</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-monospace small">
+                                <tr>
+                                    <td class="fw-semibold">Opening</td>
+                                    <td class="text-end">@active.OpeningCashFloat.ToString("C", money)</td>
+                                    <td class="text-end">@active.OpeningWhishBalance.ToString("C", money)</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold">+ Sales</td>
+                                    <td class="text-end text-success">+@active.CashSalesTotal.ToString("C", money)</td>
+                                    <td class="text-end text-success">+@active.WhishSalesTotal.ToString("C", money)</td>
+                                </tr>
+                                <tr class="table-light fw-bold">
+                                    <td>Expected</td>
+                                    <td class="text-end">@active.ExpectedCash.ToString("C", money)</td>
+                                    <td class="text-end">@active.ExpectedWhish.ToString("C", money)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="border rounded-3 p-4 bg-body h-100">
+                    <h2 class="h6 fw-bold mb-3">Close day</h2>
+                    <form asp-action="CloseSession" method="post" class="row g-3" id="bk-accounts-close-form"
+                          data-expected-cash="@active.ExpectedCash.ToString("C", money)"
+                          data-expected-whish="@active.ExpectedWhish.ToString("C", money)"
+                          data-period="@Model.PeriodLabel">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="CloseForm.SessionId" />
+                        <div class="col-12">
+                            <label asp-for="CloseForm.CountedCash" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="CloseForm.CountedCash" class="form-control bk-money-input" inputmode="decimal" step="0.01" min="0"
+                                       placeholder="@active.ExpectedCash.ToString("F2", CultureInfo.InvariantCulture)" />
+                            </div>
+                            <div class="form-text">Expected: @active.ExpectedCash.ToString("C", money)</div>
+                            <span asp-validation-for="CloseForm.CountedCash" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="CloseForm.CountedWhish" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="CloseForm.CountedWhish" class="form-control bk-money-input" inputmode="decimal" step="0.01" min="0"
+                                       placeholder="@active.ExpectedWhish.ToString("F2", CultureInfo.InvariantCulture)" />
+                            </div>
+                            <div class="form-text">Expected: @active.ExpectedWhish.ToString("C", money)</div>
+                            <span asp-validation-for="CloseForm.CountedWhish" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="CloseForm.Notes" class="form-label small fw-bold"></label>
+                            <textarea asp-for="CloseForm.Notes" class="form-control" rows="2" placeholder="Optional variance notes"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-dark fw-semibold w-100">Close &amp; reconcile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="bk-admin-modal d-none" id="bk-accounts-close-modal" role="dialog" aria-modal="true"
+             aria-labelledby="bk-accounts-close-title" aria-describedby="bk-accounts-close-desc">
+            <div class="bk-admin-modal-backdrop" data-bk-close-dismiss tabindex="-1" aria-hidden="true"></div>
+            <div class="bk-admin-modal-panel bk-accounts-close-modal-panel" role="document">
+                <button type="button" class="bk-admin-modal-close" data-bk-close-dismiss aria-label="Close">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+                <div class="bk-admin-modal-icon bk-accounts-close-modal-icon" aria-hidden="true">
+                    <i class="bi bi-lock"></i>
+                </div>
+                <h2 class="bk-admin-modal-title" id="bk-accounts-close-title">Close this session?</h2>
+                <p class="bk-admin-modal-desc" id="bk-accounts-close-desc">
+                    You are about to lock <strong id="bk-accounts-close-period">@Model.PeriodLabel</strong>.
+                    Counted amounts will be saved and this cannot be undone.
+                </p>
+                <div class="bk-accounts-close-modal-summary">
+                    <div class="bk-accounts-close-modal-row">
+                        <span class="bk-accounts-close-modal-label">
+                            <i class="bi bi-cash-stack" aria-hidden="true"></i>Cash
+                        </span>
+                        <span class="bk-accounts-close-modal-values">
+                            <span class="bk-accounts-close-modal-count" id="bk-accounts-close-cash">—</span>
+                            <span class="bk-accounts-close-modal-expected">Expected <span id="bk-accounts-close-cash-expected">@active.ExpectedCash.ToString("C", money)</span></span>
+                        </span>
+                    </div>
+                    <div class="bk-accounts-close-modal-row">
+                        <span class="bk-accounts-close-modal-label">
+                            <i class="bi bi-phone" aria-hidden="true"></i>Whish
+                        </span>
+                        <span class="bk-accounts-close-modal-values">
+                            <span class="bk-accounts-close-modal-count" id="bk-accounts-close-whish">—</span>
+                            <span class="bk-accounts-close-modal-expected">Expected <span id="bk-accounts-close-whish-expected">@active.ExpectedWhish.ToString("C", money)</span></span>
+                        </span>
+                    </div>
+                </div>
+                <ul class="bk-admin-modal-notes">
+                    <li>Sales for this day stop attaching to this session</li>
+                    <li>Variances are recorded permanently on the day close</li>
+                </ul>
+                <div class="bk-admin-modal-actions">
+                    <button type="button" class="btn btn-light border fw-semibold" data-bk-close-dismiss>Keep open</button>
+                    <button type="button" class="btn btn-dark fw-semibold" id="bk-accounts-close-confirm">
+                        <i class="bi bi-check2-circle me-1" aria-hidden="true"></i>Close &amp; reconcile
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+    else if (Model.CanOpenSession)
+    {
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="border rounded-3 p-4 bg-body">
+                    <h2 class="h6 fw-bold mb-3">Open session</h2>
+                    <form asp-action="OpenSession" method="post" class="row g-3">
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-6">
+                            <label asp-for="OpenForm.OpeningCashFloat" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="OpenForm.OpeningCashFloat" class="form-control bk-money-input" inputmode="decimal" step="0.01" min="0"
+                                       placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="OpenForm.OpeningCashFloat" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OpenForm.OpeningWhishBalance" class="form-label small fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="OpenForm.OpeningWhishBalance" class="form-control bk-money-input" inputmode="decimal" step="0.01" min="0"
+                                       placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="OpenForm.OpeningWhishBalance" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="OpenForm.Notes" class="form-label small fw-bold"></label>
+                            <textarea asp-for="OpenForm.Notes" class="form-control" rows="2" placeholder="Optional notes"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary fw-semibold">Open session</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else if (!Model.IsToday && Model.DayCloses.Count == 0)
+    {
+        <div class="alert alert-light border mb-4" role="status">
+            No Accounts session was opened or closed on <strong>@Model.PeriodLabel</strong>.
+        </div>
+    }
+
+    <section class="bk-accounts-closes" aria-label="Day close">
+        <div class="bk-accounts-closes-head">
+            <h2 class="h6 fw-bold mb-0">Day close</h2>
+            <span class="bk-accounts-closes-count">
+                @(Model.DayCloses.Count == 0
+                    ? "No close yet"
+                    : $"{Model.DayCloses.Count} close{(Model.DayCloses.Count == 1 ? "" : "s")}")
+            </span>
+        </div>
+
+        @if (Model.DayCloses.Count == 0)
+        {
+            <div class="bk-accounts-closes-empty border rounded-3 p-4 bg-body text-muted small fw-semibold">
+                @(active is not null
+                    ? "Session is still open — close the day to see the reconciliation card here."
+                    : "Pick another day, or open and close a session for today.")
+            </div>
+        }
+        else
+        {
+            <div class="bk-accounts-closes-list">
+                @foreach (var row in Model.DayCloses)
+                {
+                    var cashVarTone = VarianceTone(row.CashVariance);
+                    var whishVarTone = VarianceTone(row.WhishVariance);
+                    <article class="bk-accounts-close-card">
+                        <header class="bk-accounts-close-top">
+                            <div class="bk-accounts-close-date">
+                                <span class="bk-accounts-close-day">@row.SessionDate.ToString("MMM d, yyyy", money)</span>
+                                <span class="bk-accounts-close-time">Closed @row.ClosedAtUtc.ToLocalTime().ToString("t", money)</span>
+                            </div>
+                            <div class="bk-accounts-close-stats" aria-label="Activity counts">
+                                <span class="bk-accounts-stat">
+                                    <i class="bi bi-receipt" aria-hidden="true"></i>
+                                    @row.SaleCount sale@(row.SaleCount == 1 ? "" : "s")
+                                </span>
+                                <span class="bk-accounts-stat">
+                                    <i class="bi bi-tools" aria-hidden="true"></i>
+                                    @row.RepairCount repair@(row.RepairCount == 1 ? "" : "s")
+                                </span>
+                            </div>
+                        </header>
+
+                        <div class="bk-accounts-close-people">
+                            <div class="bk-accounts-person">
+                                <span class="bk-accounts-person-label">Opened by</span>
+                                <span class="bk-accounts-person-name" title="@row.OpenedBy">@ShortName(row.OpenedBy)</span>
+                            </div>
+                            <i class="bi bi-arrow-right bk-accounts-people-arrow" aria-hidden="true"></i>
+                            <div class="bk-accounts-person">
+                                <span class="bk-accounts-person-label">Closed by</span>
+                                <span class="bk-accounts-person-name" title="@row.ClosedBy">@ShortName(row.ClosedBy)</span>
+                            </div>
+                        </div>
+
+                        <div class="bk-accounts-close-amounts">
+                            <div class="bk-accounts-rail">
+                                <div class="bk-accounts-rail-label">
+                                    <i class="bi bi-cash-stack" aria-hidden="true"></i>Cash
+                                </div>
+                                <div class="bk-accounts-rail-flow">
+                                    <div class="bk-accounts-metric">
+                                        <span class="bk-accounts-metric-label">Open</span>
+                                        <span class="bk-accounts-metric-value">@row.OpeningCashFloat.ToString("C", money)</span>
+                                    </div>
+                                    <i class="bi bi-arrow-right bk-accounts-amt-arrow" aria-hidden="true"></i>
+                                    <div class="bk-accounts-metric">
+                                        <span class="bk-accounts-metric-label">Expected</span>
+                                        <span class="bk-accounts-metric-value">@row.ExpectedCash.ToString("C", money)</span>
+                                    </div>
+                                    <i class="bi bi-arrow-right bk-accounts-amt-arrow" aria-hidden="true"></i>
+                                    <div class="bk-accounts-metric">
+                                        <span class="bk-accounts-metric-label">Close</span>
+                                        <span class="bk-accounts-metric-value">@row.CountedCash.ToString("C", money)</span>
+                                    </div>
+                                    <i class="bi bi-arrow-right bk-accounts-amt-arrow" aria-hidden="true"></i>
+                                    <div class="bk-accounts-metric bk-accounts-metric--@cashVarTone" title="Close minus expected">
+                                        <span class="bk-accounts-metric-label">Difference</span>
+                                        <span class="bk-accounts-metric-value">@FormatVariance(row.CashVariance, money)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bk-accounts-rail">
+                                <div class="bk-accounts-rail-label">
+                                    <i class="bi bi-phone" aria-hidden="true"></i>Whish
+                                </div>
+                                <div class="bk-accounts-rail-flow">
+                                    <div class="bk-accounts-metric">
+                                        <span class="bk-accounts-metric-label">Open</span>
+                                        <span class="bk-accounts-metric-value">@row.OpeningWhishBalance.ToString("C", money)</span>
+                                    </div>
+                                    <i class="bi bi-arrow-right bk-accounts-amt-arrow" aria-hidden="true"></i>
+                                    <div class="bk-accounts-metric">
+                                        <span class="bk-accounts-metric-label">Expected</span>
+                                        <span class="bk-accounts-metric-value">@row.ExpectedWhish.ToString("C", money)</span>
+                                    </div>
+                                    <i class="bi bi-arrow-right bk-accounts-amt-arrow" aria-hidden="true"></i>
+                                    <div class="bk-accounts-metric">
+                                        <span class="bk-accounts-metric-label">Close</span>
+                                        <span class="bk-accounts-metric-value">@row.CountedWhish.ToString("C", money)</span>
+                                    </div>
+                                    <i class="bi bi-arrow-right bk-accounts-amt-arrow" aria-hidden="true"></i>
+                                    <div class="bk-accounts-metric bk-accounts-metric--@whishVarTone" title="Close minus expected">
+                                        <span class="bk-accounts-metric-label">Difference</span>
+                                        <span class="bk-accounts-metric-value">@FormatVariance(row.WhishVariance, money)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            function isZeroMoney(value) {
+                var v = (value || "").trim().replace(/\s/g, "");
+                return v === "" || /^0([.,]0+)?$/.test(v);
+            }
+
+            document.querySelectorAll(".bk-money-input").forEach(function (input) {
+                if (isZeroMoney(input.value))
+                    input.value = "";
+
+                input.addEventListener("focus", function () {
+                    if (isZeroMoney(input.value))
+                        input.value = "";
+                    else
+                        input.select();
+                });
+            });
+
+            var form = document.getElementById("bk-accounts-close-form");
+            var modal = document.getElementById("bk-accounts-close-modal");
+            if (!form || !modal) return;
+
+            var confirmBtn = document.getElementById("bk-accounts-close-confirm");
+            var cashEl = document.getElementById("bk-accounts-close-cash");
+            var whishEl = document.getElementById("bk-accounts-close-whish");
+            var cashExpectedEl = document.getElementById("bk-accounts-close-cash-expected");
+            var whishExpectedEl = document.getElementById("bk-accounts-close-whish-expected");
+            var periodEl = document.getElementById("bk-accounts-close-period");
+            var cashInput = form.querySelector('[name="CloseForm.CountedCash"]');
+            var whishInput = form.querySelector('[name="CloseForm.CountedWhish"]');
+            var lastFocus = null;
+            var confirmed = false;
+
+            function formatMoney(raw) {
+                var v = (raw || "").trim();
+                if (!v) return "$0.00";
+                var normalized = v.replace(/\s/g, "").replace(",", ".");
+                var n = Number(normalized);
+                if (!Number.isFinite(n)) return "$" + v;
+                return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            function openModal() {
+                if (periodEl) periodEl.textContent = form.getAttribute("data-period") || "";
+                if (cashEl) cashEl.textContent = formatMoney(cashInput && cashInput.value);
+                if (whishEl) whishEl.textContent = formatMoney(whishInput && whishInput.value);
+                if (cashExpectedEl) cashExpectedEl.textContent = form.getAttribute("data-expected-cash") || "—";
+                if (whishExpectedEl) whishExpectedEl.textContent = form.getAttribute("data-expected-whish") || "—";
+                modal.classList.remove("d-none");
+                document.body.classList.add("bk-admin-modal-open");
+                confirmBtn && confirmBtn.focus();
+            }
+
+            function closeModal() {
+                modal.classList.add("d-none");
+                document.body.classList.remove("bk-admin-modal-open");
+                if (lastFocus) lastFocus.focus();
+                lastFocus = null;
+            }
+
+            form.addEventListener("submit", function (e) {
+                if (confirmed) return;
+                e.preventDefault();
+                if (typeof form.reportValidity === "function" && !form.reportValidity())
+                    return;
+                lastFocus = document.activeElement;
+                openModal();
+            });
+
+            confirmBtn && confirmBtn.addEventListener("click", function () {
+                confirmed = true;
+                closeModal();
+                form.submit();
+            });
+
+            modal.querySelectorAll("[data-bk-close-dismiss]").forEach(function (el) {
+                el.addEventListener("click", closeModal);
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (modal.classList.contains("d-none")) return;
+                if (e.key === "Escape") {
+                    e.preventDefault();
+                    closeModal();
+                }
+            });
+        })();
+    </script>
+}
+
+@functions {
+    private static string VarianceTone(decimal variance) =>
+        variance == 0m ? "ok" : variance > 0m ? "over" : "short";
+
+    private static string FormatVariance(decimal variance, CultureInfo money) =>
+        variance == 0m ? "Balanced" : variance.ToString("+$0.00;-$0.00", money);
+
+    private static string ShortName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value) || value == "—")
+            return "—";
+
+        var paren = value.IndexOf('(');
+        return paren > 0 ? value[..paren].Trim() : value.Trim();
+    }
+}

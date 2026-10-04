@@ -7,6 +7,7 @@
     var pct = CultureInfo.InvariantCulture;
     var inv = CultureInfo.InvariantCulture;
     var maxHourRevenue = Model.Hourly.Count > 0 ? Model.Hourly.Max(h => h.Revenue) : 0m;
+    var canViewGrossProfit = User.CanViewGrossProfit();
 }
 <div class="container pb-5 pt-3 bk-reports bk-insights">
     @await Component.InvokeAsync("ModuleNav")
@@ -48,8 +49,17 @@
             <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-piggy-bank"></i></div>
             <div>
                 <div class="bk-reports-kpi-label">Gross profit</div>
-                <div class="bk-reports-kpi-value">@Model.GrossProfit.ToString("C0", money)</div>
-                <div class="bk-reports-kpi-hint">@Model.GrossProfitPercent.ToString("0.#", pct)% margin</div>
+                @if (canViewGrossProfit)
+                {
+                    <div class="bk-reports-kpi-value">@Model.GrossProfit.ToString("C0", money)</div>
+                    <div class="bk-reports-kpi-hint">@Model.GrossProfitPercent.ToString("0.#", pct)% margin</div>
+                }
+                else
+                {
+                    <div class="bk-reports-kpi-value bk-sensitive-blur" aria-hidden="true" title="Hidden for your role">@Model.GrossProfit.ToString("C0", money)</div>
+                    <div class="bk-reports-kpi-hint bk-sensitive-blur" aria-hidden="true">@Model.GrossProfitPercent.ToString("0.#", pct)% margin</div>
+                    <div class="visually-hidden">Gross profit is hidden for your role</div>
+                }
             </div>
         </article>
     </section>
@@ -109,11 +119,11 @@
                                 <td>
                                     @if (r.IsPosSale)
                                     {
-                                        <span class="badge text-bg-primary">@r.Type</span>
+                                        <span class="bk-finance-type bk-finance-type--revenue">@r.Type</span>
                                     }
                                     else
                                     {
-                                        <span class="badge text-bg-info">@r.Type</span>
+                                        <span class="bk-finance-type bk-finance-type--liability">@r.Type</span>
                                     }
                                 </td>
                                 <td class="font-monospace small">

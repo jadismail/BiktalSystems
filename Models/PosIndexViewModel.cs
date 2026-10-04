@@ -8,7 +8,7 @@ public sealed class PosIndexViewModel
 
     public decimal TaxRate { get; init; } = 0.09m;
 
-    public string StoreName { get; init; } = "Biktal Systems";
+    public string StoreName { get; init; } = "Khulasa Retail";
 
     public string? ReceiptFooter { get; init; }
 

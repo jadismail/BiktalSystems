@@ -1,6 +1,7 @@
 using Biktal.Domain.Repairs;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -257,6 +258,7 @@ public sealed class InsightsController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = AppRoleGroups.OwnerAdmin)]
     public async Task<IActionResult> Monthly(string? period, CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Monthly insights";
@@ -331,6 +333,7 @@ public sealed class InsightsController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = AppRoleGroups.OwnerAdmin)]
     public async Task<IActionResult> Yearly(int? year, CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Yearly insights";
@@ -409,17 +412,22 @@ public sealed class InsightsController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = AppRoleGroups.Management)]
     public IActionResult RevenueMargin() => RedirectToActionPermanent("Sales", "Operations");
 
     [HttpGet]
+    [Authorize(Roles = AppRoleGroups.Management)]
     public IActionResult Inventory() => RedirectToActionPermanent("Inventory", "Operations");
 
     [HttpGet]
+    [Authorize(Roles = AppRoleGroups.Management)]
     public IActionResult Repairs() => RedirectToActionPermanent("Repairs", "Operations");
 
     [HttpGet]
+    [Authorize(Roles = AppRoleGroups.Sales)]
     public IActionResult Customers() => RedirectToActionPermanent("Index", "Crm");
 
     [HttpGet]
+    [Authorize(Roles = AppRoleGroups.Management)]
     public IActionResult Staff() => RedirectToActionPermanent("Index", "Staff");
 }

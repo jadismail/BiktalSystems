@@ -1,0 +1,13 @@
+@model string
+@{
+    var storeName = string.IsNullOrWhiteSpace(Model) ? "Khulasa Retail" : Model.Trim();
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var canSales = isAuthenticated && User.CanAccessSales();
+    var canFloor = isAuthenticated && User.CanAccessFloor();
+    var canFinance = isAuthenticated && User.CanAccessFinance();
+    string homeController = canSales ? "Pos" : canFloor ? "Repairs" : canFinance ? "Finance" : isAuthenticated ? "Account" : "Home";
+    string homeAction = "Index";
+}
+<a class="navbar-brand bk-brand" asp-controller="@homeController" asp-action="@homeAction" title="@storeName">
+    <span class="bk-brand-text">@storeName</span>
+</a>

@@ -3,6 +3,7 @@ using Biktal.Domain.Admin;
 using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize(Roles = ApplicationRoles.AdminModule)]
+[Authorize(Roles = AppRoleGroups.Management)]
 public sealed class AdminController : Controller
 {
     private readonly ApplicationDbContext _db;

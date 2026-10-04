@@ -1,15 +1,15 @@
 using System.Globalization;
 using Biktal.Domain.Finance;
-using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Finance)]
 public sealed class FinanceController : Controller
 {
     private const decimal MaxJournalLineAmount = 999_999.99m;
@@ -17,12 +17,10 @@ public sealed class FinanceController : Controller
     private sealed record ParsedJournalLine(Guid AccountId, decimal Debit, decimal Credit, string? LineMemo);
 
     private readonly ApplicationDbContext _db;
-    private readonly CashboxSessionService _cashbox;
 
-    public FinanceController(ApplicationDbContext db, CashboxSessionService cashbox)
+    public FinanceController(ApplicationDbContext db)
     {
         _db = db;
-        _cashbox = cashbox;
     }
 
     [HttpGet]
@@ -382,75 +380,8 @@ public sealed class FinanceController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Cashbox(CancellationToken cancellationToken)
-    {
-        ViewData["Title"] = "Cashbox";
-        ViewData["Module"] = "Finance";
-        ViewData["ModuleSubtitle"] = "Daily sessions, payment accounts, and end-of-day reconciliation.";
-        return View(await BuildCashboxPageAsync(cancellationToken));
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> OpenCashboxSession(
-        [Bind(Prefix = nameof(CashboxPageViewModel.OpenForm))] OpenCashboxSessionFormModel model,
-        CancellationToken cancellationToken)
-    {
-        ViewData["Title"] = "Cashbox";
-        ViewData["Module"] = "Finance";
-        ViewData["ModuleSubtitle"] = "Daily sessions, payment accounts, and end-of-day reconciliation.";
-
-        if (!ModelState.IsValid)
-            return View("Cashbox", await BuildCashboxPageAsync(cancellationToken, model, null));
-
-        var result = await _cashbox.OpenSessionAsync(
-            model.OpeningCashFloat,
-            model.OpeningWhishBalance,
-            model.Notes,
-            cancellationToken);
-
-        if (!result.Success)
-        {
-            TempData["FinanceError"] = result.Error;
-            return View("Cashbox", await BuildCashboxPageAsync(cancellationToken, model, null));
-        }
-
-        TempData["FinanceMessage"] =
-            $"Cashbox opened with {model.OpeningCashFloat:C} cash and {model.OpeningWhishBalance:C} Whish starting balance.";
-        return RedirectToAction(nameof(Cashbox));
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CloseCashboxSession(
-        [Bind(Prefix = nameof(CashboxPageViewModel.CloseForm))] CloseCashboxSessionFormModel model,
-        CancellationToken cancellationToken)
-    {
-        ViewData["Title"] = "Cashbox";
-        ViewData["Module"] = "Finance";
-        ViewData["ModuleSubtitle"] = "Daily sessions, payment accounts, and end-of-day reconciliation.";
-
-        if (!ModelState.IsValid)
-            return View("Cashbox", await BuildCashboxPageAsync(cancellationToken, null, model));
-
-        var result = await _cashbox.CloseSessionAsync(
-            model.SessionId,
-            model.CountedCash,
-            model.CountedWhish,
-            model.Notes,
-            cancellationToken);
-
-        if (!result.Success)
-        {
-            TempData["FinanceError"] = result.Error;
-            return View("Cashbox", await BuildCashboxPageAsync(cancellationToken, null, model));
-        }
-
-        var cashMsg = FormatVarianceMessage("Cash", result.CashVariance);
-        var whishMsg = FormatVarianceMessage("Whish", result.WhishVariance);
-        TempData["FinanceMessage"] = $"Day closed. Expected cash {result.ExpectedCash:C}, Whish {result.ExpectedWhish:C}. {cashMsg} {whishMsg}";
-        return RedirectToAction(nameof(Cashbox));
-    }
+    public IActionResult Cashbox() =>
+        RedirectToAction(nameof(AccountsController.Index), "Accounts");
 
     [HttpGet]
     public IActionResult Aging()
@@ -617,122 +548,4 @@ public sealed class FinanceController : Controller
         };
     }
 
-    private async Task<CashboxPageViewModel> BuildCashboxPageAsync(
-        CancellationToken cancellationToken,
-        OpenCashboxSessionFormModel? openForm = null,
-        CloseCashboxSessionFormModel? closeForm = null)
-    {
-        await FinanceDataSeeder.EnsureCashboxAccountDisplayNamesAsync(_db, cancellationToken);
-
-        var openSession = await _cashbox.GetOpenSessionAsync(cancellationToken);
-        CashboxActiveSessionViewModel? active = null;
-        CashboxSessionTotals? totals = null;
-
-        if (openSession is not null)
-        {
-            totals = await _cashbox.GetSessionPaymentTotalsAsync(openSession.Id, cancellationToken);
-            active = new CashboxActiveSessionViewModel
-            {
-                Id = openSession.Id,
-                SessionDate = openSession.SessionDate,
-                OpenedAtUtc = openSession.OpenedAtUtc,
-                OpeningCashFloat = openSession.OpeningCashFloat,
-                OpeningWhishBalance = openSession.OpeningWhishBalance,
-                CashSalesTotal = totals.CashTotal,
-                WhishSalesTotal = totals.WhishTotal,
-                ExpectedCash = CashboxSessionService.RoundMoney(openSession.OpeningCashFloat + totals.CashTotal),
-                ExpectedWhish = CashboxSessionService.RoundMoney(openSession.OpeningWhishBalance + totals.WhishTotal),
-                SaleCount = totals.SaleCount,
-                OpenNotes = openSession.OpenNotes
-            };
-        }
-
-        var aggregateList = await _db.JournalEntryLines.AsNoTracking()
-            .GroupBy(l => l.GeneralLedgerAccountId)
-            .Select(g => new { Id = g.Key, Debits = g.Sum(l => l.DebitAmount), Credits = g.Sum(l => l.CreditAmount) })
-            .ToListAsync(cancellationToken);
-
-        var aggregates = aggregateList.ToDictionary(x => x.Id, x => (x.Debits, x.Credits));
-
-        var paymentCodes = new[] { FinanceDataSeeder.CashOnHandCode, FinanceDataSeeder.WhishWalletCode };
-        var paymentAccounts = await _db.GeneralLedgerAccounts.AsNoTracking()
-            .Where(a => paymentCodes.Contains(a.AccountCode))
-            .OrderBy(a => a.AccountCode)
-            .ToListAsync(cancellationToken);
-
-        var accountRows = paymentAccounts.Select(a =>
-        {
-            decimal debits = 0m;
-            decimal credits = 0m;
-            if (aggregates.TryGetValue(a.Id, out var pair))
-            {
-                debits = pair.Debits;
-                credits = pair.Credits;
-            }
-
-            var sessionSales = 0m;
-            if (totals is not null)
-            {
-                sessionSales = a.AccountCode switch
-                {
-                    FinanceDataSeeder.CashOnHandCode => totals.CashTotal,
-                    FinanceDataSeeder.WhishWalletCode => totals.WhishTotal,
-                    _ => 0m
-                };
-            }
-
-            return new CashboxPaymentAccountViewModel
-            {
-                AccountCode = a.AccountCode,
-                Name = a.Name,
-                PostedBalance = PostedBalance(a.Type, debits, credits),
-                SessionSales = sessionSales
-            };
-        }).ToList();
-
-        var recentCloses = await _db.CashboxSessions.AsNoTracking()
-            .Where(s => s.Status == CashboxSessionStatus.Closed)
-            .OrderByDescending(s => s.ClosedAtUtc)
-            .Take(14)
-            .Select(s => new CashboxClosedSessionRowViewModel
-            {
-                Id = s.Id,
-                SessionDate = s.SessionDate,
-                OpenedAtUtc = s.OpenedAtUtc,
-                ClosedAtUtc = s.ClosedAtUtc!.Value,
-                OpeningCashFloat = s.OpeningCashFloat,
-                OpeningWhishBalance = s.OpeningWhishBalance,
-                ExpectedCash = s.ExpectedCash,
-                ExpectedWhish = s.ExpectedWhish,
-                CountedCash = s.CountedCash,
-                CountedWhish = s.CountedWhish,
-                CashVariance = s.CashVariance,
-                WhishVariance = s.WhishVariance,
-                SaleCount = s.SaleCount
-            })
-            .ToListAsync(cancellationToken);
-
-        var close = closeForm ?? new CloseCashboxSessionFormModel();
-        if (active is not null)
-            close.SessionId = active.Id;
-
-        return new CashboxPageViewModel
-        {
-            ActiveSession = active,
-            PaymentAccounts = accountRows,
-            RecentCloses = recentCloses,
-            OpenForm = openForm ?? new OpenCashboxSessionFormModel(),
-            CloseForm = close
-        };
-    }
-
-    private static string FormatVarianceMessage(string label, decimal variance)
-    {
-        if (variance == 0m)
-            return $"{label} balanced.";
-
-        return variance > 0m
-            ? $"{label} over by {variance:C}."
-            : $"{label} short by {Math.Abs(variance):C}.";
-    }
 }

@@ -67,12 +67,36 @@
                     <dd class="col-sm-8 fw-semibold mb-2">@Model.DeviceSummary</dd>
                     <dt class="col-sm-4 text-muted fw-semibold">IMEI / serial</dt>
                     <dd class="col-sm-8 mb-2">@(string.IsNullOrWhiteSpace(Model.SerialOrImei) ? "—" : Model.SerialOrImei)</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Device barcode</dt>
+                    <dd class="col-sm-8 mb-2 font-monospace">@(string.IsNullOrWhiteSpace(Model.Barcode) ? "—" : Model.Barcode)</dd>
                     <dt class="col-sm-4 text-muted fw-semibold">Issue</dt>
                     <dd class="col-sm-8 mb-2">@Model.IssueDescription</dd>
                     <dt class="col-sm-4 text-muted fw-semibold">Accessories</dt>
                     <dd class="col-sm-8 mb-0">@(string.IsNullOrWhiteSpace(Model.AccessoriesNotes) ? "—" : Model.AccessoriesNotes)</dd>
                 </dl>
             </div>
+            @if (!string.IsNullOrWhiteSpace(Model.Barcode))
+            {
+                <div class="bk-card p-4 mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                        <div>
+                            <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-1">Device barcode label</h2>
+                            <p class="small text-muted mb-0 fw-semibold">Reprint the sticker for this phone.</p>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm fw-semibold" id="bk-repair-barcode-print">
+                            <i class="bi bi-printer me-1" aria-hidden="true"></i>Print label
+                        </button>
+                    </div>
+                    <div class="bk-repair-barcode-preview">
+                        <svg id="bk-repair-barcode-svg"></svg>
+                        <div class="bk-repair-barcode-meta">
+                            <div class="font-monospace fw-bold">@Model.Barcode</div>
+                            <span class="bk-repair-barcode-line">@Model.DeviceSummary</span>
+                            <span class="bk-repair-barcode-line">@Model.CustomerName</span>
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="bk-card p-4">
                 <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Customer</h2>
                 <dl class="row small mb-0">
@@ -99,35 +123,82 @@
                         <p class="small text-muted mb-3">@mp.ToString("N1", CultureInfo.InvariantCulture)% of customer quote</p>
                     }
                 }
-                <form asp-action="UpdateTicketEstimate" method="post" class="mb-0">
+                @if (Model.IsPostedToAccounts)
+                {
+                    <div class="alert alert-success border-0 py-2 small mb-3" role="status">
+                        Posted to Accounts — Cash @Model.AmountPaidCash.ToString("C", money),
+                        Whish @Model.AmountPaidWhish.ToString("C", money).
+                    </div>
+                }
+                <form asp-action="UpdateTicketEstimate" method="post" class="mb-0" id="bk-repair-pricing-form">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="id" value="@Model.Id" />
-                    <label for="repair-estimated-price" class="form-label small fw-semibold text-muted">Customer quote (USD)</label>
-                    <div class="input-group input-group-lg mb-3">
-                        <span class="input-group-text">$</span>
-                        <input type="text"
-                               class="form-control font-monospace"
-                               id="repair-estimated-price"
-                               name="estimatedPrice"
-                               inputmode="decimal"
-                               placeholder="e.g. 149.99"
-                               value="@(Model.EstimatedPrice?.ToString("0.00", CultureInfo.InvariantCulture) ?? "")"
-                               autocomplete="off" />
-                    </div>
-                    <label for="repair-parts-cost" class="form-label small fw-semibold text-muted">Parts cost (USD)</label>
-                    <div class="input-group input-group-lg mb-2">
-                        <span class="input-group-text">$</span>
-                        <input type="text"
-                               class="form-control font-monospace"
-                               id="repair-parts-cost"
-                               name="partsCost"
-                               inputmode="decimal"
-                               placeholder="e.g. 45.00"
-                               value="@(Model.PartsCost?.ToString("0.00", CultureInfo.InvariantCulture) ?? "")"
-                               autocomplete="off" />
-                    </div>
-                    <p class="small text-muted mb-3">Track parts and materials so Insights can show repair margin. Leave fields blank to clear.</p>
-                    <button type="submit" class="btn btn-primary btn-sm fw-semibold">Save pricing</button>
+                    <fieldset @(Model.IsPostedToAccounts ? "disabled" : null)>
+                        <label for="repair-estimated-price" class="form-label small fw-semibold text-muted">Customer quote (USD)</label>
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text">$</span>
+                            <input type="text"
+                                   class="form-control font-monospace"
+                                   id="repair-estimated-price"
+                                   name="estimatedPrice"
+                                   inputmode="decimal"
+                                   placeholder="e.g. 149.99"
+                                   value="@(Model.EstimatedPrice?.ToString("0.00", CultureInfo.InvariantCulture) ?? "")"
+                                   autocomplete="off" />
+                        </div>
+                        <label for="repair-parts-cost" class="form-label small fw-semibold text-muted">Parts cost (USD)</label>
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text">$</span>
+                            <input type="text"
+                                   class="form-control font-monospace"
+                                   id="repair-parts-cost"
+                                   name="partsCost"
+                                   inputmode="decimal"
+                                   placeholder="e.g. 45.00"
+                                   value="@(Model.PartsCost?.ToString("0.00", CultureInfo.InvariantCulture) ?? "")"
+                                   autocomplete="off" />
+                        </div>
+                        <div class="border-top pt-3 mb-3">
+                            <p class="small fw-semibold text-muted mb-2">Payment at delivery (like POS)</p>
+                            <p class="small text-muted mb-3">Cash + Whish must equal the customer quote before marking Delivered.</p>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="repair-paid-cash" class="form-label small fw-semibold text-muted">Cash</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text"
+                                               class="form-control font-monospace"
+                                               id="repair-paid-cash"
+                                               name="amountPaidCash"
+                                               inputmode="decimal"
+                                               placeholder="0.00"
+                                               value="@(Model.AmountPaidCash > 0m ? Model.AmountPaidCash.ToString("0.00", CultureInfo.InvariantCulture) : "")"
+                                               autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label for="repair-paid-whish" class="form-label small fw-semibold text-muted">Whish</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text"
+                                               class="form-control font-monospace"
+                                               id="repair-paid-whish"
+                                               name="amountPaidWhish"
+                                               inputmode="decimal"
+                                               placeholder="0.00"
+                                               value="@(Model.AmountPaidWhish > 0m ? Model.AmountPaidWhish.ToString("0.00", CultureInfo.InvariantCulture) : "")"
+                                               autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="bk-repair-pay-all-cash">All cash</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="bk-repair-pay-all-whish">All Whish</button>
+                            </div>
+                        </div>
+                        <p class="small text-muted mb-3">Save pricing any time. Delivered posts Cash/Whish into Accounts.</p>
+                        <button type="submit" class="btn btn-primary btn-sm fw-semibold">Save pricing</button>
+                    </fieldset>
                 </form>
             </div>
             <div class="bk-card p-4 mb-4">
@@ -140,6 +211,23 @@
                         {
                             continue;
                         }
+
+                        if (s == RepairTicketStatus.Delivered)
+                        {
+                            if (Model.IsPostedToAccounts)
+                            {
+                                continue;
+                            }
+                            <form asp-action="DeliverTicket" method="post" class="d-inline" data-repair-deliver>
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="amountPaidCash" value="" />
+                                <input type="hidden" name="amountPaidWhish" value="" />
+                                <button type="submit" class="btn btn-success btn-sm fw-semibold">Delivered</button>
+                            </form>
+                            continue;
+                        }
+
                         <form asp-action="UpdateTicketStatus" method="post" class="d-inline">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@Model.Id" />
@@ -164,3 +252,57 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var quoteEl = document.getElementById('repair-estimated-price');
+        var cashEl = document.getElementById('repair-paid-cash');
+        var whishEl = document.getElementById('repair-paid-whish');
+        var allCashBtn = document.getElementById('bk-repair-pay-all-cash');
+        var allWhishBtn = document.getElementById('bk-repair-pay-all-whish');
+
+        function quoteValue() {
+          if (!quoteEl) return '';
+          return (quoteEl.value || '').trim();
+        }
+
+        if (allCashBtn && cashEl && whishEl) {
+          allCashBtn.addEventListener('click', function () {
+            cashEl.value = quoteValue();
+            whishEl.value = '';
+          });
+        }
+        if (allWhishBtn && cashEl && whishEl) {
+          allWhishBtn.addEventListener('click', function () {
+            whishEl.value = quoteValue();
+            cashEl.value = '';
+          });
+        }
+
+        document.querySelectorAll('form[data-repair-deliver]').forEach(function (form) {
+          form.addEventListener('submit', function () {
+            var cashInput = form.querySelector('input[name="amountPaidCash"]');
+            var whishInput = form.querySelector('input[name="amountPaidWhish"]');
+            if (cashInput) cashInput.value = cashEl ? cashEl.value : '';
+            if (whishInput) whishInput.value = whishEl ? whishEl.value : '';
+          });
+        });
+      });
+    </script>
+    @if (!string.IsNullOrWhiteSpace(Model.Barcode))
+    {
+        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+        <script src="~/js/repair-barcode.js" asp-append-version="true"></script>
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            window.BiktalRepairBarcode.initDetail({
+              code: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Barcode)),
+              device: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DeviceSummary)),
+              customer: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CustomerName)),
+              autoPrint: @(ViewData["PrintBarcode"] is true ? "true" : "false")
+            });
+          });
+        </script>
+    }
+}

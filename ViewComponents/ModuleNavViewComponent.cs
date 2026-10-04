@@ -1,3 +1,4 @@
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Biktal.WebMVC.ViewComponents;
@@ -43,7 +44,6 @@ public sealed class ModuleNavViewComponent : ViewComponent
                 new("Chart of accounts", "Accounts"),
                 new("Journal entries", "Journal"),
                 new("New journal", "NewJournal"),
-                new("Cashbox", "Cashbox"),
                 new("Expenses", "Expenses"),
                 new("Aging (AR/AP)", "Aging")
             ],
@@ -113,12 +113,23 @@ public sealed class ModuleNavViewComponent : ViewComponent
         if (!Map.TryGetValue(controller, out var links) || links.Length <= 1)
             return Content(string.Empty);
 
+        IReadOnlyList<ModuleNavLink> visible = links;
+        var principal = HttpContext?.User;
+        if (string.Equals(controller, "Insights", StringComparison.OrdinalIgnoreCase)
+            && principal?.CanAccessInsightsPeriods() != true)
+        {
+            visible = links.Where(l => string.Equals(l.Action, "Daily", StringComparison.OrdinalIgnoreCase)).ToArray();
+        }
+
+        if (visible.Count <= 1)
+            return Content(string.Empty);
+
         var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
         var vm = new ModuleNavViewModel
         {
             Controller = controller,
             ActiveAction = action,
-            Links = links
+            Links = visible
         };
 
         return View(vm);

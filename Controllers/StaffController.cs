@@ -2,13 +2,14 @@ using System.Security.Claims;
 using Biktal.Domain.Staff;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biktal.WebMVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppRoleGroups.Management)]
 public sealed class StaffController : Controller
 {
     private readonly ApplicationDbContext _db;

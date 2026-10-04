@@ -160,7 +160,6 @@ public sealed class AdminResetUserPasswordFormModel
     public string Email { get; set; } = "";
 
     [Required]
-    [StringLength(100, MinimumLength = 8)]
     [DataType(DataType.Password)]
     [Display(Name = "New password")]
     public string NewPassword { get; set; } = "";
@@ -186,7 +185,6 @@ public sealed class AdminCreateUserFormModel
     public DateOnly? HireDate { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 8)]
     [DataType(DataType.Password)]
     public string Password { get; set; } = "";
 
