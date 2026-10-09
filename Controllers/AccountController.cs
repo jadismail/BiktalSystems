@@ -14,20 +14,17 @@ public sealed class AccountController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IdentitySeedOptions _seedOptions;
-    private readonly IWebHostEnvironment _environment;
     private readonly ILogger<AccountController> _logger;
 
     public AccountController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IOptions<IdentitySeedOptions> seedOptions,
-        IWebHostEnvironment environment,
         ILogger<AccountController> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _seedOptions = seedOptions.Value;
-        _environment = environment;
         _logger = logger;
     }
 
@@ -202,7 +199,7 @@ public sealed class AccountController : Controller
         if (canFloor)
             return ("Repairs", nameof(RepairsController.Index));
         if (canFinance)
-            return ("Finance", nameof(FinanceController.Index));
+            return ("Finance", nameof(FinanceController.Expenses));
 
         return ("Account", nameof(Index));
     }
@@ -218,19 +215,5 @@ public sealed class AccountController : Controller
     private async Task SetAuthPageHintsAsync()
     {
         ViewData["ShowRegisterLink"] = await CanRegisterAsync();
-
-        if (!_environment.IsDevelopment() || !_seedOptions.CreateBootstrapAdmin)
-            return;
-
-        var bootstrapEmail = _seedOptions.AdminEmail.Trim();
-        if (string.IsNullOrWhiteSpace(bootstrapEmail))
-            return;
-
-        var bootstrapUser = await _userManager.FindByEmailAsync(bootstrapEmail);
-        if (bootstrapUser is not null)
-        {
-            ViewData["BootstrapAdminHint"] =
-                $"Development administrator: {bootstrapEmail} / password from Seed:AdminPassword in appsettings.Development.json.";
-        }
     }
 }

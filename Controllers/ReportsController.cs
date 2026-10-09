@@ -16,5 +16,5 @@ public sealed class ReportsController : Controller
 
     public IActionResult Repairs() => RedirectToActionPermanent("Repairs", "Operations");
 
-    public IActionResult Financial() => RedirectToActionPermanent("Accounting", "Finance");
+    public IActionResult Financial() => RedirectToActionPermanent("Expenses", "Finance");
 }

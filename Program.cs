@@ -3,6 +3,7 @@ using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Data;
+using Biktal.WebMVC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -41,6 +42,9 @@ builder.Services.ConfigureDbContext<ApplicationDbContext>((sp, options) =>
 
 builder.Services.AddScoped<CashboxSessionService>();
 builder.Services.AddScoped<InstallmentPlanService>();
+builder.Services.Configure<BackupOptions>(builder.Configuration.GetSection(BackupOptions.SectionName));
+builder.Services.AddScoped<DatabaseBackupService>();
+builder.Services.AddHostedService<WeeklyBackupHostedService>();
 
 builder.Services.AddAuthorization();
 
@@ -96,18 +100,36 @@ using (var scope = app.Services.CreateScope())
             }
         }
 
-        await RunSeedAsync("CatalogProduct", () => CatalogProductSeeder.SeedIfEmptyAsync(db));
-        await RunSeedAsync("CatalogCategory", () => CatalogCategorySeeder.SeedIfEmptyAsync(db));
-        await RunSeedAsync("CatalogBrand", () => CatalogBrandSeeder.SeedIfEmptyAsync(db));
-        await RunSeedAsync("CatalogWarehouse", () => CatalogWarehouseSeeder.SeedIfEmptyAsync(db));
-        await RunSeedAsync("CatalogSupplier", () => CatalogSupplierSeeder.SeedIfEmptyAsync(db));
-        await RunSeedAsync("RepairTicket", () => RepairTicketSeeder.SeedIfEmptyAsync(db));
+        // Demo / sample catalog & CRM data should only load on a brand-new database.
+        // After Admin → Reset data (settings are kept), restart must NOT refill sample rows.
+        var seedDemoData = app.Configuration.GetValue("Seed:SeedDemoData", defaultValue: true);
+        var storeAlreadyInitialized = await db.TenantSettings.AsNoTracking().AnyAsync();
+        var runDemoSeed = seedDemoData && !storeAlreadyInitialized;
+
+        if (runDemoSeed)
+        {
+            await RunSeedAsync("CatalogProduct", () => CatalogProductSeeder.SeedIfEmptyAsync(db));
+            await RunSeedAsync("CatalogCategory", () => CatalogCategorySeeder.SeedIfEmptyAsync(db));
+            await RunSeedAsync("CatalogBrand", () => CatalogBrandSeeder.SeedIfEmptyAsync(db));
+            await RunSeedAsync("CatalogWarehouse", () => CatalogWarehouseSeeder.SeedIfEmptyAsync(db));
+            await RunSeedAsync("CatalogSupplier", () => CatalogSupplierSeeder.SeedIfEmptyAsync(db));
+            await RunSeedAsync("RepairTicket", () => RepairTicketSeeder.SeedIfEmptyAsync(db));
+            await RunSeedAsync("Crm", () => SafeCrmDataSeeder.SeedIfEmptyAsync(db));
+            await RunSeedAsync("Staff", () => StaffDataSeeder.SeedIfEmptyAsync(db));
+        }
+        else
+        {
+            logger.LogInformation(
+                "Skipping demo data seed (Seed:SeedDemoData={SeedDemoData}, storeInitialized={StoreInitialized}).",
+                seedDemoData,
+                storeAlreadyInitialized);
+        }
+
+        // Structural seeds the app needs to operate (chart of accounts, tax/cashbox accounts, settings, login).
         await RunSeedAsync("Finance", () => FinanceDataSeeder.SeedIfEmptyAsync(db));
         await RunSeedAsync("FinanceSalesTax", () => FinanceDataSeeder.EnsureSalesTaxPayableAccountAsync(db));
         await RunSeedAsync("FinanceInventoryAccounts", () => FinanceDataSeeder.EnsureInventoryMovementAccountsAsync(db));
         await RunSeedAsync("FinanceCashboxNames", () => FinanceDataSeeder.EnsureCashboxAccountDisplayNamesAsync(db));
-        await RunSeedAsync("Crm", () => SafeCrmDataSeeder.SeedIfEmptyAsync(db));
-        await RunSeedAsync("Staff", () => StaffDataSeeder.SeedIfEmptyAsync(db));
         await RunSeedAsync("Admin", () => AdminDataSeeder.SeedIfEmptyAsync(db));
         await RunSeedAsync("Identity", () => IdentitySeeder.SeedAsync(services));
     }

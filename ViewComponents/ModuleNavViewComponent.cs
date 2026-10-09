@@ -37,16 +37,6 @@ public sealed class ModuleNavViewComponent : ViewComponent
                 new("Tickets", "Tickets"),
                 new("New check-in", "New")
             ],
-            ["Finance"] =
-            [
-                new("Overview", "Index"),
-                new("Accounting", "Accounting"),
-                new("Chart of accounts", "Accounts"),
-                new("Journal entries", "Journal"),
-                new("New journal", "NewJournal"),
-                new("Expenses", "Expenses"),
-                new("Aging (AR/AP)", "Aging")
-            ],
             ["Crm"] =
             [
                 new("Overview", "Index"),

@@ -26,7 +26,7 @@ public class HomeController : Controller
         if (User.CanAccessFloor())
             return RedirectToAction(nameof(RepairsController.Index), "Repairs");
         if (User.CanAccessFinance())
-            return RedirectToAction(nameof(FinanceController.Index), "Finance");
+            return RedirectToAction(nameof(FinanceController.Expenses), "Finance");
 
         return RedirectToAction(nameof(AccountController.Index), "Account");
     }

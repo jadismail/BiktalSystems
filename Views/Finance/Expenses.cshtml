@@ -2,8 +2,8 @@
 @using System.Globalization
 @{
     ViewData["Title"] = "Expenses";
-    ViewData["Module"] = "Finance";
-    ViewData["ModuleSubtitle"] = "Operating costs, approvals, and vendor bills.";
+    ViewData["Module"] = "Expenses";
+    ViewData["ModuleSubtitle"] = "Log vendor bills, categories, and operating costs.";
     var money = CultureInfo.GetCultureInfo("en-US");
 }
 <div class="container pb-5 pt-3 bk-finance">
@@ -98,7 +98,6 @@
             </table>
         </div>
     </div>
-    <p class="small text-muted fw-semibold mt-3 mb-0">This log is separate from the GL; wire to journal templates when you are ready.</p>
 </div>
 
 @section Scripts {

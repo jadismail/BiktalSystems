@@ -138,7 +138,7 @@
                                         <td class="small">
                                             @if (!string.IsNullOrEmpty(m.JournalReference))
                                             {
-                                                <a asp-controller="Finance" asp-action="Journal" class="fw-semibold">@m.JournalReference</a>
+                                                <span class="fw-semibold">@m.JournalReference</span>
                                             }
                                             else if (!string.IsNullOrEmpty(m.GlSkipReason))
                                             {

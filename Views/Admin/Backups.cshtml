@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Backups";
     ViewData["Module"] = "Admin";
-    ViewData["ModuleSubtitle"] = "On-prem backup jobs and restore drills.";
+    ViewData["ModuleSubtitle"] = "Weekly database backups stored on this computer.";
     var n = CultureInfo.InvariantCulture;
     string FormatBytes(long? bytes)
     {
@@ -13,6 +13,28 @@
         var i = 0;
         while (b >= 1024 && i < units.Length - 1) { b /= 1024; i++; }
         return $"{b:0.##} {units[i]}";
+    }
+
+    bool IsLocalFile(string? notes)
+    {
+        if (string.IsNullOrWhiteSpace(notes) || string.IsNullOrWhiteSpace(Model.BackupDirectory))
+            return false;
+        try
+        {
+            var full = System.IO.Path.GetFullPath(notes.Trim());
+            var root = System.IO.Path.GetFullPath(Model.BackupDirectory);
+            if (!root.EndsWith(System.IO.Path.DirectorySeparatorChar))
+                root += System.IO.Path.DirectorySeparatorChar;
+            var name = System.IO.Path.GetFileName(full);
+            return full.StartsWith(root, StringComparison.OrdinalIgnoreCase)
+                && name.StartsWith("ishop-", StringComparison.OrdinalIgnoreCase)
+                && name.EndsWith(".dump", StringComparison.OrdinalIgnoreCase)
+                && System.IO.File.Exists(full);
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
 <div class="container pb-5 pt-3 bk-admin">
@@ -27,11 +49,39 @@
             <div>@okMsg</div>
         </div>
     }
+    @if (TempData["AdminError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
 
     <div class="row g-3 mb-4">
         <div class="col-lg-6">
             <div class="bk-admin-panel p-4 h-100">
-                <h2 class="h6 fw-bold mb-3">Schedule</h2>
+                <h2 class="h6 fw-bold mb-3">Weekly schedule</h2>
+                @if (Model.AutomaticBackupsEnabled)
+                {
+                    <p class="small mb-3">
+                        A full database backup is saved on this computer every @Model.IntervalDays days while the app is running.
+                        If a week is missed, the next backup runs shortly after the app starts again.
+                    </p>
+                    @if (Model.WeeklyBackupDue)
+                    {
+                        <p class="small fw-semibold mb-3">A weekly backup is due and will run automatically.</p>
+                    }
+                    else if (Model.NextAutomaticBackupUtc is { } next)
+                    {
+                        <p class="small mb-3">Next automatic backup after <span class="fw-semibold">@next.ToLocalTime().ToString("f", n)</span>.</p>
+                    }
+                }
+                else
+                {
+                    <p class="small mb-3">Automatic weekly backups are turned off. You can still create one now.</p>
+                }
+                <label class="form-label small fw-bold" for="backup-folder">Saved on this computer</label>
+                <input class="form-control font-monospace small mb-3" id="backup-folder" value="@Model.BackupDirectory" readonly />
                 <form asp-action="SaveBackupSchedule" method="post" class="mb-0">
                     @Html.AntiForgeryToken()
                     <label class="form-label small fw-bold" for="backup-notes">Notes</label>
@@ -51,9 +101,20 @@
                         <dt class="col-5 text-muted">Label</dt>
                         <dd class="col-7 fw-semibold mb-2">@last.Label</dd>
                         <dt class="col-5 text-muted">Checksum</dt>
-                        <dd class="col-7 font-monospace mb-2">@(last.Checksum ?? "—")</dd>
+                        <dd class="col-7 font-monospace mb-2 text-break">@(last.Checksum ?? "—")</dd>
                         <dt class="col-5 text-muted">Size</dt>
-                        <dd class="col-7 fw-semibold mb-0">@FormatBytes(last.SizeBytes)</dd>
+                        <dd class="col-7 fw-semibold mb-2">@FormatBytes(last.SizeBytes)</dd>
+                        <dt class="col-5 text-muted">File</dt>
+                        <dd class="col-7 mb-0">
+                            @if (IsLocalFile(last.Notes))
+                            {
+                                <a asp-action="DownloadBackup" asp-route-id="@last.Id" class="fw-semibold">@System.IO.Path.GetFileName(last.Notes)</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
                     </dl>
                 }
                 else
@@ -65,20 +126,13 @@
     </div>
 
     <div class="bk-admin-panel p-4 mb-4">
-        <div class="bk-admin-panel-title">Log manual backup</div>
-        <form asp-action="LogBackup" method="post" class="row g-3 align-items-end">
+        <div class="bk-admin-panel-title">Create a backup now</div>
+        <p class="small text-muted mb-3">Writes a PostgreSQL dump into the folder above. Restore it later with pg_restore.</p>
+        <form asp-action="CreateBackup" method="post" class="mb-0">
             @Html.AntiForgeryToken()
-            <div class="col-md-5">
-                <label class="form-label small fw-bold" for="log-label">Label</label>
-                <input class="form-control" id="log-label" name="Label" value="Manual backup" required maxlength="256" />
-            </div>
-            <div class="col-md-5">
-                <label class="form-label small fw-bold" for="log-notes">Notes</label>
-                <input class="form-control" id="log-notes" name="Notes" maxlength="2000" placeholder="Optional" />
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100 fw-semibold">Record</button>
-            </div>
+            <button type="submit" class="btn btn-primary fw-semibold">
+                <i class="bi bi-download me-1" aria-hidden="true"></i>Create backup now
+            </button>
         </form>
     </div>
 
@@ -90,6 +144,7 @@
                         <th scope="col">Completed</th>
                         <th scope="col">Label</th>
                         <th scope="col">Status</th>
+                        <th scope="col">File</th>
                         <th scope="col">Checksum</th>
                         <th scope="col">Size</th>
                     </tr>
@@ -97,7 +152,7 @@
                 <tbody>
                     @if (Model.RecentBackups.Count == 0)
                     {
-                        <tr><td colspan="5"><div class="bk-empty">No backup history.</div></td></tr>
+                        <tr><td colspan="6"><div class="bk-empty">No backup history.</div></td></tr>
                     }
                     @foreach (var b in Model.RecentBackups)
                     {
@@ -118,7 +173,21 @@
                                         break;
                                 }
                             </td>
-                            <td class="font-monospace small">@(b.Checksum ?? "—")</td>
+                            <td class="small">
+                                @if (IsLocalFile(b.Notes))
+                                {
+                                    <a asp-action="DownloadBackup" asp-route-id="@b.Id">@System.IO.Path.GetFileName(b.Notes)</a>
+                                }
+                                else if (b.Status == AdminBackupStatus.Failed && !string.IsNullOrWhiteSpace(b.Notes))
+                                {
+                                    <span class="text-danger">@b.Notes</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td class="font-monospace small text-break">@(b.Checksum ?? "—")</td>
                             <td class="small">@FormatBytes(b.SizeBytes)</td>
                         </tr>
                     }

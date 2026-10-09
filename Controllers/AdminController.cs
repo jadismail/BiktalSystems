@@ -4,6 +4,7 @@ using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
 using Biktal.WebMVC.Security;
+using Biktal.WebMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +20,20 @@ public sealed class AdminController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IdentitySeedOptions _seedOptions;
     private readonly BusinessDataResetService _dataReset;
+    private readonly DatabaseBackupService _backup;
 
     public AdminController(
         ApplicationDbContext db,
         UserManager<ApplicationUser> userManager,
         IOptions<IdentitySeedOptions> seedOptions,
-        BusinessDataResetService dataReset)
+        BusinessDataResetService dataReset,
+        DatabaseBackupService backup)
     {
         _db = db;
         _userManager = userManager;
         _seedOptions = seedOptions.Value;
         _dataReset = dataReset;
+        _backup = backup;
     }
 
     private async Task<TenantSettings> GetOrCreateSettingsAsync(CancellationToken cancellationToken)
@@ -48,7 +52,7 @@ public sealed class AdminController : Controller
             BaseCurrencyCode = "USD",
             PricesTaxInclusive = true,
             LbpPerUsd = 89_500m,
-            BackupScheduleNotes = "Nightly pg_dump to secured NAS.",
+            BackupScheduleNotes = "Weekly automatic backup saved on this computer.",
             UpdatedAtUtc = DateTimeOffset.UtcNow
         };
         _db.TenantSettings.Add(settings);
@@ -550,7 +554,7 @@ public sealed class AdminController : Controller
     {
         ViewData["Title"] = "Backups";
         ViewData["Module"] = "Admin";
-        ViewData["ModuleSubtitle"] = "On-prem backup jobs and restore drills.";
+        ViewData["ModuleSubtitle"] = "Weekly database backups stored on this computer.";
 
         var settings = await GetOrCreateSettingsAsync(cancellationToken);
         var lastSuccess = await _db.AdminBackupRecords.AsNoTracking()
@@ -563,12 +567,52 @@ public sealed class AdminController : Controller
             .Take(12)
             .ToListAsync(cancellationToken);
 
+        var lastReal = await _backup.LastRealBackupAsync(cancellationToken);
+        var next = lastReal?.CompletedAtUtc.AddDays(_backup.IntervalDays);
+        var due = _backup.AutomaticBackupsEnabled
+            && (lastReal is null || lastReal.CompletedAtUtc <= DateTimeOffset.UtcNow.AddDays(-_backup.IntervalDays));
+
         return View(new AdminBackupsPageViewModel
         {
             BackupScheduleNotes = settings.BackupScheduleNotes,
             LastSuccessfulBackup = lastSuccess,
-            RecentBackups = recent
+            RecentBackups = recent,
+            BackupDirectory = _backup.BackupDirectory,
+            IntervalDays = _backup.IntervalDays,
+            AutomaticBackupsEnabled = _backup.AutomaticBackupsEnabled,
+            NextAutomaticBackupUtc = next,
+            WeeklyBackupDue = due
         });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateBackup(CancellationToken cancellationToken)
+    {
+        var result = await _backup.CreateBackupAsync(DatabaseBackupService.ManualLabel, cancellationToken);
+        if (result.Success)
+            TempData["AdminMessage"] = result.Message;
+        else
+            TempData["AdminError"] = result.Message;
+        return RedirectToAction(nameof(Backups));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DownloadBackup(Guid id, CancellationToken cancellationToken)
+    {
+        var record = await _db.AdminBackupRecords.AsNoTracking()
+            .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
+        if (record is null)
+            return NotFound();
+
+        var path = _backup.GetDownloadPath(record);
+        if (path is null)
+        {
+            TempData["AdminError"] = "That backup file is no longer on this computer.";
+            return RedirectToAction(nameof(Backups));
+        }
+
+        return PhysicalFile(path, "application/octet-stream", Path.GetFileName(path));
     }
 
     [HttpPost]
@@ -584,29 +628,6 @@ public sealed class AdminController : Controller
         await _db.SaveChangesAsync(cancellationToken);
 
         TempData["AdminMessage"] = "Backup schedule notes saved.";
-        return RedirectToAction(nameof(Backups));
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> LogBackup(AdminLogBackupFormModel model, CancellationToken cancellationToken)
-    {
-        if (!ModelState.IsValid)
-            return RedirectToAction(nameof(Backups));
-
-        _db.AdminBackupRecords.Add(new AdminBackupRecord
-        {
-            Id = Guid.NewGuid(),
-            Label = model.Label.Trim(),
-            Status = AdminBackupStatus.Success,
-            CompletedAtUtc = DateTimeOffset.UtcNow,
-            Checksum = $"sha256:{Guid.NewGuid():N}"[..24],
-            Notes = string.IsNullOrWhiteSpace(model.Notes) ? null : model.Notes.Trim(),
-            SizeBytes = null
-        });
-        await _db.SaveChangesAsync(cancellationToken);
-
-        TempData["AdminMessage"] = "Backup recorded.";
         return RedirectToAction(nameof(Backups));
     }
 
@@ -712,7 +733,7 @@ public sealed class AdminController : Controller
     {
         ViewData["Title"] = "Reset data";
         ViewData["Module"] = "Admin";
-        ViewData["ModuleSubtitle"] = "Clear business data by area for a fresh start. Users and settings are kept.";
+        ViewData["ModuleSubtitle"] = "Clear business data by area for a fresh start. Users and settings are kept. Sample seed data will not come back after restart.";
         return View(await BuildDataResetPageAsync(cancellationToken));
     }
 
@@ -722,7 +743,7 @@ public sealed class AdminController : Controller
     {
         ViewData["Title"] = "Reset data";
         ViewData["Module"] = "Admin";
-        ViewData["ModuleSubtitle"] = "Clear business data by area for a fresh start. Users and settings are kept.";
+        ViewData["ModuleSubtitle"] = "Clear business data by area for a fresh start. Users and settings are kept. Sample seed data will not come back after restart.";
 
         if (!ModelState.IsValid)
             return View(await BuildDataResetPageAsync(cancellationToken));

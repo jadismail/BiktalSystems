@@ -205,16 +205,16 @@ public sealed class AdminBackupsPageViewModel
     public AdminBackupRecord? LastSuccessfulBackup { get; init; }
 
     public IReadOnlyList<AdminBackupRecord> RecentBackups { get; init; } = [];
-}
 
-public sealed class AdminLogBackupFormModel
-{
-    [Required]
-    [StringLength(256)]
-    public string Label { get; set; } = "Manual backup";
+    public string BackupDirectory { get; init; } = "";
 
-    [StringLength(2000)]
-    public string? Notes { get; set; }
+    public int IntervalDays { get; init; } = 7;
+
+    public bool AutomaticBackupsEnabled { get; init; } = true;
+
+    public DateTimeOffset? NextAutomaticBackupUtc { get; init; }
+
+    public bool WeeklyBackupDue { get; init; }
 }
 
 public sealed class AdminBackupScheduleFormModel
