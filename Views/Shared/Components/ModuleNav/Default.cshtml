@@ -9,8 +9,61 @@
                 && string.Equals(controller, "Installments", StringComparison.OrdinalIgnoreCase)
                 && string.Equals(Model.Controller, "Installments", StringComparison.OrdinalIgnoreCase)
                 && (string.Equals(Model.ActiveAction, "Detail", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(Model.ActiveAction, "New", StringComparison.OrdinalIgnoreCase)));
+                    || string.Equals(Model.ActiveAction, "New", StringComparison.OrdinalIgnoreCase)))
+            || (string.Equals(link.Action, "Index", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Model.Controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && IsKatshVoucherAction(Model.ActiveAction))
+            || (string.Equals(link.Action, "Airtime", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Model.Controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && IsKatshAirtimeAction(Model.ActiveAction))
+            || (string.Equals(link.Action, "CreditsOnMobile", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Model.Controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && IsKatshMobileCreditsAction(Model.ActiveAction))
+            || (string.Equals(link.Action, "ValidityDays", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Model.Controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && IsKatshValidityDaysAction(Model.ActiveAction))
+            || (string.Equals(link.Action, "Balance", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Model.Controller, "Katsh", StringComparison.OrdinalIgnoreCase)
+                && IsKatshBalanceAction(Model.ActiveAction));
         <a asp-controller="@controller" asp-action="@link.Action"
            class="bk-subnav-link @(isActive ? "is-active" : null)">@link.Label</a>
     }
 </nav>
+
+@functions {
+    private static bool IsKatshVoucherAction(string? action) =>
+        string.Equals(action, "Touch", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "Alfa", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "ICloud", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "PubG", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "Other", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "SaveAlfaPrices", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "SellAlfaVoucher", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "SaveTouchPrices", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "SellTouchVoucher", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "CreateManualSale", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsKatshAirtimeAction(string? action) =>
+        string.Equals(action, "SaveAirtimePrices", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "SellAirtime", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsKatshMobileCreditsAction(string? action) =>
+        string.Equals(action, "SaveMobileCreditsPrices", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "SellMobileCredits", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "AddMobileCreditsBalance", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsKatshValidityDaysAction(string? action) =>
+        string.Equals(action, "SaveValidityDaysPrices", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "SellValidityDays", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsKatshBalanceAction(string? action) =>
+        string.Equals(action, "OpenBalance", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "AdjustBalance", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "AddBalance", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(action, "ConfirmBalanceCarryOver", StringComparison.OrdinalIgnoreCase);
+}

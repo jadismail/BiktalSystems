@@ -3,6 +3,7 @@ using Biktal.Domain.Repairs;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
 using Biktal.WebMVC.Security;
+using Biktal.WebMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,12 @@ public sealed class OperationsController : Controller
     private const int LowStockThreshold = 5;
 
     private readonly ApplicationDbContext _db;
+    private readonly KatshSaleHistoryStore _katshSales;
 
-    public OperationsController(ApplicationDbContext db)
+    public OperationsController(ApplicationDbContext db, KatshSaleHistoryStore katshSales)
     {
         _db = db;
+        _katshSales = katshSales;
     }
 
     private static (DateTimeOffset MonthStart, DateOnly Today, string PeriodLabel) CurrentMonthPeriod()
@@ -37,7 +40,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Operations";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Daily store activity — sales, inventory, repairs, and supply chain.";
 
         var (monthStart, today, periodLabel) = CurrentMonthPeriod();
@@ -83,7 +86,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> DailySales(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Daily sales";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Today's completed POS sales and delivered repairs.";
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -118,7 +121,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> MonthlySales(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Monthly sales";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Month-to-date POS and repair revenue.";
 
         var (monthStart, _, periodLabel) = CurrentMonthPeriod();
@@ -155,7 +158,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> ProductProfitability(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Product profitability";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Margin by category, brand, and top SKUs.";
         return View(await BuildSalesPageAsync(cancellationToken));
     }
@@ -169,7 +172,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> Inventory(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Real-time inventory";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Stock health, valuation, and movement activity.";
 
         var (monthStart, _, _) = CurrentMonthPeriod();
@@ -248,7 +251,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> LowStock(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Low stock alerts";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = $"SKUs at or below {LowStockThreshold} units on hand.";
 
         var lowStock = await _db.CatalogProducts.AsNoTracking()
@@ -277,7 +280,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> Repairs(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Repair revenue";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Service desk funnel with parts cost and repair margin.";
 
         var (monthStart, _, periodLabel) = CurrentMonthPeriod();
@@ -352,7 +355,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> PurchaseOrders(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Purchase orders";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Open PO pipeline and recent supplier orders.";
 
         var (monthStart, _, _) = CurrentMonthPeriod();
@@ -399,7 +402,7 @@ public sealed class OperationsController : Controller
     public async Task<IActionResult> StockMovement(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Stock movement";
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Inventory adjustments, receipts, and transfers MTD.";
 
         var (monthStart, _, periodLabel) = CurrentMonthPeriod();
@@ -445,7 +448,7 @@ public sealed class OperationsController : Controller
     private IActionResult ComingSoon(string title, string description)
     {
         ViewData["Title"] = title;
-        ViewData["Module"] = "Operations";
+        ViewData["Module"] = "Admin";
         ViewData["ModuleSubtitle"] = "Planned for a future release.";
         return View("ComingSoon", new OperationsComingSoonViewModel
         {
@@ -457,8 +460,8 @@ public sealed class OperationsController : Controller
     private async Task<InsightsRevenueMarginViewModel> BuildSalesPageAsync(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Sales";
-        ViewData["Module"] = "Operations";
-        ViewData["ModuleSubtitle"] = "Category, brand, channel, and top SKU breakdown from POS.";
+        ViewData["Module"] = "Admin";
+        ViewData["ModuleSubtitle"] = "Category, brand, channel, and top SKU breakdown — POS plus Katsh.";
 
         var (monthStart, _, periodLabel) = CurrentMonthPeriod();
         var hasSales = await _db.PosSales.AsNoTracking().AnyAsync(s => s.CompletedAtUtc >= monthStart, cancellationToken);
@@ -534,18 +537,30 @@ public sealed class OperationsController : Controller
         var repairPartsCost = await deliveredRepairsQuery.SumAsync(t => (decimal?)t.PartsCost, cancellationToken) ?? 0m;
         var repairCount = await deliveredRepairsQuery.CountAsync(cancellationToken);
 
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var monthSaleStart = new DateOnly(today.Year, today.Month, 1);
+        var settings = await _db.TenantSettings.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+        var lbpPerUsd = settings?.LbpPerUsd ?? 89_500m;
+        var katshMonth = (await _katshSales.GetByMonthAsync(today.Year, today.Month, cancellationToken))
+            .Where(s => s.IsMerchandiseSale && s.SaleDate >= monthSaleStart)
+            .ToList();
+        var katshRevenue = katshMonth.Sum(s => KatshSaleHistoryStore.ToUsd(s.Amount, s.Currency, lbpPerUsd));
+        var katshCost = katshMonth.Sum(s => KatshSaleHistoryStore.ToUsd(s.Cost, s.Currency, lbpPerUsd));
+        var katshCount = katshMonth.Count;
+
         var channels = new List<InsightsChannelRowViewModel>
         {
             new() { Channel = "POS", Revenue = posRevenue, TransactionCount = posCount, IsLive = true },
             new() { Channel = "Repairs", Revenue = repairRevenue, Cost = repairPartsCost, TransactionCount = repairCount, IsLive = true },
+            new() { Channel = "Katsh", Revenue = katshRevenue, Cost = katshCost, TransactionCount = katshCount, IsLive = true },
             new() { Channel = "Online store", Revenue = 0m, TransactionCount = 0, IsLive = false },
             new() { Channel = "Instagram orders", Revenue = 0m, TransactionCount = 0, IsLive = false },
             new() { Channel = "WhatsApp orders", Revenue = 0m, TransactionCount = 0, IsLive = false },
             new() { Channel = "Marketplace", Revenue = 0m, TransactionCount = 0, IsLive = false }
         };
 
-        var totalRevenue = lineRows.Sum(x => x.LineTotal);
-        var totalCost = lineRows.Sum(x => x.LineCostTotal);
+        var totalRevenue = lineRows.Sum(x => x.LineTotal) + katshRevenue;
+        var totalCost = lineRows.Sum(x => x.LineCostTotal) + katshCost;
 
         return new InsightsRevenueMarginViewModel
         {

@@ -1,0 +1,139 @@
+@model KatshHistoryPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "History";
+    ViewData["Module"] = "Katsh";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var lbp = CultureInfo.InvariantCulture;
+    var isDaily = string.Equals(Model.Mode, "daily", StringComparison.OrdinalIgnoreCase);
+}
+
+<div class="container pb-5 pt-3 bk-katsh bk-reports">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-katsh-history-modes mb-3" role="tablist" aria-label="History period">
+        <a class="bk-katsh-history-mode @(isDaily ? "is-active" : null)"
+           asp-action="History"
+           asp-route-mode="daily"
+           asp-route-date="@Model.DateInputValue"
+           role="tab"
+           aria-selected="@(isDaily ? "true" : "false")">Daily</a>
+        <a class="bk-katsh-history-mode @(!isDaily ? "is-active" : null)"
+           asp-action="History"
+           asp-route-mode="monthly"
+           asp-route-period="@Model.MonthInputValue"
+           role="tab"
+           aria-selected="@(!isDaily ? "true" : "false")">Monthly</a>
+    </div>
+
+    @if (isDaily)
+    {
+        <form method="get" class="bk-reports-toolbar mb-3" asp-action="History">
+            <input type="hidden" name="mode" value="daily" />
+            <label for="date" class="fw-semibold small text-muted mb-0">Choose day</label>
+            <input type="date" id="date" name="date" value="@Model.DateInputValue" class="form-control form-control-sm" style="max-width: 12rem;" />
+            <button type="submit" class="btn btn-primary btn-sm fw-semibold">View</button>
+            <span class="badge text-bg-light border fw-semibold ms-auto">@Model.PeriodLabel</span>
+        </form>
+    }
+    else
+    {
+        <form method="get" class="bk-reports-toolbar mb-3" asp-action="History">
+            <input type="hidden" name="mode" value="monthly" />
+            <label for="period" class="fw-semibold small text-muted mb-0">Choose month</label>
+            <input type="month" id="period" name="period" value="@Model.MonthInputValue" class="form-control form-control-sm" style="max-width: 12rem;" />
+            <button type="submit" class="btn btn-primary btn-sm fw-semibold">View</button>
+            <span class="badge text-bg-light border fw-semibold ms-auto">@Model.PeriodLabel</span>
+        </form>
+    }
+
+    <section class="bk-reports-kpis bk-reports-kpis--compact mb-4" aria-label="Katsh history totals">
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Sales</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.SaleCount</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Total USD</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalUsd.ToString("C", money)</div>
+        </article>
+        <article class="bk-reports-kpi bk-reports-kpi--sm">
+            <div class="bk-reports-kpi-label">Total LBP</div>
+            <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalLbp.ToString("N0", lbp) L.L</div>
+        </article>
+    </section>
+
+    <div class="bk-table-wrap">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Time</th>
+                    @if (!isDaily)
+                    {
+                        <th scope="col">Date</th>
+                    }
+                    <th scope="col">Provider</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Currency</th>
+                    <th class="text-end" scope="col">Amount</th>
+                    <th scope="col">Pay</th>
+                    <th scope="col">By</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Sales.Count == 0)
+                {
+                    <tr>
+                        <td colspan="@(isDaily ? 7 : 8)" class="text-muted small fw-semibold py-4 text-center">
+                            No Katsh sales for @Model.PeriodLabel.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var sale in Model.Sales)
+                    {
+                        <tr>
+                            <td class="small fw-semibold font-monospace">@sale.SoldAtLocal.ToString("t", money)</td>
+                            @if (!isDaily)
+                            {
+                                <td class="small fw-semibold">@sale.SaleDate.ToString("MMM d", money)</td>
+                            }
+                            <td class="small fw-semibold">@sale.Provider</td>
+                            <td class="fw-bold">@sale.Label</td>
+                            <td>
+                                <span class="badge text-bg-light border fw-semibold">@sale.Currency</span>
+                            </td>
+                            <td class="text-end font-monospace fw-bold @(sale.IsBalanceEntry ? (sale.Amount < 0m ? "text-danger" : "text-success") : null)">
+                                @{
+                                    var amountPrefix = sale.IsBalanceEntry
+                                        ? (sale.Amount > 0m ? "+" : "")
+                                        : "";
+                                }
+                                @if (string.Equals(sale.Currency, "USD", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    @(amountPrefix + sale.Amount.ToString("C", money))
+                                }
+                                else
+                                {
+                                    @(amountPrefix + $"{sale.Amount.ToString("N0", lbp)} L.L")
+                                }
+                            </td>
+                            <td class="small fw-semibold">
+                                @if (string.IsNullOrWhiteSpace(sale.PaymentMethod) || sale.IsBalanceEntry)
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                                else
+                                {
+                                    @sale.PaymentMethod
+                                }
+                            </td>
+                            <td class="small text-muted">@(sale.SoldBy ?? "—")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

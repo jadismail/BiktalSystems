@@ -1,0 +1,398 @@
+@model KatshIndexPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Prepaid Vouchers";
+    ViewData["Module"] = "Katsh";
+    var needsOpen = !Model.IsBalanceOpen;
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var lbp = CultureInfo.InvariantCulture;
+}
+
+<div class="container pb-5 pt-3 bk-katsh @(needsOpen ? "bk-katsh--locked" : null)">
+    @await Component.InvokeAsync("ModuleNav")
+    <div class="bk-katsh-top">
+        <partial name="_ModuleHeader" />
+
+        @if (Model.IsBalanceOpen)
+        {
+            <partial name="_KatshBalances" model="(Model.BalanceUsd, Model.BalanceLbp)" />
+        }
+    </div>
+
+    @if (TempData["KatshMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm mb-4" role="status">@okMsg</div>
+    }
+    @if (TempData["KatshError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">@errMsg</div>
+    }
+
+    @if (Model.IsBalanceOpen)
+    {
+        <partial name="_KatshAccountsGate" model="Model.IsAccountsSessionOpen" />
+    }
+
+    @if (needsOpen && !Model.NeedsDayConfirmation)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex flex-wrap align-items-center gap-2 mb-4" role="status">
+            <i class="bi bi-wallet2 flex-shrink-0" aria-hidden="true"></i>
+            <span class="me-auto">Open an initial balance before selling prepaid vouchers.</span>
+            <a asp-action="Balance" class="btn btn-sm btn-primary fw-semibold">Open balance</a>
+        </div>
+    }
+
+    @if (Model.NeedsDayConfirmation)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex flex-wrap align-items-center gap-2 mb-4" role="status">
+            <i class="bi bi-clipboard-check flex-shrink-0" aria-hidden="true"></i>
+            <span class="me-auto">Confirm yesterday’s carried balance to unlock Katsh for today.</span>
+        </div>
+    }
+
+    <div class="bk-katsh-search" role="search">
+        <label class="visually-hidden" for="bk-katsh-search-input">Search prepaid vouchers</label>
+        <div class="bk-katsh-search-field">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <input type="search"
+                   id="bk-katsh-search-input"
+                   class="form-control"
+                   placeholder="Search vouchers… e.g. 4.5, Touch, Magic, Alfa"
+                   autocomplete="off"
+                   enterkeyhint="search"
+                   @(needsOpen ? "disabled" : null)
+                   @(!needsOpen ? "autofocus" : null) />
+            <button type="button" class="bk-katsh-search-clear d-none" id="bk-katsh-search-clear" aria-label="Clear search">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+        <p class="bk-katsh-search-meta d-none" id="bk-katsh-search-meta" aria-live="polite"></p>
+    </div>
+
+    <div class="bk-katsh-stage @(needsOpen ? "bk-katsh-stage--blurred" : null)">
+        <div class="bk-katsh-grid" id="bk-katsh-provider-grid">
+            <a asp-action="Touch" class="bk-katsh-card" data-katsh-searchable data-search="touch"
+               tabindex="@(needsOpen ? -1 : null)">
+                <span class="bk-katsh-card-media bk-katsh-card-media--fill">
+                    <img src="~/img/katsh-touch.png" alt="" />
+                </span>
+                <span class="bk-katsh-card-label">Touch</span>
+            </a>
+
+            <a asp-action="Alfa" class="bk-katsh-card" data-katsh-searchable data-search="alfa"
+               tabindex="@(needsOpen ? -1 : null)">
+                <span class="bk-katsh-card-media bk-katsh-card-media--fill">
+                    <img src="~/img/katsh-alfa.png" alt="" />
+                </span>
+                <span class="bk-katsh-card-label">Alfa</span>
+            </a>
+
+            <a asp-action="ICloud" class="bk-katsh-card" data-katsh-searchable data-search="icloud apple"
+               tabindex="@(needsOpen ? -1 : null)">
+                <span class="bk-katsh-card-media bk-katsh-card-media--icloud">
+                    <img src="~/img/katsh-icloud.webp" alt="" />
+                </span>
+                <span class="bk-katsh-card-label">iCloud</span>
+            </a>
+
+            <a asp-action="PubG" class="bk-katsh-card" data-katsh-searchable data-search="pubg"
+               tabindex="@(needsOpen ? -1 : null)">
+                <span class="bk-katsh-card-media bk-katsh-card-media--pubg">
+                    <img src="~/img/katsh-pubg.webp" alt="" />
+                </span>
+                <span class="bk-katsh-card-label">PubG</span>
+            </a>
+
+            <a asp-action="Other" class="bk-katsh-card" data-katsh-searchable data-search="other manual"
+               tabindex="@(needsOpen ? -1 : null)">
+                <span class="bk-katsh-card-media bk-katsh-card-media--other" aria-hidden="true">
+                    <i class="bi bi-plus-lg"></i>
+                </span>
+                <span class="bk-katsh-card-label">Other</span>
+            </a>
+        </div>
+
+        @if (Model.IsBalanceOpen && Model.SearchVouchers.Count > 0)
+        {
+            <div class="bk-katsh-voucher-grid d-none" id="bk-katsh-search-results" role="list">
+                @foreach (var voucher in Model.SearchVouchers)
+                {
+                    var sellAction = string.Equals(voucher.Provider, "Touch", StringComparison.OrdinalIgnoreCase)
+                        ? "SellTouchVoucher"
+                        : "SellAlfaVoucher";
+                    <article class="bk-katsh-voucher"
+                             role="listitem"
+                             data-katsh-searchable
+                             data-search="@voucher.SearchText"
+                             data-face="@voucher.FaceUsd.ToString(CultureInfo.InvariantCulture)"
+                             data-sell-action="@sellAction">
+                        <span class="bk-katsh-voucher-media">
+                            <img src="~/img/katsh/@voucher.ImageFolder/@voucher.Image" alt="@voucher.Label" />
+                        </span>
+                        <span class="bk-katsh-voucher-label">@voucher.Label</span>
+                        <div class="bk-katsh-voucher-prices">
+                            <button type="button"
+                                    class="bk-katsh-voucher-price bk-katsh-voucher-price--usd"
+                                    @(Model.CanSell ? "data-katsh-sell" : null)
+                                    @(Model.CanSell ? null : "disabled")
+                                    data-amount-key="@voucher.AmountKey"
+                                    data-label="@voucher.Label"
+                                    data-currency="USD"
+                                    data-sell-action="@sellAction"
+                                    data-price-display="@voucher.PriceUsd.ToString("C2", money)"
+                                    data-cost-display="@voucher.CostUsd.ToString("C2", money)">
+                                <span class="bk-katsh-voucher-price-currency">USD</span>
+                                <span class="bk-katsh-voucher-metrics">
+                                    <span class="bk-katsh-voucher-metric">
+                                        <span class="bk-katsh-voucher-metric-label">Price</span>
+                                        <span class="bk-katsh-voucher-metric-value">@voucher.PriceUsd.ToString("C2", money)</span>
+                                    </span>
+                                    <span class="bk-katsh-voucher-metric bk-katsh-voucher-metric--cost">
+                                        <span class="bk-katsh-voucher-metric-label">Cost</span>
+                                        <span class="bk-katsh-voucher-metric-value">@voucher.CostUsd.ToString("C2", money)</span>
+                                    </span>
+                                </span>
+                            </button>
+                            <button type="button"
+                                    class="bk-katsh-voucher-price bk-katsh-voucher-price--lbp"
+                                    @(Model.CanSell ? "data-katsh-sell" : null)
+                                    @(Model.CanSell ? null : "disabled")
+                                    data-amount-key="@voucher.AmountKey"
+                                    data-label="@voucher.Label"
+                                    data-currency="LBP"
+                                    data-sell-action="@sellAction"
+                                    data-price-display="@(voucher.PriceLbp.ToString("N0", lbp) + " L.L")"
+                                    data-cost-display="@(voucher.CostLbp.ToString("N0", lbp) + " L.L")">
+                                <span class="bk-katsh-voucher-price-currency">LBP</span>
+                                <span class="bk-katsh-voucher-metrics">
+                                    <span class="bk-katsh-voucher-metric">
+                                        <span class="bk-katsh-voucher-metric-label">Price</span>
+                                        <span class="bk-katsh-voucher-metric-value">@voucher.PriceLbp.ToString("N0", lbp)</span>
+                                    </span>
+                                    <span class="bk-katsh-voucher-metric bk-katsh-voucher-metric--cost">
+                                        <span class="bk-katsh-voucher-metric-label">Cost</span>
+                                        <span class="bk-katsh-voucher-metric-value">@voucher.CostLbp.ToString("N0", lbp)</span>
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+                    </article>
+                }
+            </div>
+
+            <div class="bk-katsh-search-empty d-none" id="bk-katsh-search-empty">
+                No vouchers match your search.
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model.CanSell)
+{
+    <div class="bk-admin-modal d-none" id="bk-katsh-sell-modal" role="dialog" aria-modal="true"
+         aria-labelledby="bk-katsh-sell-title">
+        <div class="bk-admin-modal-backdrop" data-katsh-sell-dismiss tabindex="-1" aria-hidden="true"></div>
+        <div class="bk-admin-modal-panel" role="document">
+            <button type="button" class="bk-admin-modal-close" data-katsh-sell-dismiss aria-label="Close">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+            <div class="bk-admin-modal-icon" aria-hidden="true">
+                <i class="bi bi-wallet2"></i>
+            </div>
+            <h2 class="bk-admin-modal-title" id="bk-katsh-sell-title">Cash or Whish?</h2>
+            <p class="bk-admin-modal-desc" id="bk-katsh-sell-desc">
+                Choose how the customer is paying for this voucher.
+            </p>
+            <div class="bk-katsh-sell-summary">
+                <div class="bk-katsh-sell-row">
+                    <span class="bk-katsh-sell-label">Voucher</span>
+                    <span class="bk-katsh-sell-value" id="bk-katsh-sell-voucher">—</span>
+                </div>
+                <div class="bk-katsh-sell-row">
+                    <span class="bk-katsh-sell-label">Currency</span>
+                    <span class="bk-katsh-sell-value" id="bk-katsh-sell-currency">—</span>
+                </div>
+                <div class="bk-katsh-sell-row">
+                    <span class="bk-katsh-sell-label">Sell price</span>
+                    <span class="bk-katsh-sell-value" id="bk-katsh-sell-price">—</span>
+                </div>
+                <div class="bk-katsh-sell-row">
+                    <span class="bk-katsh-sell-label">Cost</span>
+                    <span class="bk-katsh-sell-value bk-katsh-sell-value--strong" id="bk-katsh-sell-cost">—</span>
+                </div>
+            </div>
+            <form asp-action="SellAlfaVoucher" method="post" id="bk-katsh-sell-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="AmountKey" id="bk-katsh-sell-amount-key" value="" />
+                <input type="hidden" name="Currency" id="bk-katsh-sell-currency-input" value="" />
+                <input type="hidden" name="ReturnUrl" value="@Url.Action("Index")" />
+                <div class="bk-katsh-pay-choices" role="group" aria-label="Payment method">
+                    <button type="submit" name="PaymentMethod" value="Cash" class="bk-katsh-pay-choice bk-katsh-pay-choice--cash">
+                        <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                        <span>Cash</span>
+                    </button>
+                    <button type="submit" name="PaymentMethod" value="Whish" class="bk-katsh-pay-choice bk-katsh-pay-choice--whish">
+                        <i class="bi bi-phone" aria-hidden="true"></i>
+                        <span>Whish</span>
+                    </button>
+                </div>
+                <div class="bk-katsh-pay-cancel">
+                    <button type="button" class="btn btn-link text-muted fw-semibold text-decoration-none" data-katsh-sell-dismiss>Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<script>
+(function () {
+    var input = document.getElementById("bk-katsh-search-input");
+    if (!input) return;
+
+    if (!input.disabled) {
+        // Keep caret ready whenever Prepaid Vouchers / Katsh Index opens.
+        requestAnimationFrame(function () {
+            input.focus({ preventScroll: true });
+        });
+    }
+
+    var clearBtn = document.getElementById("bk-katsh-search-clear");
+    var meta = document.getElementById("bk-katsh-search-meta");
+    var providerGrid = document.getElementById("bk-katsh-provider-grid");
+    var results = document.getElementById("bk-katsh-search-results");
+    var empty = document.getElementById("bk-katsh-search-empty");
+    var providerCards = providerGrid ? Array.prototype.slice.call(providerGrid.querySelectorAll("[data-katsh-searchable]")) : [];
+    var voucherCards = results ? Array.prototype.slice.call(results.querySelectorAll("[data-katsh-searchable]")) : [];
+
+    function normalize(value) {
+        return String(value || "").toLowerCase().replace(/[^a-z0-9.]/g, "");
+    }
+
+    function matches(el, query) {
+        if (!query) return true;
+        var hay = normalize(el.getAttribute("data-search"));
+        if (hay.indexOf(query) !== -1) return true;
+
+        if (/^\d+\.?\d*$/.test(query)) {
+            var face = parseFloat(el.getAttribute("data-face") || "");
+            var qNum = parseFloat(query);
+            if (isFinite(face) && isFinite(qNum) && Math.abs(face - qNum) < 0.001)
+                return true;
+        }
+        return false;
+    }
+
+    function refresh() {
+        var raw = (input.value || "").trim();
+        var query = normalize(raw);
+        var searching = query.length > 0;
+
+        if (clearBtn)
+            clearBtn.classList.toggle("d-none", !searching);
+
+        if (!searching) {
+            if (providerGrid) providerGrid.classList.remove("d-none");
+            if (results) results.classList.add("d-none");
+            if (empty) empty.classList.add("d-none");
+            providerCards.forEach(function (card) { card.classList.remove("d-none"); });
+            voucherCards.forEach(function (card) { card.classList.remove("d-none"); });
+            if (meta) {
+                meta.textContent = "";
+                meta.classList.add("d-none");
+            }
+            return;
+        }
+
+        var providerHits = 0;
+        providerCards.forEach(function (card) {
+            var hit = matches(card, query);
+            card.classList.toggle("d-none", !hit);
+            if (hit) providerHits++;
+        });
+
+        var voucherHits = 0;
+        voucherCards.forEach(function (card) {
+            var hit = matches(card, query);
+            card.classList.toggle("d-none", !hit);
+            if (hit) voucherHits++;
+        });
+
+        if (providerGrid)
+            providerGrid.classList.toggle("d-none", providerHits === 0);
+        if (results)
+            results.classList.toggle("d-none", voucherHits === 0);
+        if (empty)
+            empty.classList.toggle("d-none", !(providerHits === 0 && voucherHits === 0));
+
+        if (meta) {
+            var parts = [];
+            if (voucherHits > 0) parts.push(voucherHits + (voucherHits === 1 ? " voucher" : " vouchers"));
+            if (providerHits > 0) parts.push(providerHits + (providerHits === 1 ? " category" : " categories"));
+            meta.textContent = parts.length ? ("Showing " + parts.join(" · ")) : "No matches";
+            meta.classList.remove("d-none");
+        }
+    }
+
+    input.addEventListener("input", refresh);
+    if (clearBtn) {
+        clearBtn.addEventListener("click", function () {
+            input.value = "";
+            input.focus();
+            refresh();
+        });
+    }
+
+    var modal = document.getElementById("bk-katsh-sell-modal");
+    if (!modal) return;
+
+    var form = document.getElementById("bk-katsh-sell-form");
+    var voucherEl = document.getElementById("bk-katsh-sell-voucher");
+    var currencyEl = document.getElementById("bk-katsh-sell-currency");
+    var priceEl = document.getElementById("bk-katsh-sell-price");
+    var costEl = document.getElementById("bk-katsh-sell-cost");
+    var amountKeyInput = document.getElementById("bk-katsh-sell-amount-key");
+    var currencyInput = document.getElementById("bk-katsh-sell-currency-input");
+    var descEl = document.getElementById("bk-katsh-sell-desc");
+
+    function openModal(btn) {
+        var label = btn.getAttribute("data-label") || "Voucher";
+        var currency = btn.getAttribute("data-currency") || "";
+        var priceDisplay = btn.getAttribute("data-price-display") || "";
+        var costDisplay = btn.getAttribute("data-cost-display") || "";
+        var amountKey = btn.getAttribute("data-amount-key") || "";
+        var sellAction = btn.getAttribute("data-sell-action") || "SellAlfaVoucher";
+
+        voucherEl.textContent = label;
+        currencyEl.textContent = currency;
+        priceEl.textContent = priceDisplay;
+        costEl.textContent = costDisplay;
+        amountKeyInput.value = amountKey;
+        currencyInput.value = currency;
+        descEl.textContent = "How is the customer paying for " + label + "? Cost " + costDisplay + " will deduct from Katsh " + currency + ".";
+        form.setAttribute("action", "/Katsh/" + sellAction);
+
+        modal.classList.remove("d-none");
+        document.body.classList.add("bk-admin-modal-open");
+    }
+
+    function closeModal() {
+        modal.classList.add("d-none");
+        document.body.classList.remove("bk-admin-modal-open");
+    }
+
+    document.querySelectorAll("[data-katsh-sell]").forEach(function (btn) {
+        btn.addEventListener("click", function () { openModal(btn); });
+    });
+
+    modal.querySelectorAll("[data-katsh-sell-dismiss]").forEach(function (el) {
+        el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !modal.classList.contains("d-none"))
+            closeModal();
+    });
+})();
+</script>
+}

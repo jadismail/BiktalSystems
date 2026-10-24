@@ -1,0 +1,259 @@
+@model KatshAlfaPageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Alfa";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var lbp = CultureInfo.InvariantCulture;
+}
+
+<div class="container pb-5 pt-3 bk-katsh">
+    @await Component.InvokeAsync("ModuleNav")
+    <a class="bk-katsh-back" asp-controller="Katsh" asp-action="Index">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        <span>Back to Katsh</span>
+    </a>
+    <div class="bk-katsh-top">
+        <partial name="_ModuleHeader" />
+        <partial name="_KatshBalances" model="(Model.BalanceUsd, Model.BalanceLbp)" />
+    </div>
+
+    @if (TempData["KatshMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["KatshError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <partial name="_KatshAccountsGate" model="Model.IsAccountsSessionOpen" />
+
+    @if (Model.CanEditPrices)
+    {
+        <details class="bk-katsh-price-admin mb-4">
+            <summary class="bk-katsh-price-admin-summary">
+                <i class="bi bi-sliders" aria-hidden="true"></i>
+                <span>Edit voucher prices</span>
+                <span class="bk-katsh-price-admin-badge">Admin</span>
+            </summary>
+            <form asp-action="SaveAlfaPrices" method="post" class="bk-katsh-price-admin-form">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+                <div class="bk-katsh-price-admin-grid">
+                    @for (var i = 0; i < Model.EditForm.Rows.Count; i++)
+                    {
+                        <div class="bk-katsh-price-admin-row">
+                            <input type="hidden" asp-for="EditForm.Rows[i].AmountKey" />
+                            <input type="hidden" asp-for="EditForm.Rows[i].Label" />
+                            <div class="bk-katsh-price-admin-name">@Model.EditForm.Rows[i].Label</div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].PriceUsd">Price ($)</label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">$</span>
+                                        <input asp-for="EditForm.Rows[i].PriceUsd" class="form-control text-end" step="any" min="0" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].PriceLbp">Price (L.L)</label>
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="EditForm.Rows[i].PriceLbp" class="form-control text-end" step="any" min="0" />
+                                        <span class="input-group-text">L.L</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].CostUsd">Cost ($)</label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">$</span>
+                                        <input asp-for="EditForm.Rows[i].CostUsd" class="form-control text-end" step="any" min="0" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].CostLbp">Cost (L.L)</label>
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="EditForm.Rows[i].CostLbp" class="form-control text-end" step="any" min="0" />
+                                        <span class="input-group-text">L.L</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button type="submit" class="btn btn-primary fw-semibold mt-3">
+                    <i class="bi bi-check2 me-1" aria-hidden="true"></i>Save prices
+                </button>
+            </form>
+        </details>
+    }
+
+    <div class="bk-katsh-voucher-grid" role="list">
+        @foreach (var voucher in Model.Vouchers)
+        {
+            <article class="bk-katsh-voucher" role="listitem" data-amount="@voucher.AmountKey">
+                <span class="bk-katsh-voucher-media">
+                    <img src="~/img/katsh/alfa/@voucher.Image" alt="@voucher.Label" />
+                </span>
+                <span class="bk-katsh-voucher-label">@voucher.Label</span>
+                <div class="bk-katsh-voucher-prices">
+                    <button type="button"
+                            class="bk-katsh-voucher-price bk-katsh-voucher-price--usd"
+                            @(Model.CanSell ? "data-katsh-sell" : null)
+                            @(Model.CanSell ? null : "disabled")
+                            data-amount-key="@voucher.AmountKey"
+                            data-label="@voucher.Label"
+                            data-currency="USD"
+                            data-price="@voucher.PriceUsd.ToString("F2", CultureInfo.InvariantCulture)"
+                            data-price-display="@voucher.PriceUsd.ToString("C2", money)"
+                            data-cost-display="@voucher.CostUsd.ToString("C2", money)">
+                        <span class="bk-katsh-voucher-price-currency">USD</span>
+                        <span class="bk-katsh-voucher-metrics">
+                            <span class="bk-katsh-voucher-metric">
+                                <span class="bk-katsh-voucher-metric-label">Price</span>
+                                <span class="bk-katsh-voucher-metric-value">@voucher.PriceUsd.ToString("C2", money)</span>
+                            </span>
+                            <span class="bk-katsh-voucher-metric bk-katsh-voucher-metric--cost">
+                                <span class="bk-katsh-voucher-metric-label">Cost</span>
+                                <span class="bk-katsh-voucher-metric-value">@voucher.CostUsd.ToString("C2", money)</span>
+                            </span>
+                        </span>
+                    </button>
+                    <button type="button"
+                            class="bk-katsh-voucher-price bk-katsh-voucher-price--lbp"
+                            @(Model.CanSell ? "data-katsh-sell" : null)
+                            @(Model.CanSell ? null : "disabled")
+                            data-amount-key="@voucher.AmountKey"
+                            data-label="@voucher.Label"
+                            data-currency="LBP"
+                            data-price="@voucher.PriceLbp.ToString("F0", CultureInfo.InvariantCulture)"
+                            data-price-display="@(voucher.PriceLbp.ToString("N0", lbp) + " L.L")"
+                            data-cost-display="@(voucher.CostLbp.ToString("N0", lbp) + " L.L")">
+                        <span class="bk-katsh-voucher-price-currency">LBP</span>
+                        <span class="bk-katsh-voucher-metrics">
+                            <span class="bk-katsh-voucher-metric">
+                                <span class="bk-katsh-voucher-metric-label">Price</span>
+                                <span class="bk-katsh-voucher-metric-value">@voucher.PriceLbp.ToString("N0", lbp)</span>
+                            </span>
+                            <span class="bk-katsh-voucher-metric bk-katsh-voucher-metric--cost">
+                                <span class="bk-katsh-voucher-metric-label">Cost</span>
+                                <span class="bk-katsh-voucher-metric-value">@voucher.CostLbp.ToString("N0", lbp)</span>
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </article>
+        }
+    </div>
+</div>
+
+<div class="bk-admin-modal d-none" id="bk-katsh-sell-modal" role="dialog" aria-modal="true"
+     aria-labelledby="bk-katsh-sell-title">
+    <div class="bk-admin-modal-backdrop" data-katsh-sell-dismiss tabindex="-1" aria-hidden="true"></div>
+    <div class="bk-admin-modal-panel" role="document">
+        <button type="button" class="bk-admin-modal-close" data-katsh-sell-dismiss aria-label="Close">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <div class="bk-admin-modal-icon" aria-hidden="true">
+            <i class="bi bi-wallet2"></i>
+        </div>
+        <h2 class="bk-admin-modal-title" id="bk-katsh-sell-title">Cash or Whish?</h2>
+        <p class="bk-admin-modal-desc" id="bk-katsh-sell-desc">
+            Choose how the customer is paying for this voucher.
+        </p>
+        <div class="bk-katsh-sell-summary">
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Voucher</span>
+                <span class="bk-katsh-sell-value" id="bk-katsh-sell-voucher">—</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Currency</span>
+                <span class="bk-katsh-sell-value" id="bk-katsh-sell-currency">—</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Sell price</span>
+                <span class="bk-katsh-sell-value" id="bk-katsh-sell-price">—</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Cost</span>
+                <span class="bk-katsh-sell-value bk-katsh-sell-value--strong" id="bk-katsh-sell-cost">—</span>
+            </div>
+        </div>
+        <form asp-action="SellAlfaVoucher" method="post" id="bk-katsh-sell-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="AmountKey" id="bk-katsh-sell-amount-key" value="" />
+            <input type="hidden" name="Currency" id="bk-katsh-sell-currency-input" value="" />
+            <div class="bk-katsh-pay-choices" role="group" aria-label="Payment method">
+                <button type="submit" name="PaymentMethod" value="Cash" class="bk-katsh-pay-choice bk-katsh-pay-choice--cash">
+                    <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                    <span>Cash</span>
+                </button>
+                <button type="submit" name="PaymentMethod" value="Whish" class="bk-katsh-pay-choice bk-katsh-pay-choice--whish">
+                    <i class="bi bi-phone" aria-hidden="true"></i>
+                    <span>Whish</span>
+                </button>
+            </div>
+            <div class="bk-katsh-pay-cancel">
+                <button type="button" class="btn btn-link text-muted fw-semibold text-decoration-none" data-katsh-sell-dismiss>Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+(function () {
+    var modal = document.getElementById("bk-katsh-sell-modal");
+    if (!modal) return;
+
+    var voucherEl = document.getElementById("bk-katsh-sell-voucher");
+    var currencyEl = document.getElementById("bk-katsh-sell-currency");
+    var priceEl = document.getElementById("bk-katsh-sell-price");
+    var costEl = document.getElementById("bk-katsh-sell-cost");
+    var amountKeyInput = document.getElementById("bk-katsh-sell-amount-key");
+    var currencyInput = document.getElementById("bk-katsh-sell-currency-input");
+    var descEl = document.getElementById("bk-katsh-sell-desc");
+
+    function openModal(btn) {
+        var label = btn.getAttribute("data-label") || "Voucher";
+        var currency = btn.getAttribute("data-currency") || "";
+        var priceDisplay = btn.getAttribute("data-price-display") || "";
+        var costDisplay = btn.getAttribute("data-cost-display") || "";
+        var amountKey = btn.getAttribute("data-amount-key") || "";
+
+        voucherEl.textContent = label;
+        currencyEl.textContent = currency;
+        priceEl.textContent = priceDisplay;
+        costEl.textContent = costDisplay;
+        amountKeyInput.value = amountKey;
+        currencyInput.value = currency;
+        descEl.textContent = "How is the customer paying for " + label + "? Cost " + costDisplay + " will deduct from Katsh " + currency + ".";
+
+        modal.classList.remove("d-none");
+        document.body.classList.add("bk-admin-modal-open");
+    }
+
+    function closeModal() {
+        modal.classList.add("d-none");
+        document.body.classList.remove("bk-admin-modal-open");
+    }
+
+    document.querySelectorAll("[data-katsh-sell]").forEach(function (btn) {
+        btn.addEventListener("click", function () { openModal(btn); });
+    });
+
+    modal.querySelectorAll("[data-katsh-sell-dismiss]").forEach(function (el) {
+        el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !modal.classList.contains("d-none"))
+            closeModal();
+    });
+})();
+</script>
+}

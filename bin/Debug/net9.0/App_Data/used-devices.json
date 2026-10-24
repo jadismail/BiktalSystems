@@ -1,0 +1,21 @@
+[
+  {
+    "id": "60b5439e-0962-49da-9999-8d9c2c2f237d",
+    "kind": "phone",
+    "name": "iPhone 13 Pro Max",
+    "brand": "Apple",
+    "barcode": "UD7420908362",
+    "catalogProductId": "93f59256-a290-4348-8c4b-a860cc100abe",
+    "batteryHealthPercent": 84,
+    "storage": "256GB",
+    "price": 630,
+    "cost": 570,
+    "previousUserName": "Jad Ismail",
+    "receivedDate": "2026-10-22",
+    "issuesOrChanges": "Changed Screen",
+    "color": "Blue",
+    "status": "sold",
+    "createdAtUtc": "2026-10-24T13:47:25.592275+00:00",
+    "modifiedAtUtc": "2026-10-24T14:03:28.204956+00:00"
+  }
+]

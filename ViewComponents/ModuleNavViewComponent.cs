@@ -22,6 +22,7 @@ public sealed class ModuleNavViewComponent : ViewComponent
             ["Inventory"] =
             [
                 new("Products", "Products"),
+                new("Used devices", "UsedDevices"),
                 new("Import Excel", "Import"),
                 new("Categories", "Categories"),
                 new("Brands", "Brands"),
@@ -60,6 +61,7 @@ public sealed class ModuleNavViewComponent : ViewComponent
             ],
             ["Operations"] =
             [
+                new("Admin", "Index", "Admin"),
                 new("Operations hub", "Index"),
                 new("Daily sales", "DailySales"),
                 new("Monthly sales", "MonthlySales"),
@@ -76,6 +78,15 @@ public sealed class ModuleNavViewComponent : ViewComponent
                 new("Monthly", "Monthly"),
                 new("Yearly", "Yearly")
             ],
+            ["Katsh"] =
+            [
+                new("Balance", "Balance"),
+                new("Prepaid Vouchers", "Index"),
+                new("Airtime ($)", "Airtime"),
+                new("Credits on Mobile", "CreditsOnMobile"),
+                new("Validity Days", "ValidityDays"),
+                new("History", "History")
+            ],
             ["Admin"] =
             [
                 new("Overview", "Index"),
@@ -84,8 +95,10 @@ public sealed class ModuleNavViewComponent : ViewComponent
                 new("Tax & currency", "Tax"),
                 new("Users & roles", "Users"),
                 new("Backups", "Backups"),
-                new("Reset data", "DataReset")
+                new("Reset data", "DataReset"),
+                new("Operations", "Index", "Operations")
             ],
+
             ["Staff"] =
             [
                 new("Overview", "Index"),

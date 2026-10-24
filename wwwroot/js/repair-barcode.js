@@ -49,8 +49,6 @@
       'html,body{margin:0;padding:0;background:#fff;color:#111;' +
       'font-family:ui-sans-serif,system-ui,-apple-system,sans-serif}' +
       '.label{width:48mm;max-width:100%;padding:3mm 3mm 2.5mm;box-sizing:border-box}' +
-      '.title{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;' +
-      'color:#555;margin:0 0 2mm}' +
       '.bars{display:block;width:100%;text-align:center}' +
       '.bars svg{display:block;margin:0 auto;max-width:100%;height:auto}' +
       '.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;' +
@@ -62,7 +60,6 @@
       '@page{margin:0;size:auto}' +
       '@media print{html,body{margin:0}.label{padding:2mm}}' +
       '</style></head><body><div class="label">' +
-      '<p class="title">Khulasa repair</p>' +
       '<div class="bars"><svg id="bc"></svg></div>' +
       '<div class="code">' +
       escapeHtml(code) +

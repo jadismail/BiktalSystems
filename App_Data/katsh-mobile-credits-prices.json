@@ -1,0 +1,24 @@
+[
+  {
+    "provider": "Touch",
+    "priceUsd": 1.20,
+    "priceLbp": 110000.00,
+    "costOneUsd": 1.00,
+    "costOneLbp": 89500.00,
+    "costTwoUsd": 1.00,
+    "costTwoLbp": 89500.00,
+    "costThreePlusUsd": 1.00,
+    "costThreePlusLbp": 89500.00
+  },
+  {
+    "provider": "Alfa",
+    "priceUsd": 1.2,
+    "priceLbp": 110000,
+    "costOneUsd": 1.00,
+    "costOneLbp": 89500.00,
+    "costTwoUsd": 1.00,
+    "costTwoLbp": 89500.00,
+    "costThreePlusUsd": 1.00,
+    "costThreePlusLbp": 89500.00
+  }
+]

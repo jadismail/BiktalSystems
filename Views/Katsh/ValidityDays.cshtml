@@ -1,0 +1,359 @@
+@model KatshValidityDaysPageViewModel
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Validity Days";
+    ViewData["Module"] = "Katsh";
+    var isTouch = !string.Equals(Model.SellForm.Provider, "Alfa", StringComparison.OrdinalIgnoreCase);
+    var isUsd = !string.Equals(Model.SellForm.Currency, "LBP", StringComparison.OrdinalIgnoreCase);
+    var selectedDays = Model.SellForm.Days ?? 30;
+    var pricePayload = Model.Options.ToDictionary(
+        o => o.AmountKey,
+        o => new
+        {
+            provider = o.Provider,
+            days = o.Days,
+            label = o.Label,
+            priceUsd = o.PriceUsd,
+            priceLbp = o.PriceLbp,
+            costUsd = o.CostUsd,
+            costLbp = o.CostLbp
+        },
+        StringComparer.OrdinalIgnoreCase);
+    var priceJson = JsonSerializer.Serialize(pricePayload);
+}
+
+<div class="container pb-5 pt-3 bk-katsh">
+    @await Component.InvokeAsync("ModuleNav")
+    <div class="bk-katsh-top">
+        <partial name="_ModuleHeader" />
+        <partial name="_KatshBalances" model="(Model.BalanceUsd, Model.BalanceLbp)" />
+    </div>
+
+    @if (TempData["KatshMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["KatshError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <partial name="_KatshAccountsGate" model="Model.IsAccountsSessionOpen" />
+
+    @if (Model.CanEditPrices)
+    {
+        <details class="bk-katsh-price-admin mb-4">
+            <summary class="bk-katsh-price-admin-summary">
+                <i class="bi bi-sliders" aria-hidden="true"></i>
+                <span>Edit price &amp; cost</span>
+                <span class="bk-katsh-price-admin-badge">Admin</span>
+            </summary>
+            <form asp-action="SaveValidityDaysPrices" method="post" class="bk-katsh-price-admin-form">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+                <p class="small text-muted mb-3">
+                    Set selling price and Katsh cost for each Touch / Alfa validity package.
+                </p>
+                <div class="bk-katsh-price-admin-grid">
+                    @for (var i = 0; i < Model.EditForm.Rows.Count; i++)
+                    {
+                        <div class="bk-katsh-price-admin-row">
+                            <input type="hidden" asp-for="EditForm.Rows[i].Provider" />
+                            <input type="hidden" asp-for="EditForm.Rows[i].Days" />
+                            <div class="bk-katsh-price-admin-name">
+                                @Model.EditForm.Rows[i].Provider · @Model.EditForm.Rows[i].Days Days
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].PriceUsd">Price ($)</label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">$</span>
+                                        <input asp-for="EditForm.Rows[i].PriceUsd" class="form-control text-end" step="any" min="0" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].PriceLbp">Price (L.L)</label>
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="EditForm.Rows[i].PriceLbp" class="form-control text-end" step="any" min="0" />
+                                        <span class="input-group-text">L.L</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].CostUsd">Cost ($)</label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">$</span>
+                                        <input asp-for="EditForm.Rows[i].CostUsd" class="form-control text-end" step="any" min="0" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold mb-1" asp-for="EditForm.Rows[i].CostLbp">Cost (L.L)</label>
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="EditForm.Rows[i].CostLbp" class="form-control text-end" step="any" min="0" />
+                                        <span class="input-group-text">L.L</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button type="submit" class="btn btn-primary fw-semibold mt-3">
+                    <i class="bi bi-check2 me-1" aria-hidden="true"></i>Save settings
+                </button>
+            </form>
+        </details>
+    }
+
+    <section class="bk-katsh-airtime" aria-label="Validity Days">
+        <div class="bk-katsh-airtime-layout">
+            <form asp-action="SellValidityDays" method="post" id="bk-katsh-validity-form" class="bk-katsh-airtime-form">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+
+                <div class="bk-katsh-airtime-field">
+                    <span class="bk-katsh-airtime-label">Validity</span>
+                    <div class="bk-katsh-validity-days" role="group" aria-label="Validity period">
+                        @foreach (var days in new[] { 30, 60, 90, 180, 360 })
+                        {
+                            <label class="bk-katsh-airtime-pill">
+                                <input type="radio"
+                                       name="SellForm.Days"
+                                       value="@days"
+                                       @(selectedDays == days ? "checked" : null) />
+                                <span class="bk-katsh-airtime-pill-face bk-katsh-validity-day-face">
+                                    <strong>@days</strong>
+                                    <span>Days</span>
+                                </span>
+                            </label>
+                        }
+                    </div>
+                    <span asp-validation-for="SellForm.Days" class="text-danger small"></span>
+                </div>
+
+                <div class="bk-katsh-airtime-field">
+                    <span class="bk-katsh-airtime-label">Network</span>
+                    <div class="bk-katsh-airtime-pills" role="group" aria-label="Network">
+                        <label class="bk-katsh-airtime-pill bk-katsh-airtime-pill--touch">
+                            <input type="radio" name="SellForm.Provider" value="Touch" @(isTouch ? "checked" : null) />
+                            <span class="bk-katsh-airtime-pill-face">
+                                <span class="bk-katsh-airtime-pill-dot" aria-hidden="true"></span>
+                                <span>Touch</span>
+                            </span>
+                        </label>
+                        <label class="bk-katsh-airtime-pill bk-katsh-airtime-pill--alfa">
+                            <input type="radio" name="SellForm.Provider" value="Alfa" @(!isTouch ? "checked" : null) />
+                            <span class="bk-katsh-airtime-pill-face">
+                                <span class="bk-katsh-airtime-pill-dot" aria-hidden="true"></span>
+                                <span>Alfa</span>
+                            </span>
+                        </label>
+                    </div>
+                    <span asp-validation-for="SellForm.Provider" class="text-danger small"></span>
+                </div>
+
+                <div class="bk-katsh-airtime-field">
+                    <span class="bk-katsh-airtime-label">Currency</span>
+                    <div class="bk-katsh-airtime-pills" role="group" aria-label="Currency">
+                        <label class="bk-katsh-airtime-pill">
+                            <input type="radio" name="SellForm.Currency" value="USD" @(isUsd ? "checked" : null) />
+                            <span class="bk-katsh-airtime-pill-face">USD</span>
+                        </label>
+                        <label class="bk-katsh-airtime-pill">
+                            <input type="radio" name="SellForm.Currency" value="LBP" @(!isUsd ? "checked" : null) />
+                            <span class="bk-katsh-airtime-pill-face">LBP</span>
+                        </label>
+                    </div>
+                    <span asp-validation-for="SellForm.Currency" class="text-danger small"></span>
+                </div>
+
+                <button type="button"
+                        class="btn btn-primary fw-semibold bk-katsh-airtime-submit"
+                        id="bk-katsh-validity-review"
+                        @(Model.CanSell ? null : "disabled")>
+                    <i class="bi bi-cart-check me-1" aria-hidden="true"></i>Review &amp; deduct
+                </button>
+            </form>
+
+            <aside class="bk-katsh-airtime-quote" aria-live="polite" aria-label="Live quote">
+                <div class="bk-katsh-airtime-quote-head">
+                    <span class="bk-katsh-airtime-quote-kicker">Live quote</span>
+                    <span class="bk-katsh-airtime-quote-badge" id="bk-katsh-validity-badge">—</span>
+                </div>
+
+                <div class="bk-katsh-airtime-quote-total">
+                    <span class="bk-katsh-airtime-quote-total-label">Customer pays</span>
+                    <strong class="bk-katsh-airtime-quote-total-value" id="bk-katsh-validity-sale">—</strong>
+                </div>
+
+                <dl class="bk-katsh-airtime-quote-rows">
+                    <div class="bk-katsh-airtime-quote-row">
+                        <dt>Network</dt>
+                        <dd id="bk-katsh-validity-network">—</dd>
+                    </div>
+                    <div class="bk-katsh-airtime-quote-row bk-katsh-airtime-quote-row--accent">
+                        <dt>Deduct from Katsh</dt>
+                        <dd id="bk-katsh-validity-cost">—</dd>
+                    </div>
+                </dl>
+            </aside>
+        </div>
+    </section>
+</div>
+
+<div class="bk-admin-modal d-none" id="bk-katsh-validity-modal" role="dialog" aria-modal="true"
+     aria-labelledby="bk-katsh-validity-modal-title">
+    <div class="bk-admin-modal-backdrop" data-katsh-validity-dismiss tabindex="-1" aria-hidden="true"></div>
+    <div class="bk-admin-modal-panel" role="document">
+        <button type="button" class="bk-admin-modal-close" data-katsh-validity-dismiss aria-label="Close">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <div class="bk-admin-modal-icon" aria-hidden="true">
+            <i class="bi bi-calendar-check"></i>
+        </div>
+        <h2 class="bk-admin-modal-title" id="bk-katsh-validity-modal-title">Cash or Whish?</h2>
+        <p class="bk-admin-modal-desc" id="bk-katsh-validity-modal-desc">
+            Choose how the customer is paying for this validity package.
+        </p>
+        <div class="bk-katsh-sell-summary">
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Sale</span>
+                <span class="bk-katsh-sell-value" id="bk-katsh-validity-summary-label">—</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Customer pays</span>
+                <span class="bk-katsh-sell-value" id="bk-katsh-validity-summary-sale">—</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Deduct</span>
+                <span class="bk-katsh-sell-value bk-katsh-sell-value--strong" id="bk-katsh-validity-summary-cost">—</span>
+            </div>
+        </div>
+        <div class="bk-katsh-pay-choices" role="group" aria-label="Payment method">
+            <button type="submit" form="bk-katsh-validity-form" name="SellForm.PaymentMethod" value="Cash"
+                    class="bk-katsh-pay-choice bk-katsh-pay-choice--cash">
+                <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                <span>Cash</span>
+            </button>
+            <button type="submit" form="bk-katsh-validity-form" name="SellForm.PaymentMethod" value="Whish"
+                    class="bk-katsh-pay-choice bk-katsh-pay-choice--whish">
+                <i class="bi bi-phone" aria-hidden="true"></i>
+                <span>Whish</span>
+            </button>
+        </div>
+        <div class="bk-katsh-pay-cancel">
+            <button type="button" class="btn btn-link text-muted fw-semibold text-decoration-none" data-katsh-validity-dismiss>Cancel</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+<script>
+(function () {
+    var form = document.getElementById("bk-katsh-validity-form");
+    var modal = document.getElementById("bk-katsh-validity-modal");
+    var reviewBtn = document.getElementById("bk-katsh-validity-review");
+    if (!form || !modal || !reviewBtn) return;
+
+    var prices = @Html.Raw(priceJson);
+    var badgeEl = document.getElementById("bk-katsh-validity-badge");
+    var saleEl = document.getElementById("bk-katsh-validity-sale");
+    var networkEl = document.getElementById("bk-katsh-validity-network");
+    var costEl = document.getElementById("bk-katsh-validity-cost");
+    var summaryLabel = document.getElementById("bk-katsh-validity-summary-label");
+    var summarySale = document.getElementById("bk-katsh-validity-summary-sale");
+    var summaryCost = document.getElementById("bk-katsh-validity-summary-cost");
+    var descEl = document.getElementById("bk-katsh-validity-modal-desc");
+
+    function selectedValue(name) {
+        var checked = form.querySelector('input[name="' + name + '"]:checked');
+        return checked ? checked.value : "";
+    }
+
+    function formatMoney(currency, value) {
+        if (!isFinite(value) || value <= 0) return "—";
+        if (currency === "LBP") {
+            return Math.round(value).toLocaleString("en-US") + " L.L";
+        }
+        return "$" + value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function keyFor(provider, days) {
+        return String(provider).toLowerCase() + ":" + String(days);
+    }
+
+    function refreshQuote() {
+        var provider = selectedValue("SellForm.Provider") || "Touch";
+        var currency = selectedValue("SellForm.Currency") || "USD";
+        var days = parseInt(selectedValue("SellForm.Days"), 10) || 0;
+        var row = prices[keyFor(provider, days)];
+        var price = row ? Number(currency === "USD" ? row.priceUsd : row.priceLbp) || 0 : 0;
+        var cost = row ? Number(currency === "USD" ? row.costUsd : row.costLbp) || 0 : 0;
+        var label = row ? row.label : (days ? days + " Days" : "—");
+
+        badgeEl.textContent = label;
+        saleEl.textContent = formatMoney(currency, price);
+        networkEl.textContent = provider;
+        costEl.textContent = formatMoney(currency, cost);
+
+        return {
+            provider: provider,
+            currency: currency,
+            days: days,
+            label: provider + " · " + label,
+            price: price,
+            cost: cost
+        };
+    }
+
+    form.querySelectorAll('input[name="SellForm.Provider"], input[name="SellForm.Currency"], input[name="SellForm.Days"]').forEach(function (el) {
+        el.addEventListener("change", refreshQuote);
+    });
+
+    refreshQuote();
+
+    function openModal() {
+        var quote = refreshQuote();
+        if (!quote.days) return;
+        if (!(quote.price > 0)) {
+            saleEl.textContent = "Price not set";
+            return;
+        }
+        if (!(quote.cost > 0)) {
+            costEl.textContent = "Cost not set";
+            return;
+        }
+
+        var saleDisplay = formatMoney(quote.currency, quote.price);
+        var costDisplay = formatMoney(quote.currency, quote.cost);
+        summaryLabel.textContent = quote.label;
+        summarySale.textContent = saleDisplay;
+        summaryCost.textContent = costDisplay;
+        descEl.textContent = "Customer pays " + saleDisplay + ". Deduct " + costDisplay + " from the Katsh " + quote.currency + " balance.";
+
+        modal.classList.remove("d-none");
+        document.body.classList.add("bk-admin-modal-open");
+    }
+
+    function closeModal() {
+        modal.classList.add("d-none");
+        document.body.classList.remove("bk-admin-modal-open");
+    }
+
+    reviewBtn.addEventListener("click", openModal);
+    modal.querySelectorAll("[data-katsh-validity-dismiss]").forEach(function (el) {
+        el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !modal.classList.contains("d-none"))
+            closeModal();
+    });
+})();
+</script>
+}

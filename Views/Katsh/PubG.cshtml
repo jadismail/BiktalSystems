@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "PubG";
+    ViewData["Module"] = "Katsh";
+}
+
+<div class="container pb-5 pt-3 bk-katsh">
+    @await Component.InvokeAsync("ModuleNav")
+    <a class="bk-katsh-back" asp-controller="Katsh" asp-action="Index">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        <span>Back to Katsh</span>
+    </a>
+    <partial name="_ModuleHeader" />
+</div>

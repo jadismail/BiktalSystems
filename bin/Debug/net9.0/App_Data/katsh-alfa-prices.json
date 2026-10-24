@@ -1,0 +1,51 @@
+[
+  {
+    "amountKey": "3.03",
+    "priceUsd": 3.03,
+    "priceLbp": 271185.00,
+    "costUsd": 3.03,
+    "costLbp": 271185.00
+  },
+  {
+    "amountKey": "4.5",
+    "priceUsd": 5.5,
+    "priceLbp": 520000.00,
+    "costUsd": 5.2,
+    "costLbp": 470000.00
+  },
+  {
+    "amountKey": "7.58",
+    "priceUsd": 9.00,
+    "priceLbp": 820000.00,
+    "costUsd": 85.00,
+    "costLbp": 760000.00
+  },
+  {
+    "amountKey": "10.0",
+    "priceUsd": 10.00,
+    "priceLbp": 1100000.00,
+    "costUsd": 10.00,
+    "costLbp": 1100000.00
+  },
+  {
+    "amountKey": "15.15",
+    "priceUsd": 15.15,
+    "priceLbp": 1650000.00,
+    "costUsd": 15.15,
+    "costLbp": 1650000.00
+  },
+  {
+    "amountKey": "22.73",
+    "priceUsd": 22.73,
+    "priceLbp": 2400000.00,
+    "costUsd": 22.73,
+    "costLbp": 2400000.00
+  },
+  {
+    "amountKey": "77.28",
+    "priceUsd": 77.28,
+    "priceLbp": 7500000.00,
+    "costUsd": 77.28,
+    "costLbp": 7500000.00
+  }
+]

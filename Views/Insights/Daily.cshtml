@@ -26,7 +26,7 @@
             <div>
                 <div class="bk-reports-kpi-label">Total revenue</div>
                 <div class="bk-reports-kpi-value">@Model.TotalRevenue.ToString("C0", money)</div>
-                <div class="bk-reports-kpi-hint">@Model.PosSaleCount POS · @Model.RepairCount repairs</div>
+                <div class="bk-reports-kpi-hint">@Model.PosSaleCount POS · @Model.RepairCount repairs · @Model.KatshSaleCount Katsh</div>
             </div>
         </article>
         <article class="bk-reports-kpi">
@@ -43,6 +43,14 @@
                 <div class="bk-reports-kpi-label">Repair delivered</div>
                 <div class="bk-reports-kpi-value">@Model.RepairDelivered.ToString("C0", money)</div>
                 <div class="bk-reports-kpi-hint">@Model.RepairCount ticket(s)</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-sim"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Katsh sales</div>
+                <div class="bk-reports-kpi-value">@Model.KatshSales.ToString("C0", money)</div>
+                <div class="bk-reports-kpi-hint">@Model.KatshSaleCount sale(s) · USD</div>
             </div>
         </article>
         <article class="bk-reports-kpi">
@@ -120,6 +128,10 @@
                                     @if (r.IsPosSale)
                                     {
                                         <span class="bk-finance-type bk-finance-type--revenue">@r.Type</span>
+                                    }
+                                    else if (r.Type.StartsWith("Katsh", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="bk-finance-type bk-finance-type--asset">@r.Type</span>
                                     }
                                     else
                                     {

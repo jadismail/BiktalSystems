@@ -1,0 +1,276 @@
+@model KatshBalancePageViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Balance";
+    ViewData["Module"] = "Katsh";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var lbp = CultureInfo.InvariantCulture;
+}
+
+<div class="container pb-5 pt-3 bk-katsh">
+    @await Component.InvokeAsync("ModuleNav")
+    <div class="bk-katsh-top">
+        <partial name="_ModuleHeader" />
+        @if (Model.IsBalanceOpen)
+        {
+            <partial name="_KatshBalances" model="(Model.BalanceUsd, Model.BalanceLbp)" />
+        }
+    </div>
+
+    @if (TempData["KatshMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["KatshError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    @if (Model.NeedsInitialOpen)
+    {
+        <section class="bk-katsh-balance-panel" aria-labelledby="bk-katsh-balance-open-title">
+            <div class="bk-katsh-balance-panel-head">
+                <div class="bk-katsh-balance-panel-icon" aria-hidden="true">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <div class="bk-katsh-balance-panel-copy">
+                    <h2 id="bk-katsh-balance-open-title" class="bk-katsh-balance-panel-title">Open account balance</h2>
+                    <p class="bk-katsh-balance-panel-desc">
+                        Enter the initial USD and LBP floats once. Remaining amounts carry to the next day automatically.
+                    </p>
+                </div>
+            </div>
+
+            <form asp-action="OpenBalance" method="post" class="bk-katsh-balance-form" autocomplete="off">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+                <div class="bk-katsh-balance-fields">
+                    <div class="bk-katsh-balance-field bk-katsh-balance-field--usd">
+                        <label asp-for="OpenForm.BalanceUsd" class="bk-katsh-balance-field-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input name="OpenForm.BalanceUsd"
+                                   id="OpenForm_BalanceUsd"
+                                   class="form-control bk-money-input"
+                                   inputmode="decimal"
+                                   step="any"
+                                   min="0"
+                                   placeholder="0.00"
+                                   value=""
+                                   autofocus />
+                        </div>
+                        <span asp-validation-for="OpenForm.BalanceUsd" class="text-danger small"></span>
+                    </div>
+                    <div class="bk-katsh-balance-field bk-katsh-balance-field--lbp">
+                        <label asp-for="OpenForm.BalanceLbp" class="bk-katsh-balance-field-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">L.L</span>
+                            <input name="OpenForm.BalanceLbp"
+                                   id="OpenForm_BalanceLbp"
+                                   class="form-control bk-money-input"
+                                   inputmode="decimal"
+                                   step="any"
+                                   min="0"
+                                   placeholder="0"
+                                   value="" />
+                        </div>
+                        <span asp-validation-for="OpenForm.BalanceLbp" class="text-danger small"></span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary fw-semibold w-100">
+                    <i class="bi bi-unlock me-1" aria-hidden="true"></i>Open balances
+                </button>
+            </form>
+        </section>
+    }
+    else if (Model.NeedsDayConfirmation)
+    {
+        <section class="bk-katsh-balance-panel" aria-labelledby="bk-katsh-balance-carry-title">
+            <div class="bk-katsh-balance-panel-head">
+                <div class="bk-katsh-balance-panel-icon" aria-hidden="true">
+                    <i class="bi bi-clipboard-check"></i>
+                </div>
+                <div class="bk-katsh-balance-panel-copy">
+                    <h2 id="bk-katsh-balance-carry-title" class="bk-katsh-balance-panel-title">Confirm carried balance</h2>
+                    <p class="bk-katsh-balance-panel-desc">
+                        Remaining float from
+                        @(Model.CarryFromDate?.ToString("dddd, MMM d", money) ?? "yesterday")
+                        is ready. Confirm it is correct to unlock Katsh for today.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bk-katsh-balance-current" aria-label="Carried balances">
+                <div class="bk-katsh-balance-current-item bk-katsh-balance-current-item--usd">
+                    <span class="bk-katsh-balance-current-label">USD</span>
+                    <span class="bk-katsh-balance-current-value">@Model.BalanceUsd.ToString("C", money)</span>
+                </div>
+                <div class="bk-katsh-balance-current-item bk-katsh-balance-current-item--lbp">
+                    <span class="bk-katsh-balance-current-label">LBP</span>
+                    <span class="bk-katsh-balance-current-value">@Model.BalanceLbp.ToString("N0", lbp) L.L</span>
+                </div>
+            </div>
+
+            <form asp-action="ConfirmBalanceCarryOver" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-primary fw-semibold w-100">
+                    <i class="bi bi-check2 me-1" aria-hidden="true"></i>Yes, balance is correct
+                </button>
+            </form>
+        </section>
+    }
+    else
+    {
+        <div class="bk-katsh-balance-manage-stack">
+            <section class="bk-katsh-balance-panel" aria-labelledby="bk-katsh-balance-add-title">
+                <div class="bk-katsh-balance-panel-head">
+                    <div class="bk-katsh-balance-panel-icon" aria-hidden="true">
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <div class="bk-katsh-balance-panel-copy">
+                        <h2 id="bk-katsh-balance-add-title" class="bk-katsh-balance-panel-title">Add to balances</h2>
+                        <p class="bk-katsh-balance-panel-desc">
+                            Top up today’s USD and/or LBP floats. Leave a field empty to skip it.
+                        </p>
+                        @if (!string.IsNullOrWhiteSpace(Model.ConfirmedBy) || Model.OpenedAtLocal is not null)
+                        {
+                            <p class="bk-katsh-balance-panel-meta">
+                                Confirmed
+                                @if (!string.IsNullOrWhiteSpace(Model.ConfirmedBy))
+                                {
+                                    <text>by @Model.ConfirmedBy</text>
+                                }
+                                @if (Model.OpenedAtLocal is DateTime openedAt)
+                                {
+                                    <text>at @openedAt.ToString("t", money)</text>
+                                }
+                            </p>
+                        }
+                    </div>
+                </div>
+
+                <form asp-action="AddBalance" method="post" class="bk-katsh-balance-form" autocomplete="off">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+                    <div class="bk-katsh-balance-fields">
+                        <div class="bk-katsh-balance-field bk-katsh-balance-field--usd">
+                            <label asp-for="AddForm.AmountUsd" class="bk-katsh-balance-field-label"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input name="AddForm.AmountUsd"
+                                       id="AddForm_AmountUsd"
+                                       class="form-control bk-money-input"
+                                       inputmode="decimal"
+                                       step="any"
+                                       min="0"
+                                       placeholder="0.00"
+                                       value=""
+                                       autofocus />
+                            </div>
+                            <span asp-validation-for="AddForm.AmountUsd" class="text-danger small"></span>
+                        </div>
+                        <div class="bk-katsh-balance-field bk-katsh-balance-field--lbp">
+                            <label asp-for="AddForm.AmountLbp" class="bk-katsh-balance-field-label"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">L.L</span>
+                                <input name="AddForm.AmountLbp"
+                                       id="AddForm_AmountLbp"
+                                       class="form-control bk-money-input"
+                                       inputmode="decimal"
+                                       step="any"
+                                       min="0"
+                                       placeholder="0"
+                                       value="" />
+                            </div>
+                            <span asp-validation-for="AddForm.AmountLbp" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary fw-semibold w-100">
+                        <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>Add amounts
+                    </button>
+                </form>
+            </section>
+
+            @if (Model.CanManageBalance)
+            {
+                <section class="bk-katsh-balance-panel bk-katsh-balance-panel--admin" aria-labelledby="bk-katsh-balance-manage-title">
+                    <div class="bk-katsh-balance-panel-head">
+                        <div class="bk-katsh-balance-panel-icon" aria-hidden="true">
+                            <i class="bi bi-sliders"></i>
+                        </div>
+                        <div class="bk-katsh-balance-panel-copy">
+                            <div class="bk-katsh-balance-panel-title-row">
+                                <h2 id="bk-katsh-balance-manage-title" class="bk-katsh-balance-panel-title">Manage balances</h2>
+                                <span class="bk-katsh-balance-admin-badge">Admin</span>
+                            </div>
+                            <p class="bk-katsh-balance-panel-desc">
+                                Set the absolute remaining USD and LBP floats. This replaces today’s balances.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bk-katsh-balance-current" aria-label="Current balances">
+                        <div class="bk-katsh-balance-current-item bk-katsh-balance-current-item--usd">
+                            <span class="bk-katsh-balance-current-label">Current USD</span>
+                            <span class="bk-katsh-balance-current-value">@Model.BalanceUsd.ToString("C", money)</span>
+                        </div>
+                        <div class="bk-katsh-balance-current-item bk-katsh-balance-current-item--lbp">
+                            <span class="bk-katsh-balance-current-label">Current LBP</span>
+                            <span class="bk-katsh-balance-current-value">@Model.BalanceLbp.ToString("N0", lbp) L.L</span>
+                        </div>
+                    </div>
+
+                    <form asp-action="AdjustBalance" method="post" class="bk-katsh-balance-form" autocomplete="off">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+                        <div class="bk-katsh-balance-fields">
+                            <div class="bk-katsh-balance-field bk-katsh-balance-field--usd">
+                                <label asp-for="AdjustForm.BalanceUsd" class="bk-katsh-balance-field-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input name="AdjustForm.BalanceUsd"
+                                           id="AdjustForm_BalanceUsd"
+                                           class="form-control bk-money-input"
+                                           inputmode="decimal"
+                                           step="any"
+                                           min="0"
+                                           placeholder="@Model.BalanceUsd.ToString("0.00", CultureInfo.InvariantCulture)"
+                                           value="" />
+                                </div>
+                                <span asp-validation-for="AdjustForm.BalanceUsd" class="text-danger small"></span>
+                            </div>
+                            <div class="bk-katsh-balance-field bk-katsh-balance-field--lbp">
+                                <label asp-for="AdjustForm.BalanceLbp" class="bk-katsh-balance-field-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">L.L</span>
+                                    <input name="AdjustForm.BalanceLbp"
+                                           id="AdjustForm_BalanceLbp"
+                                           class="form-control bk-money-input"
+                                           inputmode="decimal"
+                                           step="any"
+                                           min="0"
+                                           placeholder="@Model.BalanceLbp.ToString("0", CultureInfo.InvariantCulture)"
+                                           value="" />
+                                </div>
+                                <span asp-validation-for="AdjustForm.BalanceLbp" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary fw-semibold w-100">
+                            <i class="bi bi-check2-square me-1" aria-hidden="true"></i>Set balances
+                        </button>
+                    </form>
+                </section>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

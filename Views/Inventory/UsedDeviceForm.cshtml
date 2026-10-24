@@ -1,0 +1,199 @@
+@model Biktal.WebMVC.Models.UsedDeviceFormModel
+@using Biktal.WebMVC.Services
+@{
+    var isEdit = Model.DeviceId is { } id && id != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit used device" : "Add used device";
+    ViewData["Module"] = "Inventory";
+}
+
+<div class="container pb-5 pt-3" style="max-width: 760px;">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    <div class="bk-card p-4 p-lg-5">
+        <form asp-action="SaveUsedDevice" method="post" novalidate id="bk-used-device-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="DeviceId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Kind" class="form-label small fw-bold"></label>
+                    <select asp-for="Kind" class="form-select" id="bk-used-kind">
+                        <option value="Phone">Phone</option>
+                        <option value="Accessory">Accessory</option>
+                    </select>
+                    <span asp-validation-for="Kind" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Status" class="form-label small fw-bold"></label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="InStock">In stock</option>
+                        <option value="Reserved">Reserved</option>
+                        <option value="Sold">Sold</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-8">
+                    <label asp-for="Name" class="form-label small fw-bold"></label>
+                    <input asp-for="Name" class="form-control" id="bk-used-name" placeholder="e.g. iPhone 13 Pro" autocomplete="off" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Brand" class="form-label small fw-bold"></label>
+                    <input asp-for="Brand" class="form-control" list="bk-used-brand-list" placeholder="Optional" autocomplete="off" />
+                    <datalist id="bk-used-brand-list">
+                        @foreach (var brand in Model.BrandOptions)
+                        {
+                            <option value="@brand"></option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="Brand" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 bk-used-phone-field">
+                    <label asp-for="BatteryHealthPercent" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <input asp-for="BatteryHealthPercent" class="form-control" id="bk-used-battery" inputmode="numeric" placeholder="87" />
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <span asp-validation-for="BatteryHealthPercent" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4 bk-used-phone-field">
+                    <label asp-for="Storage" class="form-label small fw-bold"></label>
+                    <input asp-for="Storage" class="form-control" id="bk-used-storage" list="bk-used-storage-list" placeholder="256GB" />
+                    <datalist id="bk-used-storage-list">
+                        <option value="64GB"></option>
+                        <option value="128GB"></option>
+                        <option value="256GB"></option>
+                        <option value="512GB"></option>
+                        <option value="1TB"></option>
+                    </datalist>
+                    <span asp-validation-for="Storage" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Color" class="form-label small fw-bold"></label>
+                    <input asp-for="Color" class="form-control" placeholder="Optional" />
+                    <span asp-validation-for="Color" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Price" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="Price" class="form-control" id="bk-used-price" inputmode="decimal" />
+                    </div>
+                    <span asp-validation-for="Price" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Cost" class="form-label small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="Cost" class="form-control" inputmode="decimal" placeholder="What you paid" />
+                    </div>
+                    <span asp-validation-for="Cost" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="PreviousUserName" class="form-label small fw-bold"></label>
+                    <input asp-for="PreviousUserName" class="form-control" placeholder="Name of previous owner" autocomplete="name" />
+                    <span asp-validation-for="PreviousUserName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="ReceivedDate" class="form-label small fw-bold"></label>
+                    <input asp-for="ReceivedDate" class="form-control" type="date" />
+                    <span asp-validation-for="ReceivedDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="SerialOrImei" class="form-label small fw-bold"></label>
+                    <input asp-for="SerialOrImei" class="form-control" placeholder="Scan or type" />
+                    <span asp-validation-for="SerialOrImei" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="IssuesOrChanges" class="form-label small fw-bold"></label>
+                    <textarea asp-for="IssuesOrChanges" class="form-control" rows="3" placeholder="Scratches, replaced battery, cleaned, missing box…"></textarea>
+                    <span asp-validation-for="IssuesOrChanges" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <div class="bk-repair-barcode-panel" id="bk-used-barcode-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                            <div>
+                                <h2 class="h6 fw-bold mb-1">Barcode label</h2>
+                                <p class="small text-muted mb-0 fw-semibold">Prints name, battery health, and storage. Price is optional.</p>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" id="bk-used-barcode-regen">
+                                    <i class="bi bi-arrow-clockwise me-1" aria-hidden="true"></i>Generate
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold" id="bk-used-barcode-print">
+                                    <i class="bi bi-printer me-1" aria-hidden="true"></i>Print label
+                                </button>
+                            </div>
+                        </div>
+                        <label asp-for="Barcode" class="form-label small fw-bold"></label>
+                        <input asp-for="Barcode" class="form-control font-monospace" id="bk-used-barcode" autocomplete="off" spellcheck="false" />
+                        <span asp-validation-for="Barcode" class="text-danger small"></span>
+                        <div class="form-check mt-3 mb-0">
+                            <input class="form-check-input" type="checkbox" id="bk-used-barcode-include-price" />
+                            <label class="form-check-label small fw-semibold" for="bk-used-barcode-include-price">
+                                Show price on label
+                            </label>
+                        </div>
+                        <div class="bk-repair-barcode-preview mt-3" aria-hidden="true">
+                            <div class="bk-used-barcode-store" id="bk-used-barcode-store-label">@(ViewData["StoreDisplayName"] as string)</div>
+                            <svg id="bk-used-barcode-svg"></svg>
+                            <div class="bk-repair-barcode-meta">
+                                <div class="font-monospace fw-bold" id="bk-used-barcode-text">@Model.Barcode</div>
+                                <span class="bk-repair-barcode-line" id="bk-used-barcode-name-label"></span>
+                                <span class="bk-repair-barcode-line" id="bk-used-barcode-specs-label"></span>
+                                <span class="bk-repair-barcode-line d-none" id="bk-used-barcode-price-label"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-primary fw-semibold">@(isEdit ? "Save changes" : "Add to inventory")</button>
+                @if (isEdit)
+                {
+                    <a asp-action="UsedDevice" asp-route-id="@Model.DeviceId" class="btn btn-outline-secondary">Cancel</a>
+                }
+                else
+                {
+                    <a asp-action="UsedDevices" class="btn btn-outline-secondary">Cancel</a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="~/js/used-device-barcode.js" asp-append-version="true"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        window.BiktalUsedDeviceBarcode.initForm({
+          nextBarcodeUrl: '@Url.Action("NextUsedDeviceBarcode", "Inventory")',
+          storeName: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewData["StoreDisplayName"] as string ?? ""))
+        });
+
+        var kind = document.getElementById('bk-used-kind');
+        function syncPhoneFields() {
+          var isPhone = kind && String(kind.value) === 'Phone';
+          document.querySelectorAll('.bk-used-phone-field').forEach(function (el) {
+            el.classList.toggle('opacity-75', !isPhone);
+          });
+        }
+        if (kind) {
+          kind.addEventListener('change', syncPhoneFields);
+          syncPhoneFields();
+        }
+      });
+    </script>
+}

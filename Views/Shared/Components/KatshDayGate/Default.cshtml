@@ -1,0 +1,41 @@
+@model Biktal.WebMVC.ViewComponents.KatshDayGateViewModel
+@using System.Globalization
+@{
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var lbp = CultureInfo.InvariantCulture;
+    var fromLabel = Model.FromDate?.ToString("dddd, MMM d", money) ?? "yesterday";
+}
+
+<div class="bk-katsh-balance-modal" role="dialog" aria-modal="true" aria-labelledby="bk-katsh-day-confirm-title">
+    <div class="bk-katsh-balance-modal-backdrop" aria-hidden="true"></div>
+    <div class="bk-katsh-balance-modal-panel">
+        <div class="bk-katsh-balance-modal-icon" aria-hidden="true">
+            <i class="bi bi-clipboard-check"></i>
+        </div>
+        <h2 id="bk-katsh-day-confirm-title" class="bk-katsh-balance-modal-title">Confirm today’s balance?</h2>
+        <p class="bk-katsh-balance-modal-desc">
+            Yesterday’s remaining float carries over. Are you sure this balance is correct before starting Katsh today?
+        </p>
+
+        <div class="bk-katsh-sell-summary mb-3">
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">From</span>
+                <span class="bk-katsh-sell-value">@fromLabel</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">USD</span>
+                <span class="bk-katsh-sell-value bk-katsh-sell-value--strong">@Model.BalanceUsd.ToString("C", money)</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">LBP</span>
+                <span class="bk-katsh-sell-value bk-katsh-sell-value--strong">@Model.BalanceLbp.ToString("N0", lbp) L.L</span>
+            </div>
+        </div>
+
+        <form asp-controller="Katsh" asp-action="ConfirmBalanceCarryOver" method="post" class="d-grid gap-2">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-primary fw-semibold">Yes, balance is correct</button>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary fw-semibold">Not now</a>
+        </form>
+    </div>
+</div>

@@ -604,6 +604,7 @@
   function productMatchScore(p, tokens, raw) {
     const name = (p.name || "").toLowerCase();
     const sku = (p.sku || "").toLowerCase();
+    const category = (p.category || "").toLowerCase();
     const barcode = p.barcode != null ? String(p.barcode).toLowerCase() : "";
     if (name === raw) return 0;
     if (sku === raw || barcode === raw) return 1;
@@ -612,6 +613,7 @@
     const nameHits = tokens.filter((t) => name.includes(t)).length;
     if (nameHits === tokens.length) return 4;
     if (sku.startsWith(raw) || barcode.startsWith(raw)) return 5;
+    if (category.includes("used") && tokens.some((t) => category.includes(t) || name.includes(t))) return 5.5;
     return 6 + (tokens.length - nameHits);
   }
 
@@ -652,7 +654,7 @@
           }>
             <div class="bk-pos-v2-dd-item-grow">
               <div class="bk-pos-v2-dd-item-title">${escapeHtml(p.name)}</div>
-              <div class="bk-pos-v2-dd-item-sub">${escapeHtml(p.sku)} · ${money.format(p.price)}</div>
+              <div class="bk-pos-v2-dd-item-sub">${escapeHtml(p.category || p.sku)} · ${money.format(p.price)}</div>
             </div>
             ${badge}
           </button>`;

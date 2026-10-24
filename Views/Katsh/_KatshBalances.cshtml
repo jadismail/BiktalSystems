@@ -1,0 +1,17 @@
+@model (decimal Usd, decimal Lbp)
+@using System.Globalization
+@{
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var lbp = CultureInfo.InvariantCulture;
+}
+
+<aside class="bk-katsh-balances" aria-label="Katsh account balances">
+    <div class="bk-katsh-balance bk-katsh-balance--usd">
+        <span class="bk-katsh-balance-label">USD</span>
+        <span class="bk-katsh-balance-value">@Model.Usd.ToString("C", money)</span>
+    </div>
+    <div class="bk-katsh-balance bk-katsh-balance--lbp">
+        <span class="bk-katsh-balance-label">LBP</span>
+        <span class="bk-katsh-balance-value">@Model.Lbp.ToString("N0", lbp) L.L</span>
+    </div>
+</aside>

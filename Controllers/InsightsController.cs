@@ -2,6 +2,7 @@ using Biktal.Domain.Repairs;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
 using Biktal.WebMVC.Security;
+using Biktal.WebMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,12 @@ namespace Biktal.WebMVC.Controllers;
 public sealed class InsightsController : Controller
 {
     private readonly ApplicationDbContext _db;
+    private readonly KatshSaleHistoryStore _katshSales;
 
-    public InsightsController(ApplicationDbContext db)
+    public InsightsController(ApplicationDbContext db, KatshSaleHistoryStore katshSales)
     {
         _db = db;
+        _katshSales = katshSales;
     }
 
     private static (DateTimeOffset MonthStart, DateOnly Today, string PeriodLabel) CurrentMonthPeriod()
@@ -123,6 +126,70 @@ public sealed class InsightsController : Controller
             .OrderByDescending(x => x.Revenue)
             .ToList();
 
+    private async Task<decimal> GetLbpPerUsdAsync(CancellationToken cancellationToken)
+    {
+        var settings = await _db.TenantSettings.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+        return settings?.LbpPerUsd ?? 89_500m;
+    }
+
+    private sealed record KatshUsdSale(
+        DateTime SoldAtUtc,
+        DateOnly SaleDate,
+        string Provider,
+        string Label,
+        string Currency,
+        string PaymentMethod,
+        decimal RevenueUsd,
+        decimal CostUsd);
+
+    private static List<KatshUsdSale> ToUsdSales(
+        IEnumerable<KatshSaleRecord> sales,
+        decimal lbpPerUsd) =>
+        sales
+            .Where(s => s.IsMerchandiseSale)
+            .Select(s => new KatshUsdSale(
+                s.SoldAtUtc,
+                s.SaleDate,
+                string.IsNullOrWhiteSpace(s.Provider) ? "Katsh" : s.Provider,
+                string.IsNullOrWhiteSpace(s.Label) ? s.Provider : s.Label,
+                s.Currency,
+                string.IsNullOrWhiteSpace(s.PaymentMethod) ? "" : s.PaymentMethod.Trim(),
+                KatshSaleHistoryStore.ToUsd(s.Amount, s.Currency, lbpPerUsd),
+                KatshSaleHistoryStore.ToUsd(s.Cost, s.Currency, lbpPerUsd)))
+            .ToList();
+
+    private static (decimal Revenue, decimal Cost, int Count) SumKatsh(IReadOnlyList<KatshUsdSale> sales) =>
+        (sales.Sum(s => s.RevenueUsd), sales.Sum(s => s.CostUsd), sales.Count);
+
+    private static List<InsightsBreakdownRowViewModel> MergeKatshIntoBreakdown(
+        List<InsightsBreakdownRowViewModel> posRows,
+        IReadOnlyList<KatshUsdSale> katsh,
+        Func<KatshUsdSale, string> keySelector)
+    {
+        var katshRows = katsh
+            .GroupBy(keySelector)
+            .Select(g => new InsightsBreakdownRowViewModel
+            {
+                Label = g.Key,
+                Revenue = g.Sum(x => x.RevenueUsd),
+                Cost = g.Sum(x => x.CostUsd),
+                UnitsSold = g.Count()
+            });
+
+        return posRows
+            .Concat(katshRows)
+            .GroupBy(r => r.Label, StringComparer.OrdinalIgnoreCase)
+            .Select(g => new InsightsBreakdownRowViewModel
+            {
+                Label = g.First().Label,
+                Revenue = g.Sum(x => x.Revenue),
+                Cost = g.Sum(x => x.Cost),
+                UnitsSold = g.Sum(x => x.UnitsSold)
+            })
+            .OrderByDescending(x => x.Revenue)
+            .ToList();
+    }
+
     [HttpGet]
     public IActionResult Index() => RedirectToAction(nameof(Daily));
 
@@ -138,25 +205,31 @@ public sealed class InsightsController : Controller
         var dayEnd = LocalDayEndUtc(day);
 
         var data = await LoadPeriodAsync(dayStart, dayEnd, day, day, cancellationToken);
+        var lbpPerUsd = await GetLbpPerUsdAsync(cancellationToken);
+        var katsh = ToUsdSales(await _katshSales.GetByDateAsync(day, cancellationToken), lbpPerUsd);
+        var (katshRevenue, katshCost, katshCount) = SumKatsh(katsh);
 
         var posSalesTotal = data.PosSales.Sum(x => x.TotalAmount);
         var productCost = data.PosLines.Sum(x => x.LineCostTotal);
         var repairRevenue = data.Repairs.Sum(x => x.Revenue);
         var repairCost = data.Repairs.Sum(x => x.PartsCost);
-        var totalRevenue = posSalesTotal + repairRevenue;
-        var grossProfit = posSalesTotal - productCost + (repairRevenue - repairCost);
+        var totalRevenue = posSalesTotal + repairRevenue + katshRevenue;
+        var grossProfit = posSalesTotal - productCost + (repairRevenue - repairCost) + (katshRevenue - katshCost);
 
         var hourly = new List<InsightsBarBucketViewModel>(24);
         for (var hour = 0; hour < 24; hour++)
         {
             var posInHour = data.PosSales.Where(s => s.CompletedAtUtc.ToLocalTime().Hour == hour).ToList();
             var repairsInHour = data.Repairs.Where(r => r.ModifiedAtUtc.ToLocalTime().Hour == hour).ToList();
-            var revenue = posInHour.Sum(s => s.TotalAmount) + repairsInHour.Sum(r => r.Revenue);
+            var katshInHour = katsh.Where(s => s.SoldAtUtc.ToLocalTime().Hour == hour).ToList();
+            var revenue = posInHour.Sum(s => s.TotalAmount)
+                + repairsInHour.Sum(r => r.Revenue)
+                + katshInHour.Sum(s => s.RevenueUsd);
             hourly.Add(new InsightsBarBucketViewModel
             {
                 Label = new DateTime(2000, 1, 1, hour, 0, 0).ToString("h tt"),
                 Revenue = revenue,
-                Count = posInHour.Count + repairsInHour.Count
+                Count = posInHour.Count + repairsInHour.Count + katshInHour.Count
             });
         }
 
@@ -195,7 +268,17 @@ public sealed class InsightsController : Controller
             })
             .ToListAsync(cancellationToken);
 
-        var records = posRecords.Concat(repairRecords)
+        var katshRecords = katsh.Select(s => new InsightsRecordRowViewModel
+        {
+            TimeUtc = new DateTimeOffset(DateTime.SpecifyKind(s.SoldAtUtc, DateTimeKind.Utc)),
+            Type = $"Katsh · {s.Provider}",
+            Reference = s.Currency,
+            Description = s.Label,
+            PaymentMethod = s.PaymentMethod,
+            Amount = s.RevenueUsd
+        });
+
+        var records = posRecords.Concat(repairRecords).Concat(katshRecords)
             .OrderBy(r => r.TimeUtc)
             .ToList();
 
@@ -205,9 +288,11 @@ public sealed class InsightsController : Controller
             TotalRevenue = totalRevenue,
             PosSales = posSalesTotal,
             RepairDelivered = repairRevenue,
+            KatshSales = katshRevenue,
             GrossProfit = grossProfit,
             PosSaleCount = data.PosSales.Count,
             RepairCount = data.Repairs.Count,
+            KatshSaleCount = katshCount,
             Hourly = hourly,
             Records = records
         });
@@ -282,13 +367,16 @@ public sealed class InsightsController : Controller
         var endDateInclusive = new DateOnly(year, month, daysInMonth);
 
         var data = await LoadPeriodAsync(monthStart, monthEnd, startDate, endDateInclusive, cancellationToken);
+        var lbpPerUsd = await GetLbpPerUsdAsync(cancellationToken);
+        var katsh = ToUsdSales(await _katshSales.GetByMonthAsync(year, month, cancellationToken), lbpPerUsd);
+        var (katshRevenue, katshCost, katshCount) = SumKatsh(katsh);
 
         var posSalesTotal = data.PosSales.Sum(x => x.TotalAmount);
         var productCost = data.PosLines.Sum(x => x.LineCostTotal);
         var repairRevenue = data.Repairs.Sum(x => x.Revenue);
         var repairCost = data.Repairs.Sum(x => x.PartsCost);
-        var totalRevenue = posSalesTotal + repairRevenue;
-        var grossProfit = posSalesTotal - productCost + (repairRevenue - repairCost);
+        var totalRevenue = posSalesTotal + repairRevenue + katshRevenue;
+        var grossProfit = posSalesTotal - productCost + (repairRevenue - repairCost) + (katshRevenue - katshCost);
         var expenses = data.Expenses.Sum(x => x.Amount);
 
         var weekCount = (int)Math.Ceiling(daysInMonth / 7.0);
@@ -298,17 +386,20 @@ public sealed class InsightsController : Controller
             var posInWeek = data.PosSales.Where(s => WeekIndex(s.CompletedAtUtc) == week).ToList();
             var costInWeek = data.PosLines.Where(l => WeekIndex(l.CompletedAtUtc) == week).Sum(l => l.LineCostTotal);
             var repairsInWeek = data.Repairs.Where(r => WeekIndex(r.ModifiedAtUtc) == week).ToList();
+            var katshInWeek = katsh.Where(s => (s.SaleDate.Day - 1) / 7 == week).ToList();
             var weekPos = posInWeek.Sum(s => s.TotalAmount);
             var weekRepair = repairsInWeek.Sum(r => r.Revenue);
             var weekRepairCost = repairsInWeek.Sum(r => r.PartsCost);
+            var weekKatsh = katshInWeek.Sum(s => s.RevenueUsd);
+            var weekKatshCost = katshInWeek.Sum(s => s.CostUsd);
             var weekExpenses = data.Expenses.Where(e => (e.ExpenseDate.Day - 1) / 7 == week).Sum(e => e.Amount);
             weekly.Add(new InsightsBarBucketViewModel
             {
                 Label = $"Week {week + 1}",
-                Revenue = weekPos + weekRepair,
-                GrossProfit = weekPos - costInWeek + (weekRepair - weekRepairCost),
+                Revenue = weekPos + weekRepair + weekKatsh,
+                GrossProfit = weekPos - costInWeek + (weekRepair - weekRepairCost) + (weekKatsh - weekKatshCost),
                 Expenses = weekExpenses,
-                Count = posInWeek.Count + repairsInWeek.Count
+                Count = posInWeek.Count + repairsInWeek.Count + katshInWeek.Count
             });
         }
 
@@ -320,13 +411,21 @@ public sealed class InsightsController : Controller
             TotalRevenue = totalRevenue,
             PosSales = posSalesTotal,
             RepairDelivered = repairRevenue,
+            KatshSales = katshRevenue,
             GrossProfit = grossProfit,
             Expenses = expenses,
             PosSaleCount = data.PosSales.Count,
             RepairCount = data.Repairs.Count,
+            KatshSaleCount = katshCount,
             Weekly = weekly,
-            Categories = BuildBreakdown(data.PosLines, x => x.Category),
-            Brands = BuildBreakdown(data.PosLines, x => x.BrandName)
+            Categories = MergeKatshIntoBreakdown(
+                BuildBreakdown(data.PosLines, x => x.Category),
+                katsh,
+                s => $"Katsh · {s.Provider}"),
+            Brands = MergeKatshIntoBreakdown(
+                BuildBreakdown(data.PosLines, x => x.BrandName),
+                katsh,
+                s => $"Katsh · {s.Provider}")
         });
 
         static int WeekIndex(DateTimeOffset value) => (value.UtcDateTime.Day - 1) / 7;
@@ -364,13 +463,18 @@ public sealed class InsightsController : Controller
         var endDateInclusive = new DateOnly(selectedYear, 12, 31);
 
         var data = await LoadPeriodAsync(yearStart, yearEnd, startDate, endDateInclusive, cancellationToken);
+        var lbpPerUsd = await GetLbpPerUsdAsync(cancellationToken);
+        var katsh = ToUsdSales(
+            await _katshSales.GetInSaleDateRangeAsync(startDate, endDateInclusive, cancellationToken),
+            lbpPerUsd);
+        var (katshRevenue, katshCost, katshCount) = SumKatsh(katsh);
 
         var posSalesTotal = data.PosSales.Sum(x => x.TotalAmount);
         var productCost = data.PosLines.Sum(x => x.LineCostTotal);
         var repairRevenue = data.Repairs.Sum(x => x.Revenue);
         var repairCost = data.Repairs.Sum(x => x.PartsCost);
-        var totalRevenue = posSalesTotal + repairRevenue;
-        var grossProfit = posSalesTotal - productCost + (repairRevenue - repairCost);
+        var totalRevenue = posSalesTotal + repairRevenue + katshRevenue;
+        var grossProfit = posSalesTotal - productCost + (repairRevenue - repairCost) + (katshRevenue - katshCost);
         var expenses = data.Expenses.Sum(x => x.Amount);
 
         var monthly = new List<InsightsBarBucketViewModel>(12);
@@ -379,17 +483,20 @@ public sealed class InsightsController : Controller
             var posInMonth = data.PosSales.Where(s => s.CompletedAtUtc.UtcDateTime.Month == m).ToList();
             var costInMonth = data.PosLines.Where(l => l.CompletedAtUtc.UtcDateTime.Month == m).Sum(l => l.LineCostTotal);
             var repairsInMonth = data.Repairs.Where(r => r.ModifiedAtUtc.UtcDateTime.Month == m).ToList();
+            var katshInMonth = katsh.Where(s => s.SaleDate.Month == m).ToList();
             var monthPos = posInMonth.Sum(s => s.TotalAmount);
             var monthRepair = repairsInMonth.Sum(r => r.Revenue);
             var monthRepairCost = repairsInMonth.Sum(r => r.PartsCost);
+            var monthKatsh = katshInMonth.Sum(s => s.RevenueUsd);
+            var monthKatshCost = katshInMonth.Sum(s => s.CostUsd);
             var monthExpenses = data.Expenses.Where(e => e.ExpenseDate.Month == m).Sum(e => e.Amount);
             monthly.Add(new InsightsBarBucketViewModel
             {
                 Label = new DateTime(2000, m, 1).ToString("MMM"),
-                Revenue = monthPos + monthRepair,
-                GrossProfit = monthPos - costInMonth + (monthRepair - monthRepairCost),
+                Revenue = monthPos + monthRepair + monthKatsh,
+                GrossProfit = monthPos - costInMonth + (monthRepair - monthRepairCost) + (monthKatsh - monthKatshCost),
                 Expenses = monthExpenses,
-                Count = posInMonth.Count + repairsInMonth.Count
+                Count = posInMonth.Count + repairsInMonth.Count + katshInMonth.Count
             });
         }
 
@@ -401,13 +508,21 @@ public sealed class InsightsController : Controller
             TotalRevenue = totalRevenue,
             PosSales = posSalesTotal,
             RepairDelivered = repairRevenue,
+            KatshSales = katshRevenue,
             GrossProfit = grossProfit,
             Expenses = expenses,
             PosSaleCount = data.PosSales.Count,
             RepairCount = data.Repairs.Count,
+            KatshSaleCount = katshCount,
             Monthly = monthly,
-            Categories = BuildBreakdown(data.PosLines, x => x.Category),
-            Brands = BuildBreakdown(data.PosLines, x => x.BrandName)
+            Categories = MergeKatshIntoBreakdown(
+                BuildBreakdown(data.PosLines, x => x.Category),
+                katsh,
+                s => $"Katsh · {s.Provider}"),
+            Brands = MergeKatshIntoBreakdown(
+                BuildBreakdown(data.PosLines, x => x.BrandName),
+                katsh,
+                s => $"Katsh · {s.Provider}")
         });
     }
 

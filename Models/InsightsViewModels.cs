@@ -167,6 +167,8 @@ public sealed class InsightsDailyViewModel
 
     public decimal RepairDelivered { get; init; }
 
+    public decimal KatshSales { get; init; }
+
     public decimal GrossProfit { get; init; }
 
     public decimal GrossProfitPercent => TotalRevenue > 0m ? GrossProfit / TotalRevenue * 100m : 0m;
@@ -174,6 +176,8 @@ public sealed class InsightsDailyViewModel
     public int PosSaleCount { get; init; }
 
     public int RepairCount { get; init; }
+
+    public int KatshSaleCount { get; init; }
 
     public IReadOnlyList<InsightsBarBucketViewModel> Hourly { get; init; } =
         Array.Empty<InsightsBarBucketViewModel>();
@@ -198,6 +202,8 @@ public sealed class InsightsMonthlyViewModel
 
     public decimal RepairDelivered { get; init; }
 
+    public decimal KatshSales { get; init; }
+
     public decimal GrossProfit { get; init; }
 
     public decimal GrossProfitPercent => TotalRevenue > 0m ? GrossProfit / TotalRevenue * 100m : 0m;
@@ -209,6 +215,8 @@ public sealed class InsightsMonthlyViewModel
     public int PosSaleCount { get; init; }
 
     public int RepairCount { get; init; }
+
+    public int KatshSaleCount { get; init; }
 
     public IReadOnlyList<InsightsBarBucketViewModel> Weekly { get; init; } =
         Array.Empty<InsightsBarBucketViewModel>();
@@ -234,6 +242,8 @@ public sealed class InsightsYearlyViewModel
 
     public decimal RepairDelivered { get; init; }
 
+    public decimal KatshSales { get; init; }
+
     public decimal GrossProfit { get; init; }
 
     public decimal GrossProfitPercent => TotalRevenue > 0m ? GrossProfit / TotalRevenue * 100m : 0m;
@@ -245,6 +255,8 @@ public sealed class InsightsYearlyViewModel
     public int PosSaleCount { get; init; }
 
     public int RepairCount { get; init; }
+
+    public int KatshSaleCount { get; init; }
 
     public IReadOnlyList<InsightsBarBucketViewModel> Monthly { get; init; } =
         Array.Empty<InsightsBarBucketViewModel>();

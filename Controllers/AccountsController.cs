@@ -5,6 +5,7 @@ using Biktal.Infrastructure.Identity;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
 using Biktal.WebMVC.Security;
+using Biktal.WebMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,18 @@ public sealed class AccountsController : Controller
 
     private readonly ApplicationDbContext _db;
     private readonly CashboxSessionService _cashbox;
+    private readonly KatshSaleHistoryStore _katshSales;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public AccountsController(
         ApplicationDbContext db,
         CashboxSessionService cashbox,
+        KatshSaleHistoryStore katshSales,
         UserManager<ApplicationUser> userManager)
     {
         _db = db;
         _cashbox = cashbox;
+        _katshSales = katshSales;
         _userManager = userManager;
     }
 
@@ -102,10 +106,25 @@ public sealed class AccountsController : Controller
             return View("Index", await BuildPageAsync(today, cancellationToken, null, model));
         }
 
-        var cashMsg = FormatVarianceMessage("Cash", result.CashVariance);
-        var whishMsg = FormatVarianceMessage("Whish", result.WhishVariance);
+        var expectedCash = result.ExpectedCash;
+        var expectedWhish = result.ExpectedWhish;
+        var cashVariance = result.CashVariance;
+        var whishVariance = result.WhishVariance;
+
+        // Fold Katsh Cash/Whish into the closed session snapshot (cashbox service only sees POS/repairs).
+        var adjusted = await ApplyKatshToClosedSessionAsync(model.SessionId, cancellationToken);
+        if (adjusted is not null)
+        {
+            expectedCash = adjusted.ExpectedCash;
+            expectedWhish = adjusted.ExpectedWhish;
+            cashVariance = adjusted.CashVariance;
+            whishVariance = adjusted.WhishVariance;
+        }
+
+        var cashMsg = FormatVarianceMessage("Cash", cashVariance);
+        var whishMsg = FormatVarianceMessage("Whish", whishVariance);
         TempData["AccountsMessage"] =
-            $"Day closed by {actor}. Expected cash {result.ExpectedCash.ToString("C", MoneyCulture)}, Whish {result.ExpectedWhish.ToString("C", MoneyCulture)}. {cashMsg} {whishMsg}";
+            $"Day closed by {actor}. Expected cash {expectedCash.ToString("C", MoneyCulture)}, Whish {expectedWhish.ToString("C", MoneyCulture)}. {cashMsg} {whishMsg}";
         return RedirectToAction(nameof(Index), new { date = today.ToString("yyyy-MM-dd") });
     }
 
@@ -130,6 +149,9 @@ public sealed class AccountsController : Controller
         if (openSession is not null && openSession.SessionDate == selectedDate)
         {
             totals = await _cashbox.GetSessionPaymentTotalsAsync(openSession.Id, cancellationToken);
+            var katsh = await GetKatshContributionAsync(openSession.Id, cancellationToken);
+            var cashSales = CashboxSessionService.RoundMoney(totals.CashTotal + katsh.CashUsd);
+            var whishSales = CashboxSessionService.RoundMoney(totals.WhishTotal + katsh.WhishUsd);
             active = new CashboxActiveSessionViewModel
             {
                 Id = openSession.Id,
@@ -138,11 +160,11 @@ public sealed class AccountsController : Controller
                 OpenedBy = CashboxSessionActorNotes.ExtractActor(openSession.OpenNotes) ?? "—",
                 OpeningCashFloat = openSession.OpeningCashFloat,
                 OpeningWhishBalance = openSession.OpeningWhishBalance,
-                CashSalesTotal = totals.CashTotal,
-                WhishSalesTotal = totals.WhishTotal,
-                ExpectedCash = CashboxSessionService.RoundMoney(openSession.OpeningCashFloat + totals.CashTotal),
-                ExpectedWhish = CashboxSessionService.RoundMoney(openSession.OpeningWhishBalance + totals.WhishTotal),
-                SaleCount = totals.SaleCount,
+                CashSalesTotal = cashSales,
+                WhishSalesTotal = whishSales,
+                ExpectedCash = CashboxSessionService.RoundMoney(openSession.OpeningCashFloat + cashSales),
+                ExpectedWhish = CashboxSessionService.RoundMoney(openSession.OpeningWhishBalance + whishSales),
+                SaleCount = totals.SaleCount + katsh.SaleCount,
                 OpenNotes = CashboxSessionActorNotes.ExtractUserNotes(openSession.OpenNotes)
             };
         }
@@ -267,6 +289,44 @@ public sealed class AccountsController : Controller
             OpenForm = openForm ?? new OpenCashboxSessionFormModel(),
             CloseForm = close
         };
+    }
+
+    private async Task<decimal> GetLbpPerUsdAsync(CancellationToken cancellationToken)
+    {
+        var settings = await _db.TenantSettings.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+        return settings?.LbpPerUsd ?? 89_500m;
+    }
+
+    private async Task<KatshCashboxContribution> GetKatshContributionAsync(
+        Guid sessionId,
+        CancellationToken cancellationToken)
+    {
+        var lbpPerUsd = await GetLbpPerUsdAsync(cancellationToken);
+        return await _katshSales.GetCashboxContributionAsync(sessionId, lbpPerUsd, cancellationToken);
+    }
+
+    private async Task<CashboxSession?> ApplyKatshToClosedSessionAsync(
+        Guid sessionId,
+        CancellationToken cancellationToken)
+    {
+        var katsh = await GetKatshContributionAsync(sessionId, cancellationToken);
+        if (katsh.SaleCount == 0 && katsh.CashUsd == 0m && katsh.WhishUsd == 0m)
+            return null;
+
+        var session = await _db.CashboxSessions.FirstOrDefaultAsync(s => s.Id == sessionId, cancellationToken);
+        if (session is null || session.Status != CashboxSessionStatus.Closed)
+            return null;
+
+        session.CashSalesTotal = CashboxSessionService.RoundMoney(session.CashSalesTotal + katsh.CashUsd);
+        session.WhishSalesTotal = CashboxSessionService.RoundMoney(session.WhishSalesTotal + katsh.WhishUsd);
+        session.ExpectedCash = CashboxSessionService.RoundMoney(session.OpeningCashFloat + session.CashSalesTotal);
+        session.ExpectedWhish = CashboxSessionService.RoundMoney(session.OpeningWhishBalance + session.WhishSalesTotal);
+        session.CashVariance = CashboxSessionService.RoundMoney(session.CountedCash - session.ExpectedCash);
+        session.WhishVariance = CashboxSessionService.RoundMoney(session.CountedWhish - session.ExpectedWhish);
+        session.SaleCount += katsh.SaleCount;
+        session.ModifiedAtUtc = DateTimeOffset.UtcNow;
+        await _db.SaveChangesAsync(cancellationToken);
+        return session;
     }
 
     private async Task<string> ResolveActorDisplayAsync()

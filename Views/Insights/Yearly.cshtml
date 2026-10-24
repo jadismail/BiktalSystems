@@ -58,6 +58,14 @@
             </div>
         </article>
         <article class="bk-reports-kpi">
+            <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-sim"></i></div>
+            <div>
+                <div class="bk-reports-kpi-label">Katsh sales</div>
+                <div class="bk-reports-kpi-value">@Model.KatshSales.ToString("C0", money)</div>
+                <div class="bk-reports-kpi-hint">@Model.KatshSaleCount sale(s) · USD</div>
+            </div>
+        </article>
+        <article class="bk-reports-kpi">
             <div class="bk-reports-kpi-icon" aria-hidden="true"><i class="bi bi-piggy-bank"></i></div>
             <div>
                 <div class="bk-reports-kpi-label">Gross profit</div>

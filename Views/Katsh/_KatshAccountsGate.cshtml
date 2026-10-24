@@ -1,0 +1,13 @@
+@model bool
+@if (!Model)
+{
+    <div class="alert alert-warning border-0 shadow-sm d-flex flex-wrap align-items-center gap-2 mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle-fill flex-shrink-0" aria-hidden="true"></i>
+        <div class="flex-grow-1 fw-semibold">
+            Open today’s Accounts session before selling Katsh. Sales post to Cash or Whish.
+        </div>
+        <a asp-controller="Accounts" asp-action="Index" class="btn btn-sm btn-primary fw-semibold">
+            Open Accounts
+        </a>
+    </div>
+}

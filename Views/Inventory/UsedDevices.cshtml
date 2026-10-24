@@ -1,0 +1,182 @@
+@model Biktal.WebMVC.Models.UsedDevicesPageViewModel
+@using System.Globalization
+@using System.Net
+@using Biktal.WebMVC.Models
+@{
+    ViewData["Title"] = "Used devices";
+    ViewData["Module"] = "Inventory";
+    var money = CultureInfo.GetCultureInfo("en-US");
+}
+
+<div class="container pb-5 pt-3 bk-used-devices-page">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["UsedDeviceMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["UsedDeviceError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <div class="bk-inv-toolbar bk-card p-3 p-md-4 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="flex-grow-1 min-w-0">
+            <h2 class="h5 fw-bold mb-2">Used phones &amp; accessories</h2>
+            <div class="d-flex flex-wrap align-items-center gap-2 gap-md-3">
+                <p class="small text-muted mb-0 fw-semibold">
+                    <span id="bk-used-devices-count-meta"
+                          data-active="@Model.ActiveCount"
+                          data-sold="@Model.SoldCount"
+                          data-total="@Model.Devices.Count">
+                        <strong>@Model.ActiveCount</strong> active
+                    </span>
+                </p>
+                <p class="small text-muted mb-0 fw-semibold">
+                    <strong>@Model.InStockCount</strong> in stock
+                    · retail @Model.InStockRetailValue.ToString("C", money)
+                </p>
+            </div>
+        </div>
+        <a asp-action="NewUsedDevice" class="btn btn-primary fw-semibold px-4">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add used device
+        </a>
+    </div>
+
+    @if (Model.Devices.Count > 0)
+    {
+        <div class="bk-products-search bk-card p-3 p-md-3 mb-3">
+            <div class="bk-products-search-form d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-center" role="search" aria-label="Filter used devices">
+                <label for="bk-used-devices-search-q" class="visually-hidden">Filter used devices</label>
+                <div class="input-group flex-grow-1">
+                    <span class="input-group-text bg-transparent border-end-0" aria-hidden="true"><i class="bi bi-search"></i></span>
+                    <input type="search"
+                           id="bk-used-devices-search-q"
+                           class="form-control border-start-0 ps-0"
+                           autocomplete="off"
+                           placeholder="Filter by name, barcode, brand, storage…"
+                           maxlength="200" />
+                    <button type="button" class="btn btn-outline-secondary fw-semibold px-3 d-none" id="bk-used-devices-search-clear" aria-label="Clear filter">Clear</button>
+                </div>
+                <button type="button"
+                        class="bk-used-sold-toggle"
+                        id="bk-used-devices-sold-toggle"
+                        aria-pressed="false"
+                        title="Show sold devices">
+                    <i class="bi bi-bag-check" aria-hidden="true"></i>
+                    <span>Sold</span>
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="bk-table-wrap">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Device</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Battery</th>
+                        <th scope="col">Storage</th>
+                        <th class="text-end" scope="col">Price</th>
+                        <th scope="col">Received</th>
+                        <th scope="col">Status</th>
+                        <th class="text-end" scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Devices.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="8">
+                                <div class="bk-empty py-5">
+                                    <i class="bi bi-phone d-block fs-1 mb-2 opacity-50" aria-hidden="true"></i>
+                                    <p class="fw-semibold mb-1">No used devices yet</p>
+                                    <p class="small text-muted mb-0">Add a phone or accessory to generate and print a barcode label.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Devices)
+                        {
+                            var searchHaystack = string.Join(
+                                ' ',
+                                row.Name,
+                                row.Brand ?? "",
+                                row.Barcode,
+                                UsedDeviceKindLabels.Title(row.Kind),
+                                row.Storage ?? "",
+                                row.BatteryHealthPercent is int bh ? $"{bh}%" : "",
+                                row.PreviousUserName ?? "",
+                                UsedDeviceStatusLabels.Title(row.Status),
+                                row.ReceivedDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)).ToLowerInvariant();
+                            <tr class="bk-used-device-row"
+                                data-bk-search="@WebUtility.HtmlEncode(searchHaystack)"
+                                data-bk-sold="@(row.Status == Biktal.WebMVC.Services.UsedDeviceStatus.Sold ? "1" : "0")">
+                                <td>
+                                    <a asp-action="UsedDevice" asp-route-id="@row.Id" class="fw-semibold text-decoration-none">@row.Name</a>
+                                    @if (!string.IsNullOrWhiteSpace(row.Brand))
+                                    {
+                                        <div class="small text-muted">@row.Brand</div>
+                                    }
+                                    <div class="small font-monospace text-muted">@row.Barcode</div>
+                                </td>
+                                <td class="small">@UsedDeviceKindLabels.Title(row.Kind)</td>
+                                <td class="font-monospace small">
+                                    @(row.BatteryHealthPercent is int batt ? $"{batt}%" : "—")
+                                </td>
+                                <td class="small">@(string.IsNullOrWhiteSpace(row.Storage) ? "—" : row.Storage)</td>
+                                <td class="text-end font-monospace fw-semibold">@row.Price.ToString("C", money)</td>
+                                <td class="small">@row.ReceivedDate.ToString("dd MMM yyyy", CultureInfo.InvariantCulture)</td>
+                                <td>
+                                    @{
+                                        var statusCls = row.Status switch
+                                        {
+                                            Biktal.WebMVC.Services.UsedDeviceStatus.InStock => "text-bg-success",
+                                            Biktal.WebMVC.Services.UsedDeviceStatus.Reserved => "text-bg-warning",
+                                            _ => "text-bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge rounded-pill @statusCls">@UsedDeviceStatusLabels.Title(row.Status)</span>
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a asp-action="UsedDevice" asp-route-id="@row.Id" class="btn btn-sm btn-outline-primary" title="View / print">
+                                        <i class="bi bi-upc-scan" aria-hidden="true"></i>
+                                    </a>
+                                    <a asp-action="EditUsedDevice" asp-route-id="@row.Id" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        <tr id="bk-used-devices-filter-empty" class="d-none">
+                            <td colspan="8">
+                                <div class="bk-empty py-4">
+                                    <p class="fw-semibold mb-1">No devices match</p>
+                                    <p class="small text-muted mb-0">Try another name, barcode, or clear the filter.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @if (Model.Devices.Count > 0)
+    {
+        <script src="~/js/used-devices-filter.js" asp-append-version="true"></script>
+    }
+}

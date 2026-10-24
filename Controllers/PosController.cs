@@ -2,6 +2,7 @@ using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
 using Biktal.WebMVC.Security;
+using Biktal.WebMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -89,11 +90,19 @@ public sealed class PosController : Controller
 
     private readonly ApplicationDbContext _db;
     private readonly PosSalePostingService _posSales;
+    private readonly UsedDeviceStore _usedDevices;
+    private readonly UsedDeviceCatalogSyncService _usedDeviceCatalog;
 
-    public PosController(ApplicationDbContext db, PosSalePostingService posSales)
+    public PosController(
+        ApplicationDbContext db,
+        PosSalePostingService posSales,
+        UsedDeviceStore usedDevices,
+        UsedDeviceCatalogSyncService usedDeviceCatalog)
     {
         _db = db;
         _posSales = posSales;
+        _usedDevices = usedDevices;
+        _usedDeviceCatalog = usedDeviceCatalog;
     }
 
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
@@ -101,10 +110,41 @@ public sealed class PosController : Controller
         ViewData["BodyClass"] = "bk-page-pos";
         ViewData["HideFooter"] = true;
 
+        await _usedDeviceCatalog.SyncAllAsync(cancellationToken);
+
+        var usedDevices = await _usedDevices.GetAllAsync(cancellationToken);
+        var soldUsedProductIds = usedDevices
+            .Where(d => d.CatalogProductId is not null && d.Status == UsedDeviceStatus.Sold)
+            .Select(d => d.CatalogProductId!.Value)
+            .ToHashSet();
+        var usedProductIds = usedDevices
+            .Where(d => d.CatalogProductId is not null)
+            .Select(d => d.CatalogProductId!.Value)
+            .ToHashSet();
+
         var rows = await _db.CatalogProducts
             .AsNoTracking()
             .OrderBy(p => p.Name)
             .ToListAsync(cancellationToken);
+
+        // Used devices: hide when sold / out of stock. Regular catalog keeps current POS behavior.
+        rows = rows
+            .Where(p =>
+            {
+                var isUsed =
+                    usedProductIds.Contains(p.Id)
+                    || string.Equals(p.Category, "Used Phones", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(p.Category, "Used Accessories", StringComparison.OrdinalIgnoreCase);
+
+                if (!isUsed)
+                    return true;
+
+                if (soldUsedProductIds.Contains(p.Id))
+                    return false;
+
+                return p.StockQuantity > 0;
+            })
+            .ToList();
 
         IReadOnlyList<PosProductDto> catalog = rows.Count > 0
             ? rows.Select(static p => new PosProductDto
@@ -196,6 +236,8 @@ public sealed class PosController : Controller
         if (!result.Success)
             return BadRequest(new { error = result.Error });
 
+        await MarkUsedDevicesSoldAsync(checkout.Lines, cancellationToken);
+
         return Json(new
         {
             saleNumber = result.SaleNumber,
@@ -203,6 +245,32 @@ public sealed class PosController : Controller
             journalEntryId = result.JournalEntryId,
             total = result.TotalAmount
         });
+    }
+
+    private async Task MarkUsedDevicesSoldAsync(
+        IReadOnlyList<PosSaleLineRequest> lines,
+        CancellationToken cancellationToken)
+    {
+        var soldProductIds = lines
+            .Where(l => l.ProductId is not null && l.Quantity > 0)
+            .Select(l => l.ProductId!.Value)
+            .ToHashSet();
+
+        if (soldProductIds.Count == 0)
+            return;
+
+        var devices = await _usedDevices.GetAllAsync(cancellationToken);
+        foreach (var device in devices)
+        {
+            if (device.CatalogProductId is not { } pid || !soldProductIds.Contains(pid))
+                continue;
+            if (device.Status == UsedDeviceStatus.Sold)
+                continue;
+
+            device.Status = UsedDeviceStatus.Sold;
+            device.ModifiedAtUtc = DateTimeOffset.UtcNow;
+            await _usedDevices.UpsertAsync(device, cancellationToken);
+        }
     }
 
     private static PosSaleLineRequest MapLine(PosCompleteSaleLineApi line)

@@ -1,0 +1,20 @@
+[
+  {
+    "provider": "Touch",
+    "oneCreditUsd": 1.00,
+    "oneCreditLbp": 89500,
+    "twoCreditsUsd": 1.00,
+    "twoCreditsLbp": 89500,
+    "threePlusCreditsUsd": 1.00,
+    "threePlusCreditsLbp": 89500
+  },
+  {
+    "provider": "Alfa",
+    "oneCreditUsd": 1.00,
+    "oneCreditLbp": 89500,
+    "twoCreditsUsd": 1.00,
+    "twoCreditsLbp": 89500,
+    "threePlusCreditsUsd": 1.00,
+    "threePlusCreditsLbp": 89500
+  }
+]

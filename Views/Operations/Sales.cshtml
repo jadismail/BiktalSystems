@@ -2,7 +2,7 @@
 @using System.Globalization
 @{
     ViewData["Title"] = "Sales";
-    ViewData["Module"] = "Operations";
+    ViewData["Module"] = "Admin";
     var money = CultureInfo.GetCultureInfo("en-US");
     var pct = CultureInfo.InvariantCulture;
 }
@@ -22,7 +22,7 @@
     }
     <section class="bk-reports-kpis bk-reports-kpis--compact mb-4">
         <article class="bk-reports-kpi bk-reports-kpi--sm">
-            <div class="bk-reports-kpi-label">Product revenue</div>
+            <div class="bk-reports-kpi-label">Revenue (POS + Katsh)</div>
             <div class="bk-reports-kpi-value bk-reports-kpi-value--sm">@Model.TotalRevenue.ToString("C0", money)</div>
         </article>
         <article class="bk-reports-kpi bk-reports-kpi--sm">

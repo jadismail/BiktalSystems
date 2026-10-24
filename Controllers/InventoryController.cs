@@ -2,12 +2,14 @@ using Biktal.Domain.Inventory;
 using Biktal.Infrastructure.Inventory;
 using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Models;
+using Biktal.WebMVC.Services;
 using ClosedXML.Excel;
 using Biktal.WebMVC.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Security.Cryptography;
 
 namespace Biktal.WebMVC.Controllers;
 
@@ -17,15 +19,21 @@ public sealed class InventoryController : Controller
     private readonly ApplicationDbContext _db;
     private readonly InventoryMovementService _movements;
     private readonly CatalogProductExcelImportService _productImport;
+    private readonly UsedDeviceStore _usedDevices;
+    private readonly UsedDeviceCatalogSyncService _usedDeviceCatalog;
 
     public InventoryController(
         ApplicationDbContext db,
         InventoryMovementService movements,
-        CatalogProductExcelImportService productImport)
+        CatalogProductExcelImportService productImport,
+        UsedDeviceStore usedDevices,
+        UsedDeviceCatalogSyncService usedDeviceCatalog)
     {
         _db = db;
         _movements = movements;
         _productImport = productImport;
+        _usedDevices = usedDevices;
+        _usedDeviceCatalog = usedDeviceCatalog;
     }
 
     public IActionResult Index() => RedirectToAction(nameof(Products));
@@ -1608,4 +1616,350 @@ public sealed class InventoryController : Controller
             Form = form ?? new CreateInventoryMovementFormModel()
         };
     }
+
+    public async Task<IActionResult> UsedDevices(CancellationToken cancellationToken)
+    {
+        ViewData["Title"] = "Used devices";
+        ViewData["Module"] = "Inventory";
+        ViewData["ModuleSubtitle"] = "Used phones and accessories — searchable in POS via linked catalog SKUs.";
+
+        await _usedDeviceCatalog.SyncAllAsync(cancellationToken);
+
+        var devices = await _usedDevices.GetAllAsync(cancellationToken);
+        var inStock = devices.Where(d => d.Status == UsedDeviceStatus.InStock).ToList();
+        var soldCount = devices.Count(d => d.Status == UsedDeviceStatus.Sold);
+        var activeCount = devices.Count(d => d.Status != UsedDeviceStatus.Sold);
+
+        return View(new UsedDevicesPageViewModel
+        {
+            Devices = devices.Select(ToUsedDeviceRow).ToList(),
+            InStockCount = inStock.Count,
+            SoldCount = soldCount,
+            ActiveCount = activeCount,
+            InStockRetailValue = inStock.Sum(d => d.Price)
+        });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> NewUsedDevice(CancellationToken cancellationToken)
+    {
+        ViewData["Title"] = "Add used device";
+        ViewData["Module"] = "Inventory";
+        ViewData["ModuleSubtitle"] = "Capture condition, history, and print a barcode label.";
+        ViewData["StoreDisplayName"] = await LoadStoreDisplayNameAsync(cancellationToken);
+
+        var form = new UsedDeviceFormModel
+        {
+            Barcode = await AllocateUsedDeviceBarcodeAsync(cancellationToken),
+            BrandOptions = await LoadUsedDeviceBrandOptionsAsync(cancellationToken)
+        };
+        return View("UsedDeviceForm", form);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditUsedDevice(Guid id, CancellationToken cancellationToken)
+    {
+        var device = await _usedDevices.GetByIdAsync(id, cancellationToken);
+        if (device is null)
+        {
+            TempData["UsedDeviceError"] = "Device not found.";
+            return RedirectToAction(nameof(UsedDevices));
+        }
+
+        ViewData["Title"] = "Edit used device";
+        ViewData["Module"] = "Inventory";
+        ViewData["ModuleSubtitle"] = "Update condition, history, or reprint the barcode label.";
+        ViewData["StoreDisplayName"] = await LoadStoreDisplayNameAsync(cancellationToken);
+
+        return View("UsedDeviceForm", ToUsedDeviceForm(device, await LoadUsedDeviceBrandOptionsAsync(cancellationToken)));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> UsedDevice(Guid id, CancellationToken cancellationToken)
+    {
+        var device = await _usedDevices.GetByIdAsync(id, cancellationToken);
+        if (device is null)
+            return NotFound();
+
+        ViewData["Title"] = device.Name;
+        ViewData["Module"] = "Inventory";
+        ViewData["ModuleSubtitle"] = "Used device detail and barcode label.";
+        ViewData["PrintBarcode"] = string.Equals(Request.Query["printBarcode"], "1", StringComparison.Ordinal);
+        ViewData["StoreDisplayName"] = await LoadStoreDisplayNameAsync(cancellationToken);
+
+        return View(ToUsedDeviceDetail(device));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> NextUsedDeviceBarcode(CancellationToken cancellationToken)
+    {
+        var barcode = await AllocateUsedDeviceBarcodeAsync(cancellationToken);
+        return Json(new { barcode });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> SaveUsedDevice(UsedDeviceFormModel model, CancellationToken cancellationToken)
+    {
+        var isEdit = model.DeviceId is { } editId && editId != Guid.Empty;
+        ViewData["Title"] = isEdit ? "Edit used device" : "Add used device";
+        ViewData["Module"] = "Inventory";
+        ViewData["ModuleSubtitle"] = isEdit
+            ? "Update condition, history, or reprint the barcode label."
+            : "Capture condition, history, and print a barcode label.";
+        ViewData["StoreDisplayName"] = await LoadStoreDisplayNameAsync(cancellationToken);
+
+        model.BrandOptions = await LoadUsedDeviceBrandOptionsAsync(cancellationToken);
+        model.Barcode = (model.Barcode ?? string.Empty).Trim().ToUpperInvariant();
+        model.Name = (model.Name ?? string.Empty).Trim();
+        model.Brand = string.IsNullOrWhiteSpace(model.Brand) ? null : model.Brand.Trim();
+        model.Storage = string.IsNullOrWhiteSpace(model.Storage) ? null : model.Storage.Trim();
+        model.PreviousUserName = string.IsNullOrWhiteSpace(model.PreviousUserName) ? null : model.PreviousUserName.Trim();
+        model.IssuesOrChanges = string.IsNullOrWhiteSpace(model.IssuesOrChanges) ? null : model.IssuesOrChanges.Trim();
+        model.SerialOrImei = string.IsNullOrWhiteSpace(model.SerialOrImei) ? null : model.SerialOrImei.Trim();
+        model.Color = string.IsNullOrWhiteSpace(model.Color) ? null : model.Color.Trim();
+
+        if (model.Kind == UsedDeviceKind.Accessory)
+        {
+            // Accessories often omit battery/storage — clear validation noise if left blank.
+            ModelState.Remove(nameof(UsedDeviceFormModel.BatteryHealthPercent));
+            ModelState.Remove(nameof(UsedDeviceFormModel.Storage));
+        }
+
+        if (string.IsNullOrWhiteSpace(model.Barcode))
+        {
+            ModelState.AddModelError(nameof(model.Barcode), "Generate a barcode before saving.");
+        }
+        else if (await _usedDevices.BarcodeExistsAsync(
+                     model.Barcode,
+                     isEdit ? model.DeviceId : null,
+                     cancellationToken))
+        {
+            ModelState.AddModelError(nameof(model.Barcode), "That barcode is already assigned. Generate a new one.");
+        }
+        else
+        {
+            Guid? linkedCatalogId = null;
+            if (isEdit)
+            {
+                var existingForBarcode = await _usedDevices.GetByIdAsync(model.DeviceId!.Value, cancellationToken);
+                linkedCatalogId = existingForBarcode?.CatalogProductId;
+            }
+
+            var barcodeTakenByCatalog = await _db.CatalogProducts.AnyAsync(
+                p => p.Barcode != null
+                     && p.Barcode.ToUpper() == model.Barcode
+                     && (linkedCatalogId == null || p.Id != linkedCatalogId),
+                cancellationToken);
+            if (barcodeTakenByCatalog)
+            {
+                ModelState.AddModelError(
+                    nameof(model.Barcode),
+                    "That barcode is already used by a catalog product. Generate a new one.");
+            }
+        }
+
+        if (!ModelState.IsValid)
+        {
+            if (string.IsNullOrWhiteSpace(model.Barcode))
+                model.Barcode = await AllocateUsedDeviceBarcodeAsync(cancellationToken);
+            return View("UsedDeviceForm", model);
+        }
+
+        UsedDeviceRecord record;
+        if (isEdit)
+        {
+            var existing = await _usedDevices.GetByIdAsync(model.DeviceId!.Value, cancellationToken);
+            if (existing is null)
+            {
+                TempData["UsedDeviceError"] = "Device not found.";
+                return RedirectToAction(nameof(UsedDevices));
+            }
+
+            record = existing;
+            record.ModifiedAtUtc = DateTimeOffset.UtcNow;
+        }
+        else
+        {
+            record = new UsedDeviceRecord
+            {
+                Id = Guid.NewGuid(),
+                CreatedAtUtc = DateTimeOffset.UtcNow
+            };
+        }
+
+        ApplyUsedDeviceForm(record, model);
+        await _usedDeviceCatalog.SyncOneAsync(record, cancellationToken);
+        await _usedDevices.UpsertAsync(record, cancellationToken);
+
+        TempData["UsedDeviceMessage"] = isEdit
+            ? $"“{record.Name}” was updated and is available in POS."
+            : $"“{record.Name}” was added — searchable in POS by name or barcode.";
+
+        if (isEdit)
+            return RedirectToAction(nameof(UsedDevice), new { id = record.Id });
+
+        return RedirectToAction(nameof(UsedDevice), new { id = record.Id, printBarcode = "1" });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteUsedDevice(Guid id, CancellationToken cancellationToken)
+    {
+        var device = await _usedDevices.GetByIdAsync(id, cancellationToken);
+        if (device is null)
+        {
+            TempData["UsedDeviceError"] = "Device not found.";
+            return RedirectToAction(nameof(UsedDevices));
+        }
+
+        await _usedDeviceCatalog.UnlinkAsync(device, cancellationToken);
+        await _usedDevices.DeleteAsync(id, cancellationToken);
+        TempData["UsedDeviceMessage"] = $"“{device.Name}” was removed from used inventory.";
+        return RedirectToAction(nameof(UsedDevices));
+    }
+
+    private static UsedDeviceRowViewModel ToUsedDeviceRow(UsedDeviceRecord d) => new()
+    {
+        Id = d.Id,
+        Kind = d.Kind,
+        Name = d.Name,
+        Brand = d.Brand,
+        Barcode = d.Barcode,
+        BatteryHealthPercent = d.BatteryHealthPercent,
+        Storage = d.Storage,
+        Price = d.Price,
+        PreviousUserName = d.PreviousUserName,
+        ReceivedDate = d.ReceivedDate,
+        Status = d.Status
+    };
+
+    private static UsedDeviceDetailViewModel ToUsedDeviceDetail(UsedDeviceRecord d) => new()
+    {
+        Id = d.Id,
+        Kind = d.Kind,
+        Name = d.Name,
+        Brand = d.Brand,
+        Barcode = d.Barcode,
+        BatteryHealthPercent = d.BatteryHealthPercent,
+        Storage = d.Storage,
+        Price = d.Price,
+        Cost = d.Cost,
+        PreviousUserName = d.PreviousUserName,
+        ReceivedDate = d.ReceivedDate,
+        IssuesOrChanges = d.IssuesOrChanges,
+        SerialOrImei = d.SerialOrImei,
+        Color = d.Color,
+        Status = d.Status,
+        CreatedAtUtc = d.CreatedAtUtc,
+        ModifiedAtUtc = d.ModifiedAtUtc
+    };
+
+    private static UsedDeviceFormModel ToUsedDeviceForm(UsedDeviceRecord d, IReadOnlyList<string> brandOptions) => new()
+    {
+        DeviceId = d.Id,
+        Kind = d.Kind,
+        Name = d.Name,
+        Brand = d.Brand,
+        Barcode = d.Barcode,
+        BatteryHealthPercent = d.BatteryHealthPercent,
+        Storage = d.Storage,
+        Price = d.Price,
+        Cost = d.Cost,
+        PreviousUserName = d.PreviousUserName,
+        ReceivedDate = d.ReceivedDate,
+        IssuesOrChanges = d.IssuesOrChanges,
+        SerialOrImei = d.SerialOrImei,
+        Color = d.Color,
+        Status = d.Status,
+        BrandOptions = brandOptions
+    };
+
+    private static void ApplyUsedDeviceForm(UsedDeviceRecord record, UsedDeviceFormModel model)
+    {
+        record.Kind = model.Kind;
+        record.Name = model.Name;
+        record.Brand = model.Brand;
+        record.Barcode = model.Barcode;
+        record.BatteryHealthPercent = model.BatteryHealthPercent;
+        record.Storage = model.Storage;
+        record.Price = decimal.Round(model.Price, 2, MidpointRounding.AwayFromZero);
+        record.Cost = model.Cost is { } cost
+            ? decimal.Round(cost, 2, MidpointRounding.AwayFromZero)
+            : null;
+        record.PreviousUserName = model.PreviousUserName;
+        record.ReceivedDate = model.ReceivedDate;
+        record.IssuesOrChanges = model.IssuesOrChanges;
+        record.SerialOrImei = model.SerialOrImei;
+        record.Color = model.Color;
+        record.Status = model.Status;
+    }
+
+    private async Task<string> LoadStoreDisplayNameAsync(CancellationToken cancellationToken)
+    {
+        const string fallback = "Khulasa Retail";
+        try
+        {
+            var name = await _db.TenantSettings.AsNoTracking()
+                .Select(s => s.StoreDisplayName)
+                .FirstOrDefaultAsync(cancellationToken);
+            return string.IsNullOrWhiteSpace(name) ? fallback : name.Trim();
+        }
+        catch
+        {
+            return fallback;
+        }
+    }
+
+    private async Task<IReadOnlyList<string>> LoadUsedDeviceBrandOptionsAsync(CancellationToken cancellationToken)
+    {
+        var fromCatalog = await _db.CatalogBrands.AsNoTracking()
+            .OrderBy(b => b.SortOrder)
+            .ThenBy(b => b.Name)
+            .Select(b => b.Name)
+            .ToListAsync(cancellationToken);
+
+        var fromDevices = (await _usedDevices.GetAllAsync(cancellationToken))
+            .Select(d => d.Brand)
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .Select(b => b!.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+
+        return fromCatalog
+            .Concat(fromDevices)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(n => n, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private async Task<string> AllocateUsedDeviceBarcodeAsync(CancellationToken cancellationToken)
+    {
+        for (var attempt = 0; attempt < 12; attempt++)
+        {
+            var candidate = GenerateUsedDeviceBarcode();
+            if (await _usedDevices.BarcodeExistsAsync(candidate, null, cancellationToken))
+                continue;
+            if (await _db.CatalogProducts.AsNoTracking().AnyAsync(
+                    p => p.Barcode != null && p.Barcode.ToUpper() == candidate,
+                    cancellationToken))
+                continue;
+            return candidate;
+        }
+
+        throw new InvalidOperationException("Could not allocate a unique used-device barcode.");
+    }
+
+    private static string GenerateUsedDeviceBarcode()
+    {
+        Span<byte> bytes = stackalloc byte[5];
+        RandomNumberGenerator.Fill(bytes);
+        var n = ((ulong)bytes[0] << 32)
+                | ((ulong)bytes[1] << 24)
+                | ((ulong)bytes[2] << 16)
+                | ((ulong)bytes[3] << 8)
+                | bytes[4];
+        // Compact Code128-friendly value, e.g. UD4829173056
+        return $"UD{(n % 10_000_000_000UL):D10}";
+    }
+
 }

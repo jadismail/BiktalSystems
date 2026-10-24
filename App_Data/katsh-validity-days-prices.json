@@ -1,0 +1,92 @@
+[
+  {
+    "provider": "Touch",
+    "days": 30,
+    "priceUsd": 3.00,
+    "priceLbp": 268500,
+    "costUsd": 3.00,
+    "costLbp": 268500,
+    "amountKey": "touch:30"
+  },
+  {
+    "provider": "Touch",
+    "days": 60,
+    "priceUsd": 6.00,
+    "priceLbp": 537000,
+    "costUsd": 6.00,
+    "costLbp": 537000,
+    "amountKey": "touch:60"
+  },
+  {
+    "provider": "Touch",
+    "days": 90,
+    "priceUsd": 9.00,
+    "priceLbp": 805500,
+    "costUsd": 9.00,
+    "costLbp": 805500,
+    "amountKey": "touch:90"
+  },
+  {
+    "provider": "Touch",
+    "days": 180,
+    "priceUsd": 18.00,
+    "priceLbp": 1611000,
+    "costUsd": 18.00,
+    "costLbp": 1611000,
+    "amountKey": "touch:180"
+  },
+  {
+    "provider": "Touch",
+    "days": 360,
+    "priceUsd": 36.00,
+    "priceLbp": 3222000,
+    "costUsd": 36.00,
+    "costLbp": 3222000,
+    "amountKey": "touch:360"
+  },
+  {
+    "provider": "Alfa",
+    "days": 30,
+    "priceUsd": 3.00,
+    "priceLbp": 268500,
+    "costUsd": 3.00,
+    "costLbp": 268500,
+    "amountKey": "alfa:30"
+  },
+  {
+    "provider": "Alfa",
+    "days": 60,
+    "priceUsd": 6.00,
+    "priceLbp": 537000,
+    "costUsd": 6.00,
+    "costLbp": 537000,
+    "amountKey": "alfa:60"
+  },
+  {
+    "provider": "Alfa",
+    "days": 90,
+    "priceUsd": 9.00,
+    "priceLbp": 805500,
+    "costUsd": 9.00,
+    "costLbp": 805500,
+    "amountKey": "alfa:90"
+  },
+  {
+    "provider": "Alfa",
+    "days": 180,
+    "priceUsd": 18.00,
+    "priceLbp": 1611000,
+    "costUsd": 18.00,
+    "costLbp": 1611000,
+    "amountKey": "alfa:180"
+  },
+  {
+    "provider": "Alfa",
+    "days": 360,
+    "priceUsd": 36.00,
+    "priceLbp": 3222000,
+    "costUsd": 36.00,
+    "costLbp": 3222000,
+    "amountKey": "alfa:360"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "amountKey": "sos-1.22",
+    "priceUsd": 1.22,
+    "priceLbp": 109190,
+    "costUsd": 1.22,
+    "costLbp": 109190
+  },
+  {
+    "amountKey": "magic-1.67",
+    "priceUsd": 1.67,
+    "priceLbp": 149465,
+    "costUsd": 1.67,
+    "costLbp": 149465
+  },
+  {
+    "amountKey": "magic-3.79",
+    "priceUsd": 3.79,
+    "priceLbp": 339205,
+    "costUsd": 3.79,
+    "costLbp": 339205
+  },
+  {
+    "amountKey": "start-4.50",
+    "priceUsd": 4.50,
+    "priceLbp": 402750,
+    "costUsd": 4.50,
+    "costLbp": 402750
+  },
+  {
+    "amountKey": "magic-4.50",
+    "priceUsd": 4.50,
+    "priceLbp": 402750,
+    "costUsd": 4.50,
+    "costLbp": 402750
+  },
+  {
+    "amountKey": "smart-7.50",
+    "priceUsd": 7.50,
+    "priceLbp": 671250,
+    "costUsd": 7.50,
+    "costLbp": 671250
+  },
+  {
+    "amountKey": "magic-7.58",
+    "priceUsd": 7.58,
+    "priceLbp": 678410,
+    "costUsd": 7.58,
+    "costLbp": 678410
+  },
+  {
+    "amountKey": "magic-10.0",
+    "priceUsd": 10.0,
+    "priceLbp": 895000,
+    "costUsd": 10.0,
+    "costLbp": 895000
+  },
+  {
+    "amountKey": "super-13.50",
+    "priceUsd": 13.50,
+    "priceLbp": 1208250,
+    "costUsd": 13.50,
+    "costLbp": 1208250
+  },
+  {
+    "amountKey": "magic-15.15",
+    "priceUsd": 15.15,
+    "priceLbp": 1355925,
+    "costUsd": 15.15,
+    "costLbp": 1355925
+  },
+  {
+    "amountKey": "magic-22.73",
+    "priceUsd": 22.73,
+    "priceLbp": 2034335,
+    "costUsd": 22.73,
+    "costLbp": 2034335
+  },
+  {
+    "amountKey": "magic-77.28",
+    "priceUsd": 77.28,
+    "priceLbp": 6916560,
+    "costUsd": 77.28,
+    "costLbp": 6916560
+  }
+]

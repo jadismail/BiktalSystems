@@ -1,0 +1,144 @@
+@model Biktal.WebMVC.Models.UsedDeviceDetailViewModel
+@using System.Globalization
+@using Biktal.WebMVC.Models
+@using Biktal.WebMVC.Services
+@{
+    ViewData["Title"] = Model.Name;
+    ViewData["Module"] = "Inventory";
+    var money = CultureInfo.GetCultureInfo("en-US");
+    var battery = Model.BatteryHealthPercent is int bh ? $"{bh}%" : null;
+    var storage = string.IsNullOrWhiteSpace(Model.Storage) ? null : Model.Storage;
+    var priceLabel = Model.Price.ToString("C", money);
+}
+
+<div class="container pb-5 pt-3" style="max-width: 920px;">
+    @await Component.InvokeAsync("ModuleNav")
+    <partial name="_ModuleHeader" />
+
+    @if (TempData["UsedDeviceMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <p class="small text-muted mb-1 fw-semibold">
+                @UsedDeviceKindLabels.Title(Model.Kind)
+                · @UsedDeviceStatusLabels.Title(Model.Status)
+            </p>
+            <h1 class="h3 fw-bold mb-0">@Model.Name</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.Brand))
+            {
+                <p class="text-muted mb-0 mt-1">@Model.Brand</p>
+            }
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-action="EditUsedDevice" asp-route-id="@Model.Id" class="btn btn-outline-primary fw-semibold">
+                <i class="bi bi-pencil me-1" aria-hidden="true"></i>Edit
+            </a>
+            <a asp-action="UsedDevices" class="btn btn-outline-secondary fw-semibold">Back to list</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="bk-card p-4 mb-4">
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Specs &amp; pricing</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-sm-4 text-muted fw-semibold">Battery health</dt>
+                    <dd class="col-sm-8 mb-2 font-monospace">@(battery ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Storage</dt>
+                    <dd class="col-sm-8 mb-2">@(storage ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Color</dt>
+                    <dd class="col-sm-8 mb-2">@(string.IsNullOrWhiteSpace(Model.Color) ? "—" : Model.Color)</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Selling price</dt>
+                    <dd class="col-sm-8 mb-2 font-monospace fw-semibold">@priceLabel</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Cost</dt>
+                    <dd class="col-sm-8 mb-2 font-monospace">@(Model.Cost is decimal c ? c.ToString("C", money) : "—")</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">IMEI / serial</dt>
+                    <dd class="col-sm-8 mb-0">@(string.IsNullOrWhiteSpace(Model.SerialOrImei) ? "—" : Model.SerialOrImei)</dd>
+                </dl>
+            </div>
+
+            <div class="bk-card p-4 mb-4">
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-3">Intake history</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-sm-4 text-muted fw-semibold">Previous user</dt>
+                    <dd class="col-sm-8 mb-2">@(string.IsNullOrWhiteSpace(Model.PreviousUserName) ? "—" : Model.PreviousUserName)</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Received / bought</dt>
+                    <dd class="col-sm-8 mb-2">@Model.ReceivedDate.ToString("dd MMM yyyy", CultureInfo.InvariantCulture)</dd>
+                    <dt class="col-sm-4 text-muted fw-semibold">Issues / changes</dt>
+                    <dd class="col-sm-8 mb-0" style="white-space: pre-wrap;">@(string.IsNullOrWhiteSpace(Model.IssuesOrChanges) ? "—" : Model.IssuesOrChanges)</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="bk-card p-4 mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                    <div>
+                        <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-1">Barcode label</h2>
+                        <p class="small text-muted mb-0 fw-semibold">Battery · storage · optional price</p>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold" id="bk-used-barcode-print">
+                        <i class="bi bi-printer me-1" aria-hidden="true"></i>Print label
+                    </button>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="bk-used-barcode-include-price" />
+                    <label class="form-check-label small fw-semibold" for="bk-used-barcode-include-price">
+                        Show price on label
+                    </label>
+                </div>
+                <div class="bk-repair-barcode-preview">
+                    <div class="bk-used-barcode-store" id="bk-used-barcode-store-label">@(ViewData["StoreDisplayName"] as string)</div>
+                    <svg id="bk-used-barcode-svg"></svg>
+                    <div class="bk-repair-barcode-meta">
+                        <div class="font-monospace fw-bold">@Model.Barcode</div>
+                        <span class="bk-repair-barcode-line">@Model.Name</span>
+                        @{
+                            var specs = string.Join(" · ", new[] { battery, storage }.Where(s => !string.IsNullOrWhiteSpace(s)));
+                        }
+                        @if (!string.IsNullOrWhiteSpace(specs))
+                        {
+                            <span class="bk-repair-barcode-line">@specs</span>
+                        }
+                        <span class="bk-repair-barcode-line d-none" id="bk-used-barcode-price-label">@priceLabel</span>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="DeleteUsedDevice" method="post" class="bk-card p-4"
+                  onsubmit="return confirm('Remove this used device from inventory?');">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <h2 class="h6 fw-bold text-uppercase letter-spacing text-muted mb-2">Danger zone</h2>
+                <p class="small text-muted mb-3">Permanently remove this record. This does not affect catalog products.</p>
+                <button type="submit" class="btn btn-outline-danger btn-sm fw-semibold">
+                    <i class="bi bi-trash3 me-1" aria-hidden="true"></i>Delete device
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="~/js/used-device-barcode.js" asp-append-version="true"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        window.BiktalUsedDeviceBarcode.initDetail({
+          code: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Barcode)),
+          name: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Name)),
+          battery: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(battery)),
+          storage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(storage)),
+          price: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(priceLabel)),
+          storeName: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewData["StoreDisplayName"] as string ?? "")),
+          autoPrint: @(ViewData["PrintBarcode"] is true ? "true" : "false")
+        });
+      });
+    </script>
+}

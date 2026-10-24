@@ -1,0 +1,233 @@
+@model KatshOtherPageViewModel
+@{
+    ViewData["Title"] = "Other";
+    ViewData["Module"] = "Katsh";
+    var isUsd = !string.Equals(Model.Form.Currency, "LBP", StringComparison.OrdinalIgnoreCase);
+}
+
+<div class="container pb-5 pt-3 bk-katsh">
+    @await Component.InvokeAsync("ModuleNav")
+    <a class="bk-katsh-back" asp-controller="Katsh" asp-action="Index">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        <span>Back to Katsh</span>
+    </a>
+    <div class="bk-katsh-top">
+        <partial name="_ModuleHeader" />
+        <partial name="_KatshBalances" model="(Model.BalanceUsd, Model.BalanceLbp)" />
+    </div>
+
+    @if (TempData["KatshMessage"] is string okMsg)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="status">
+            <i class="bi bi-check-circle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@okMsg</div>
+        </div>
+    }
+    @if (TempData["KatshError"] is string errMsg)
+    {
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1" aria-hidden="true"></i>
+            <div>@errMsg</div>
+        </div>
+    }
+
+    <partial name="_KatshAccountsGate" model="Model.IsAccountsSessionOpen" />
+
+    <section class="bk-katsh-other-panel" aria-labelledby="bk-katsh-other-title">
+        <div class="bk-katsh-other-panel-head">
+            <div class="bk-katsh-other-panel-icon" aria-hidden="true">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <div>
+                <h2 id="bk-katsh-other-title" class="bk-katsh-other-panel-title">Manual transaction</h2>
+                <p class="bk-katsh-other-panel-desc">
+                    For anything outside Touch, Alfa, iCloud, or PubG. Enter the details and deduct from today’s Katsh balance.
+                </p>
+            </div>
+        </div>
+
+        <form asp-action="CreateManualSale" method="post" id="bk-katsh-other-form" class="bk-katsh-other-form">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger small fw-semibold mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Form.Label" class="form-label small fw-bold"></label>
+                <input asp-for="Form.Label"
+                       class="form-control"
+                       maxlength="120"
+                       placeholder="e.g. Gaming card, gift voucher…"
+                       autocomplete="off" />
+                <span asp-validation-for="Form.Label" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <span class="form-label small fw-bold d-block">Currency</span>
+                <div class="bk-katsh-other-currency" role="group" aria-label="Currency">
+                    <label class="bk-katsh-other-currency-option">
+                        <input type="radio" name="Form.Currency" value="USD" @(isUsd ? "checked" : null) />
+                        <span>USD</span>
+                    </label>
+                    <label class="bk-katsh-other-currency-option">
+                        <input type="radio" name="Form.Currency" value="LBP" @(!isUsd ? "checked" : null) />
+                        <span>LBP</span>
+                    </label>
+                </div>
+                <span asp-validation-for="Form.Currency" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Form.Amount" class="form-label small fw-bold"></label>
+                <div class="input-group">
+                    <span class="input-group-text" id="bk-katsh-other-amount-prefix">@(isUsd ? "$" : "L.L")</span>
+                    <input asp-for="Form.Amount"
+                           class="form-control bk-money-input"
+                           inputmode="decimal"
+                           step="any"
+                           min="0.01"
+                           placeholder="0.00"
+                           id="bk-katsh-other-amount" />
+                </div>
+                <span asp-validation-for="Form.Amount" class="text-danger small"></span>
+            </div>
+
+            <button type="button"
+                    class="btn btn-primary fw-semibold"
+                    id="bk-katsh-other-review"
+                    @(Model.CanSell ? null : "disabled")>
+                <i class="bi bi-cart-check me-1" aria-hidden="true"></i>Review &amp; deduct
+            </button>
+        </form>
+    </section>
+</div>
+
+<div class="bk-admin-modal d-none" id="bk-katsh-other-modal" role="dialog" aria-modal="true"
+     aria-labelledby="bk-katsh-other-modal-title">
+    <div class="bk-admin-modal-backdrop" data-katsh-other-dismiss tabindex="-1" aria-hidden="true"></div>
+    <div class="bk-admin-modal-panel" role="document">
+        <button type="button" class="bk-admin-modal-close" data-katsh-other-dismiss aria-label="Close">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <div class="bk-admin-modal-icon" aria-hidden="true">
+            <i class="bi bi-wallet2"></i>
+        </div>
+        <h2 class="bk-admin-modal-title" id="bk-katsh-other-modal-title">Cash or Whish?</h2>
+        <p class="bk-admin-modal-desc" id="bk-katsh-other-modal-desc">
+            Choose how the customer is paying for this sale.
+        </p>
+        <div class="bk-katsh-sell-summary">
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Description</span>
+                <span class="bk-katsh-sell-value" id="bk-katsh-other-summary-label">—</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Currency</span>
+                <span class="bk-katsh-sell-value" id="bk-katsh-other-summary-currency">—</span>
+            </div>
+            <div class="bk-katsh-sell-row">
+                <span class="bk-katsh-sell-label">Deduct</span>
+                <span class="bk-katsh-sell-value bk-katsh-sell-value--strong" id="bk-katsh-other-summary-amount">—</span>
+            </div>
+        </div>
+        <div class="bk-katsh-pay-choices" role="group" aria-label="Payment method">
+            <button type="submit" form="bk-katsh-other-form" name="Form.PaymentMethod" value="Cash"
+                    class="bk-katsh-pay-choice bk-katsh-pay-choice--cash">
+                <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                <span>Cash</span>
+            </button>
+            <button type="submit" form="bk-katsh-other-form" name="Form.PaymentMethod" value="Whish"
+                    class="bk-katsh-pay-choice bk-katsh-pay-choice--whish">
+                <i class="bi bi-phone" aria-hidden="true"></i>
+                <span>Whish</span>
+            </button>
+        </div>
+        <div class="bk-katsh-pay-cancel">
+            <button type="button" class="btn btn-link text-muted fw-semibold text-decoration-none" data-katsh-other-dismiss>Cancel</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+<script>
+(function () {
+    var form = document.getElementById("bk-katsh-other-form");
+    var modal = document.getElementById("bk-katsh-other-modal");
+    var reviewBtn = document.getElementById("bk-katsh-other-review");
+    if (!form || !modal || !reviewBtn) return;
+
+    var labelInput = form.querySelector('[name="Form.Label"]');
+    var amountInput = document.getElementById("bk-katsh-other-amount");
+    var prefixEl = document.getElementById("bk-katsh-other-amount-prefix");
+    var summaryLabel = document.getElementById("bk-katsh-other-summary-label");
+    var summaryCurrency = document.getElementById("bk-katsh-other-summary-currency");
+    var summaryAmount = document.getElementById("bk-katsh-other-summary-amount");
+    var descEl = document.getElementById("bk-katsh-other-modal-desc");
+
+    function selectedCurrency() {
+        var checked = form.querySelector('input[name="Form.Currency"]:checked');
+        return checked ? checked.value : "USD";
+    }
+
+    function formatAmount(currency, raw) {
+        var n = Number(raw);
+        if (!isFinite(n) || n <= 0) return "";
+        if (currency === "LBP") {
+            return Math.round(n).toLocaleString("en-US") + " L.L";
+        }
+        return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function syncCurrencyUi() {
+        var currency = selectedCurrency();
+        prefixEl.textContent = currency === "LBP" ? "L.L" : "$";
+        amountInput.step = currency === "LBP" ? "1" : "0.01";
+        amountInput.inputMode = currency === "LBP" ? "numeric" : "decimal";
+    }
+
+    form.querySelectorAll('input[name="Form.Currency"]').forEach(function (radio) {
+        radio.addEventListener("change", syncCurrencyUi);
+    });
+    syncCurrencyUi();
+
+    function openModal() {
+        var label = (labelInput.value || "").trim();
+        var currency = selectedCurrency();
+        var amountDisplay = formatAmount(currency, amountInput.value);
+
+        if (!label) {
+            labelInput.focus();
+            labelInput.reportValidity();
+            return;
+        }
+        if (!amountDisplay) {
+            amountInput.focus();
+            amountInput.reportValidity();
+            return;
+        }
+
+        summaryLabel.textContent = label;
+        summaryCurrency.textContent = currency;
+        summaryAmount.textContent = amountDisplay;
+        descEl.textContent = "Deduct " + amountDisplay + " from the Katsh " + currency + " balance.";
+
+        modal.classList.remove("d-none");
+        document.body.classList.add("bk-admin-modal-open");
+    }
+
+    function closeModal() {
+        modal.classList.add("d-none");
+        document.body.classList.remove("bk-admin-modal-open");
+    }
+
+    reviewBtn.addEventListener("click", openModal);
+    modal.querySelectorAll("[data-katsh-other-dismiss]").forEach(function (el) {
+        el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !modal.classList.contains("d-none"))
+            closeModal();
+    });
+})();
+</script>
+}

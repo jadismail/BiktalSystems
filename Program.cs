@@ -1,3 +1,4 @@
+using System.Globalization;
 using Biktal.Infrastructure;
 using Biktal.Infrastructure.Finance;
 using Biktal.Infrastructure.Identity;
@@ -5,8 +6,15 @@ using Biktal.Infrastructure.Persistence;
 using Biktal.WebMVC.Data;
 using Biktal.WebMVC.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+
+// Money forms use HTML number inputs and en-US formatting ($1.00). Lock culture so
+// decimals never render/bind as 1,00 (which browsers reject as non-numeric).
+var moneyCulture = CultureInfo.GetCultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = moneyCulture;
+CultureInfo.DefaultThreadCurrentUICulture = moneyCulture;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,10 +53,26 @@ builder.Services.AddScoped<InstallmentPlanService>();
 builder.Services.Configure<BackupOptions>(builder.Configuration.GetSection(BackupOptions.SectionName));
 builder.Services.AddScoped<DatabaseBackupService>();
 builder.Services.AddHostedService<WeeklyBackupHostedService>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.KatshVoucherPriceStore>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.KatshAirtimePriceStore>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.KatshMobileCreditsPriceStore>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.KatshMobileCreditsBalanceStore>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.KatshValidityDaysPriceStore>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.KatshBalanceSessionStore>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.KatshSaleHistoryStore>();
+builder.Services.AddSingleton<Biktal.WebMVC.Services.UsedDeviceStore>();
+builder.Services.AddScoped<Biktal.WebMVC.Services.UsedDeviceCatalogSyncService>();
 
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(moneyCulture);
+    options.SupportedCultures = [moneyCulture];
+    options.SupportedUICultures = [moneyCulture];
+});
 
 var app = builder.Build();
 
@@ -65,6 +89,7 @@ else
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
+app.UseRequestLocalization();
 app.UseRouting();
 
 app.UseAuthentication();
