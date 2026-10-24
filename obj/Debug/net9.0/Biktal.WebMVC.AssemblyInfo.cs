@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Biktal.WebMVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb5cf14b8420e05a00274df3dbd965bdc6c6528f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+25a2b2cee7d787aada5b1ba827d1779b3fc5acce")]
 [assembly: System.Reflection.AssemblyProductAttribute("Biktal.WebMVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Biktal.WebMVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

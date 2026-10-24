@@ -3814,19 +3814,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\user\\AppData\\Local\\Temp\\cursor-sandbox-cache\\2f84a2abcf9eb365905d26bcf69a3082\\nuget": {}
+    "/Users/jaismail/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\user\\Desktop\\iShop System\\BiktalSystems\\Biktal.WebMVC.csproj",
+      "projectUniqueName": "/Users/jaismail/BiktalSystems/BiktalSystems/Biktal.WebMVC.csproj",
       "projectName": "Biktal.WebMVC",
-      "projectPath": "c:\\Users\\user\\Desktop\\iShop System\\BiktalSystems\\Biktal.WebMVC.csproj",
-      "packagesPath": "C:\\Users\\user\\AppData\\Local\\Temp\\cursor-sandbox-cache\\2f84a2abcf9eb365905d26bcf69a3082\\nuget",
-      "outputPath": "c:\\Users\\user\\Desktop\\iShop System\\BiktalSystems\\obj\\",
+      "projectPath": "/Users/jaismail/BiktalSystems/BiktalSystems/Biktal.WebMVC.csproj",
+      "packagesPath": "/Users/jaismail/.nuget/packages/",
+      "outputPath": "/Users/jaismail/BiktalSystems/BiktalSystems/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/jaismail/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -3850,7 +3850,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -3898,6 +3898,20 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[9.0.10, 9.0.10]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "version": "[9.0.10, 9.0.10]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[9.0.10, 9.0.10]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -3906,7 +3920,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.318/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100-rc.2.25502.107/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
